@@ -1,0 +1,120 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: '0 6 * * *'
+jobs:
+  sanity:
+    uses: ansible-network/github_actions/.github/workflows/sanity.yml@main
+    with:
+      matrix_include: "[]"
+      matrix_exclude: >-
+          [
+            {
+              "ansible-version": "stable-2.9"
+            },
+            {
+              "ansible-version": "stable-2.12",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "stable-2.12",
+              "python-version": "3.11"
+            },
+            {
+              "ansible-version": "stable-2.13",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "stable-2.13",
+              "python-version": "3.11"
+            },
+            {
+              "ansible-version": "stable-2.14",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "stable-2.14",
+              "python-version": "3.8"
+            },
+            {
+              "ansible-version": "stable-2.14",
+              "python-version": "3.11"
+            },
+            {
+              "ansible-version": "stable-2.15",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "stable-2.15",
+              "python-version": "3.8"
+            },
+            {
+              "ansible-version": "stable-2.15",
+              "python-version": "3.11"
+            },
+            {
+              "ansible-version": "milestone",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "milestone",
+              "python-version": "3.8"
+            },
+            {
+              "ansible-version": "devel",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "devel",
+              "python-version": "3.8"
+            }
+          ]
+  integration:
+    runs-on: ubuntu-latest
+    name: I (${{ matrix.ansible }}+py${{ matrix.python }})
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible:
+          - stable-2.9
+          - stable-2.11
+          - stable-2.12
+          - stable-2.13
+          - devel
+        python:
+          - '3.8'
+          - '3.9'
+          - '3.10'
+        exclude:
+          # Because ansible-test doesn't support Python 3.9 for Ansible 2.9
+          # and Python 3.10 is supported in 2.12 or later.
+          - ansible: stable-2.9
+            python: '3.9'
+          - ansible: stable-2.9
+            python: '3.10'
+          - ansible: stable-2.10
+            python: '3.10'
+          - ansible: stable-2.11
+            python: '3.10'
+
+    steps:
+      - name: >-
+          Perform integration testing against
+          Ansible version ${{ matrix.ansible }}
+          under Python ${{ matrix.python }}
+        uses: ansible-community/ansible-test-gh-action@release/v1
+        with:
+          ansible-core-version: ${{ matrix.ansible }}
+          # OPTIONAL command to run before invoking `ansible-test integration`
+          # pre-test-cmd:
+          target-python-version: ${{ matrix.python }}
+          testing-type: integration
+          # OPTIONAL If your integration tests require code
+          # from other collections, install them like this
+          test-deps: >-
+            ansible.netcommon
+            kubernetes.core

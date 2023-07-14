@@ -1,0 +1,5 @@
+plugin: kubernetes.kubevirt.kubevirt
+connections:
+  - namespaces:
+      - default
+    use_service: yes

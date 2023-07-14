@@ -1,0 +1,34 @@
+- hosts: localhost
+  tasks:
+    - name: Create VM
+      kubernetes.kubevirt.kubevirt_vm:
+        state: present
+        name: testvm
+        namespace: default
+        labels:
+          app: test
+        instancetype: u1.medium
+        preference: fedora
+        interfaces:
+        - name: default
+          masquerade: {}
+        - name: bridge-network
+          bridge: {}
+        networks:
+        - name: default
+          pod: {}
+        - name: bridge-network
+          multus:
+            networkName: kindexgw
+        volumes:
+        - containerDisk:
+            image: quay.io/containerdisks/fedora:latest
+          name: containerdisk
+        - cloudInitNoCloud:
+            userData: |-
+              #cloud-config
+              # The default username is: fedora
+              ssh_authorized_keys:
+                - ssh-ed25519 AAAA...
+          name: cloudinit
+        wait: yes

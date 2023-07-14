@@ -1,0 +1,6 @@
+plugin: kubernetes.kubevirt.kubevirt
+connections:
+  - namespaces:
+      - default
+    network_name: bridge-network
+    kube_secondary_dns: yes

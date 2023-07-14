@@ -1,0 +1,4 @@
+kubernetes>=12.0.0
+PyYaml
+jsonpatch
+jinja2

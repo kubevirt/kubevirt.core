@@ -1,0 +1,40 @@
+# See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
+
+namespace: kubernetes
+name: kubevirt
+version: "0.1.0"
+readme: README.md
+authors:
+  - KubeVirt Project (kubevirt.io)
+dependencies:
+    kubernetes.core: '>=2.0.0'
+description: Lean Ansible bindings for KubeVirt
+license_file: LICENSE
+tags:
+# tags so people can search for collections https://galaxy.ansible.com/search
+# tags are all lower-case, no spaces, no dashes.
+  - api
+  - k8s
+  - kubernetes
+  - kubevirt
+  - virtualization
+  - cloud
+  - infrastructure
+repository: https://github.com/kubevirt/kubernetes.kubevirt
+documentation: https://github.com/kubevirt/kubernetes.kubevirt/tree/main/docs
+homepage: https://kubevirt.io
+issues: https://github.com/kubevirt/kubernetes.kubevirt/issues
+build_ignore:
+  - .gitignore
+  - changelogs/.plugin-cache.yaml
+  - .github
+  - .ansible-lint
+  - .yamllint
+  - '*.tar.gz'
+  - '*.zip'
+  - molecule
+  - changelogs
+  - docs/_gh_include
+  - docs/conf.py
+  - docs/roles.rst.template
+  - docs/requirements.yml
