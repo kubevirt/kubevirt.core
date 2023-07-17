@@ -73,44 +73,14 @@ options:
     default: 180
   instancetype:
     description:
-    - Specify the instancetype of the VirtualMachine.
+    - Specify the instancetype matcher of the VirtualMachine.
     - Only used when I(state=present).
-    type: str
+    type: dict
   preference:
     description:
-    - Specify the preference of the VirtualMachine.
-    - Only used when I(state=present).
-    type: str
-  infer_from_volume:
-    description:
-    - Specify volumes to infer an instancetype or a preference from.
+    - Specify the preference matcher of the VirtualMachine.
     - Only used when I(state=present).
     type: dict
-    suboptions:
-      instancetype:
-        description:
-        - Name of the volume to infer the instancetype from.
-        type: str
-      preference:
-        description:
-        - Name of the volume to infer the preference from.
-        type: str
-  clear_revision_name:
-    description:
-    - Specify to clear the revision name of the instancetype or preference.
-    - Only used when I(state=present).
-    type: dict
-    suboptions:
-      instancetype:
-        description:
-        - Clear the revision name of the instancetype.
-        type: bool
-        default: no
-      preference:
-        description:
-        - Clear the revision name of the preference.
-        type: bool
-        default: no
   interfaces:
     description:
     - Specify the interfaces of the VirtualMachine.
@@ -163,8 +133,10 @@ EXAMPLES = """
     namespace: default
     labels:
       app: test
-    instancetype: u1.medium
-    preference: fedora
+    instancetype:
+      name: u1.medium
+    preference:
+      name: fedora
     interfaces:
     - name: default
       masquerade: {}
@@ -278,29 +250,13 @@ metadata:
     {{ labels | to_yaml | indent(4) }}
   {%- endif %}
 spec:
-  {% if instancetype or infer_from_volume.instancetype %}
+  {% if instancetype %}
   instancetype:
-    {% if instancetype %}
-    name: "{{ instancetype }}"
-    {% endif %}
-    {% if infer_from_volume.instancetype %}
-    inferFromVolume: "{{ infer_from_volume.instancetype }}"
-    {% endif %}
-    {% if clear_revision_name.instancetype %}
-    revisionName: ""
-    {% endif %}
+    {{ instancetype | to_yaml | indent(4) }}
   {% endif %}
-  {% if preference or infer_from_volume.preference %}
+  {% if preference %}
   preference:
-    {% if preference %}
-    name: "{{ preference }}"
-    {% endif %}
-    {% if infer_from_volume.preference %}
-    inferFromVolume: "{{ infer_from_volume.preference }}"
-    {% endif %}
-    {% if clear_revision_name.preference %}
-    revisionName: ""
-    {% endif %}
+    {{ preference | to_yaml | indent(4) }}
   {% endif %}
   running: {{ running }}
   template:
@@ -362,19 +318,8 @@ def arg_spec() -> Dict:
         "labels": {"type": "dict"},
         "running": {"type": "bool", "default": True},
         "termination_grace_period": {"type": "int", "default": 180},
-        "instancetype": {},
-        "preference": {},
-        "infer_from_volume": {
-            "type": "dict",
-            "options": {"instancetype": {}, "preference": {}},
-        },
-        "clear_revision_name": {
-            "type": "dict",
-            "options": {
-                "instancetype": {"type": "bool", "default": False},
-                "preference": {"type": "bool", "default": False},
-            },
-        },
+        "instancetype": {"type": "dict"},
+        "preference": {"type": "dict"},
         "interfaces": {"type": "list", "elements": "dict"},
         "networks": {"type": "list", "elements": "dict"},
         "volumes": {"type": "list", "elements": "dict"},
