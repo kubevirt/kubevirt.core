@@ -70,7 +70,8 @@ spec:
     spec:
       domain:
         devices: {}
-      terminationGracePeriodSeconds: 180'''
+      terminationGracePeriodSeconds: 180
+'''
 
 FIXTURE2 = {
     'name': 'testvm',
@@ -80,11 +81,17 @@ FIXTURE2 = {
         'service': 'loadbalancer',
         'environment': 'staging'
     },
-    'api_version': 'kubevirt.io/v1', 'running': True, 'termination_grace_period': 180, 'wait': False, 'wait_sleep': 5, 'wait_timeout': 120, 'force': False,
-    'generate_name': None, 'annotations': None, 'instancetype': None, 'preference': None, 'interfaces': None, 'networks': None, 'volumes': None,
-    'kubeconfig': None, 'context': None, 'host': None, 'api_key': None, 'username': None, 'password': None, 'validate_certs': None, 'ca_cert': None,
-    'client_cert': None, 'client_key': None, 'proxy': None, 'no_proxy': None, 'proxy_headers': None, 'persist_config': None, 'impersonate_user': None,
-    'impersonate_groups': None, 'delete_options': None,
+    'spec': {
+        'domain': {
+            'devices': {}
+        },
+        'terminationGracePeriodSeconds': 180
+    },
+    'api_version': 'kubevirt.io/v1', 'running': True, 'wait': False, 'wait_sleep': 5, 'wait_timeout': 120, 'force': False,
+    'generate_name': None, 'annotations': None, 'instancetype': None, 'preference': None,
+    'kubeconfig': None, 'context': None, 'host': None, 'api_key': None, 'username': None, 'password': None, 'validate_certs': None,
+    'ca_cert': None, 'client_cert': None, 'client_key': None, 'proxy': None, 'no_proxy': None, 'proxy_headers': None,
+    'persist_config': None, 'impersonate_user': None, 'impersonate_groups': None, 'delete_options': None,
     'resource_definition': METADATA,
     'wait_condition': {
         'type': 'Ready',
@@ -127,6 +134,12 @@ class TestCreateVM(unittest.TestCase):
                 "labels": {
                     "service": "loadbalancer",
                     "environment": "staging"
+                },
+                'spec': {
+                    'domain': {
+                        'devices': {}
+                    },
+                    'terminationGracePeriodSeconds': 180
                 }
             }
         )
