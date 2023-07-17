@@ -35,6 +35,30 @@ FIXTURE1 = {
     },
     "spec": {
         "running": True,
+        "dataVolumeTemplates": [
+            {
+                "metadata": {
+                    "name": "testdv"
+                },
+                "spec": {
+                    "source": {
+                        "registry": {
+                            "url": "docker://quay.io/containerdisks/fedora:latest"
+                        },
+                    },
+                    "storage": {
+                        "accessModes": [
+                            "ReadWriteOnce"
+                        ],
+                        "resources": {
+                            "requests": {
+                                "storage": "5Gi"
+                            }
+                        }
+                    }
+                }
+            }
+        ],
         "template": {
             "metadata": {
                 "labels": {
@@ -62,6 +86,19 @@ metadata:
     service: loadbalancer
 spec:
   running: True
+  dataVolumeTemplates:
+    - metadata:
+        name: testdv
+      spec:
+        source:
+          registry:
+            url: docker://quay.io/containerdisks/fedora:latest
+        storage:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 5Gi
   template:
     metadata:
       labels:
@@ -81,6 +118,30 @@ FIXTURE2 = {
         'service': 'loadbalancer',
         'environment': 'staging'
     },
+    'data_volume_templates': [
+        {
+            'metadata': {
+                'name': 'testdv'
+            },
+            'spec': {
+                'source': {
+                    'registry': {
+                        'url': 'docker://quay.io/containerdisks/fedora:latest'
+                    },
+                },
+                'storage': {
+                    'accessModes': [
+                        'ReadWriteOnce'
+                    ],
+                    'resources': {
+                        'requests': {
+                            'storage': '5Gi'
+                        }
+                    }
+                }
+            }
+        }
+    ],
     'spec': {
         'domain': {
             'devices': {}
@@ -135,6 +196,30 @@ class TestCreateVM(unittest.TestCase):
                     "service": "loadbalancer",
                     "environment": "staging"
                 },
+                'data_volume_templates': [
+                    {
+                        'metadata': {
+                            'name': 'testdv'
+                        },
+                        'spec': {
+                            'source': {
+                                'registry': {
+                                    'url': 'docker://quay.io/containerdisks/fedora:latest'
+                                },
+                            },
+                            'storage': {
+                                'accessModes': [
+                                    'ReadWriteOnce'
+                                ],
+                                'resources': {
+                                    'requests': {
+                                        'storage': '5Gi'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
                 'spec': {
                     'domain': {
                         'devices': {}

@@ -1,0 +1,41 @@
+- hosts: localhost
+  tasks:
+    - name: Create VM
+      kubernetes.kubevirt.kubevirt_vm:
+        state: present
+        name: testvm-with-dv
+        namespace: default
+        labels:
+          app: test
+        instancetype:
+          name: u1.medium
+        preference:
+          name: fedora
+        data_volume_templates:
+          - metadata:
+              name: testdv
+            spec:
+              source:
+                registry:
+                  url: docker://quay.io/containerdisks/fedora:latest
+              storage:
+                accessModes:
+                - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 5Gi
+        spec:
+          domain:
+            devices: {}
+          volumes:
+          - dataVolume:
+              name: testdv
+            name: datavolume
+          - cloudInitNoCloud:
+              userData: |-
+                #cloud-config
+                # The default username is: fedora
+                ssh_authorized_keys:
+                  - ssh-ed25519 AAAA...
+            name: cloudinit
+        wait: yes
