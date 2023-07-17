@@ -14,7 +14,7 @@ module: kubevirt_vm
 short_description: Create or delete KubeVirt VirtualMachines on Kubernetes
 
 author:
-- "KubeVirt Project (kubevirt.io)"
+- "KubeVirt.io Project (!UNKNOWN)"
 
 description:
 - Use the Kubernetes Python client to perform create or delete operations on KubeVirt VirtualMachines.

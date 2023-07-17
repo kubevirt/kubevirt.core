@@ -13,7 +13,7 @@ name: kubevirt
 short_description: KubeVirt inventory source
 
 author:
-- "KubeVirt Project (kubevirt.io)"
+- "KubeVirt.io Project (!UNKNOWN)"
 
 description:
 - Fetch running VirtualMachineInstances for one or more namespaces with an optional label selector.
