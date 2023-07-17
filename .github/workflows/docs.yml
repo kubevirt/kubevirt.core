@@ -48,10 +48,7 @@ jobs:
       - name: Create default collection path
         run: |
           mkdir -p /home/runner/.ansible/
-          cp -rp /home/runner/work/kubevirt/kubevirt/ansible_collections /home/runner/.ansible/collections/
-          ls -l /home/runner/.ansible/collections/ansible_collections/
-          ls -l /home/runner/.ansible/collections/ansible_collections/kubernetes/
-          ls -l /home/runner/.ansible/collections/ansible_collections/kubernetes/kubevirt/
+          cp -rp ${GITHUB_WORKSPACE}/ansible_collections /home/runner/.ansible/collections/
 
       - name: Create changelog and documentation
         uses: ansible-middleware/collection-docs-action@main
