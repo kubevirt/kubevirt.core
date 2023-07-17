@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2023 Red Hat, Inc.
 # Based on the kubernetes.core.k8s module
-# Apache License 2.0 (see LICENSE)
+# GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 
@@ -14,7 +14,7 @@ module: kubevirt_vm
 short_description: Create or delete KubeVirt VirtualMachines on Kubernetes
 
 author:
-- "KubeVirt Project (kubevirt.io)"
+- "KubeVirt.io Project (!UNKNOWN)"
 
 description:
 - Use the Kubernetes Python client to perform create or delete operations on KubeVirt VirtualMachines.

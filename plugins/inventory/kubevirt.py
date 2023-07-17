@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2023 Red Hat, Inc.
 # Based on the kubernetes.core.k8s inventory
-# Apache License 2.0 (see LICENSE)
+# GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 
@@ -13,7 +13,7 @@ name: kubevirt
 short_description: KubeVirt inventory source
 
 author:
-- "KubeVirt Project (kubevirt.io)"
+- "KubeVirt.io Project (!UNKNOWN)"
 
 description:
 - Fetch running VirtualMachineInstances for one or more namespaces with an optional label selector.
@@ -166,17 +166,18 @@ from typing import (
     Tuple,
     Union,
 )
-import traceback
 
 try:
     from kubernetes.dynamic.resource import ResourceField
     from kubernetes.dynamic.exceptions import DynamicApiError
 except ImportError:
-    HAS_K8S = False
-    K8S_IMPORT_ERROR = traceback.format_exc()
-else:
-    HAS_K8S = True
-    K8S_IMPORT_ERROR = None
+
+    class ResourceField:
+        pass
+
+    class DynamicApiError(Exception):
+        pass
+
 
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
 
