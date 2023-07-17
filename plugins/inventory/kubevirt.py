@@ -166,17 +166,18 @@ from typing import (
     Tuple,
     Union,
 )
-import traceback
 
 try:
     from kubernetes.dynamic.resource import ResourceField
     from kubernetes.dynamic.exceptions import DynamicApiError
 except ImportError:
-    HAS_K8S = False
-    K8S_IMPORT_ERROR = traceback.format_exc()
-else:
-    HAS_K8S = True
-    K8S_IMPORT_ERROR = None
+
+    class ResourceField:
+        pass
+
+    class DynamicApiError(Exception):
+        pass
+
 
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
 
