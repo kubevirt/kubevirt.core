@@ -75,6 +75,12 @@ options:
     - Specify the preference matcher of the VirtualMachine.
     - Only used when I(state=present).
     type: dict
+  data_volume_templates:
+    description:
+    - Specify the DataVolume templates of the VirtualMachine.
+    - 'See: http://kubevirt.io/api-reference/v1.0.0/definitions.html#_v1_datavolumetemplatespec'
+    type: list
+    elements: 'dict'
   spec:
     description:
     - Specify the template spec of the VirtualMachine.
@@ -143,6 +149,46 @@ EXAMPLES = """
             ssh_authorized_keys:
               - ssh-ed25519 AAAA...
         name: cloudinit
+
+- name: Create a VirtualMachine with a DataVolume template
+  kubernetes.kubevirt.kubevirt_vm:
+    state: present
+    name: testvm-with-dv
+    namespace: default
+    labels:
+      app: test
+    instancetype:
+      name: u1.medium
+    preference:
+      name: fedora
+    data_volume_templates:
+      - metadata:
+          name: testdv
+        spec:
+          source:
+            registry:
+              url: docker://quay.io/containerdisks/fedora:latest
+          storage:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
+    spec:
+      domain:
+        devices: {}
+      volumes:
+      - dataVolume:
+          name: testdv
+        name: datavolume
+      - cloudInitNoCloud:
+          userData: |-
+            #cloud-config
+            # The default username is: fedora
+            ssh_authorized_keys:
+              - ssh-ed25519 AAAA...
+        name: cloudinit
+    wait: yes
 
 - name: Delete a VirtualMachine
   kubernetes.kubevirt.kubevirt_vm:
@@ -243,6 +289,10 @@ spec:
   preference:
     {{ preference | to_yaml | indent(4) }}
   {% endif %}
+  {% if data_volume_templates %}
+  dataVolumeTemplates:
+    {{ data_volume_templates | to_yaml | indent(4) }}
+  {%- endif %}
   template:
     {% if annotations or labels %}
     metadata:
@@ -292,6 +342,7 @@ def arg_spec() -> Dict:
         "running": {"type": "bool", "default": True},
         "instancetype": {"type": "dict"},
         "preference": {"type": "dict"},
+        "data_volume_templates": {"type": "list", "elements": "dict"},
         "spec": {"type": "dict"},
         "wait": {"type": "bool", "default": False},
         "wait_sleep": {"type": "int", "default": 5},

@@ -29,6 +29,7 @@ set_default_params() {
   KUBECTL_VERSION=${KUBECTL_VERSION:-v1.27.3}
 
   KUBEVIRT_VERSION=${KUBEVIRT_VERSION:-v1.0.0}
+  KUBEVIRT_CDI_VERSION=${KUBEVIRT_CDI_VERSION:-v1.56.0}
   KUBEVIRT_COMMON_INSTANCETYPES_VERSION=${KUBEVIRT_COMMON_INSTANCETYPES_VERSION:-v0.3.0}
   KUBEVIRT_USE_EMULATION=${KUBEVIRT_USE_EMULATION:-"false"}
 
@@ -175,6 +176,12 @@ is_nested_virt_enabled() {
   [ "$kvm_nested" == "1" ] || [ "$kvm_nested" == "Y" ] || [ "$kvm_nested" == "y" ]
 }
 
+deploy_kubevirt_containerized_data_importer() {
+  echo "Deploying KubeVirt containerized-data-importer"
+  ${KUBECTL} apply -f "https://github.com/kubevirt/containerized-data-importer/releases/download/${KUBEVIRT_CDI_VERSION}/cdi-operator.yaml"
+  ${KUBECTL} apply -f "https://github.com/kubevirt/containerized-data-importer/releases/download/${KUBEVIRT_CDI_VERSION}/cdi-cr.yaml"
+}
+
 deploy_kubevirt_common_instancetypes() {
   echo "Deploying KubeVirt common-instancetypes"
   ${KUBECTL} apply -f "https://github.com/kubevirt/common-instancetypes/releases/download/${KUBEVIRT_COMMON_INSTANCETYPES_VERSION}/common-instancetypes-all-bundle-${KUBEVIRT_COMMON_INSTANCETYPES_VERSION}.yaml"
@@ -255,6 +262,7 @@ set_default_options() {
   OPT_CREATE_CLUSTER=false
   OPT_CONFIGURE_SECONDARY_NETWORK=false
   OPT_DEPLOY_KUBEVIRT=false
+  OPT_DEPLOY_KUBEVIRT_CDI=false
   OPT_DEPLOY_KUBEVIRT_COMMON_INSTANCETYPES=false
   OPT_DEPLOY_CNAO=false
   OPT_CREATE_NAD=false
@@ -270,6 +278,7 @@ parse_args() {
     --create-cluster) OPT_CREATE_CLUSTER=true ;;
     --configure-secondary-network) OPT_CONFIGURE_SECONDARY_NETWORK=true ;;
     --deploy-kubevirt) OPT_DEPLOY_KUBEVIRT=true ;;
+    --deploy-kubevirt-cdi) OPT_DEPLOY_KUBEVIRT_CDI=true ;;
     --deploy-kubevirt-common-instancetypes) OPT_DEPLOY_KUBEVIRT_COMMON_INSTANCETYPES=true ;;
     --deploy-cnao) OPT_DEPLOY_CNAO=true ;;
     --create-nad) OPT_CREATE_NAD=true ;;
@@ -310,6 +319,7 @@ if [ "${ARGCOUNT}" -eq "0" ]; then
   OPT_CREATE_CLUSTER=true
   OPT_CONFIGURE_SECONDARY_NETWORK=true
   OPT_DEPLOY_KUBEVIRT=true
+  OPT_DEPLOY_KUBEVIRT_CDI=true
   OPT_DEPLOY_KUBEVIRT_COMMON_INSTANCETYPES=true
   OPT_DEPLOY_CNAO=true
   OPT_CREATE_NAD=true
@@ -342,6 +352,10 @@ fi
 
 if [ "${OPT_DEPLOY_KUBEVIRT}" == true ]; then
   deploy_kubevirt
+fi
+
+if [ "${OPT_DEPLOY_KUBEVIRT_CDI}" == true ]; then
+  deploy_kubevirt_containerized_data_importer
 fi
 
 if [ "${OPT_DEPLOY_KUBEVIRT_COMMON_INSTANCETYPES}" == true ]; then

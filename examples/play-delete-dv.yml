@@ -1,0 +1,8 @@
+- hosts: localhost
+  tasks:
+    - name: Delete VM
+      kubernetes.kubevirt.kubevirt_vm:
+        name: testvm-with-dv
+        namespace: default
+        state: absent
+        wait: yes
