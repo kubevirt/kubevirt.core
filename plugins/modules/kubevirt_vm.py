@@ -65,12 +65,6 @@ options:
     - Specify whether the VirtualMachine should be running.
     type: bool
     default: yes
-  termination_grace_period:
-    description:
-    - Specify the termination grace period of the VirtualMachine to provide
-      time for shutting down the guest.
-    type: int
-    default: 180
   instancetype:
     description:
     - Specify the instancetype matcher of the VirtualMachine.
@@ -81,24 +75,11 @@ options:
     - Specify the preference matcher of the VirtualMachine.
     - Only used when I(state=present).
     type: dict
-  interfaces:
+  spec:
     description:
-    - Specify the interfaces of the VirtualMachine.
-    - 'See: https://kubevirt.io/api-reference/main/definitions.html#_v1_interface'
-    type: list
-    elements: 'dict'
-  networks:
-    description:
-    - Specify the networks of the VirtualMachine.
-    - 'See: https://kubevirt.io/api-reference/main/definitions.html#_v1_network'
-    type: list
-    elements: 'dict'
-  volumes:
-    description:
-    - Specify the volumes of the VirtualMachine.
-    - 'See: https://kubevirt.io/api-reference/main/definitions.html#_v1_volume'
-    type: list
-    elements: 'dict'
+    - Specify the template spec of the VirtualMachine.
+    - 'See: http://kubevirt.io/api-reference/v1.0.0/definitions.html#_v1_virtualmachineinstancespec'
+    type: dict
   wait:
     description:
     - Whether to wait for the VirtualMachine to end up in the ready state.
@@ -137,28 +118,31 @@ EXAMPLES = """
       name: u1.medium
     preference:
       name: fedora
-    interfaces:
-    - name: default
-      masquerade: {}
-    - name: bridge-network
-      bridge: {}
-    networks:
-    - name: default
-      pod: {}
-    - name: bridge-network
-      multus:
-        networkName: kindexgw
-    volumes:
-    - containerDisk:
-        image: quay.io/containerdisks/fedora:latest
-      name: containerdisk
-    - cloudInitNoCloud:
-        userData: |-
-          #cloud-config
-          # The default username is: fedora
-          ssh_authorized_keys:
-            - ssh-ed25519 AAAA...
-      name: cloudinit
+    spec:
+      domain:
+        devices:
+          interfaces:
+          - name: default
+            masquerade: {}
+          - name: bridge-network
+            bridge: {}
+      networks:
+      - name: default
+        pod: {}
+      - name: bridge-network
+        multus:
+          networkName: kindexgw
+      volumes:
+      - containerDisk:
+          image: quay.io/containerdisks/fedora:latest
+        name: containerdisk
+      - cloudInitNoCloud:
+          userData: |-
+            #cloud-config
+            # The default username is: fedora
+            ssh_authorized_keys:
+              - ssh-ed25519 AAAA...
+        name: cloudinit
 
 - name: Delete a VirtualMachine
   kubernetes.kubevirt.kubevirt_vm:
@@ -250,6 +234,7 @@ metadata:
     {{ labels | to_yaml | indent(4) }}
   {%- endif %}
 spec:
+  running: {{ running }}
   {% if instancetype %}
   instancetype:
     {{ instancetype | to_yaml | indent(4) }}
@@ -258,7 +243,6 @@ spec:
   preference:
     {{ preference | to_yaml | indent(4) }}
   {% endif %}
-  running: {{ running }}
   template:
     {% if annotations or labels %}
     metadata:
@@ -272,23 +256,12 @@ spec:
       {%- endif %}
     {% endif %}
     spec:
+    {% if spec %}
+      {{ spec | to_yaml | indent (6) }}
+    {%- else %}
       domain:
-        {% if interfaces %}
-        devices:
-          interfaces:
-          {{ interfaces | to_yaml | indent(10) }}
-        {%- else %}
         devices: {}
-        {% endif %}
-      {% if networks %}
-      networks:
-      {{ networks | to_yaml | indent(6) }}
-      {%- endif %}
-      {% if volumes %}
-      volumes:
-      {{ volumes | to_yaml | indent(6) }}
-      {%- endif %}
-      terminationGracePeriodSeconds: {{ termination_grace_period }}
+    {% endif %}
 """
 
 
@@ -317,12 +290,9 @@ def arg_spec() -> Dict:
         "annotations": {"type": "dict"},
         "labels": {"type": "dict"},
         "running": {"type": "bool", "default": True},
-        "termination_grace_period": {"type": "int", "default": 180},
         "instancetype": {"type": "dict"},
         "preference": {"type": "dict"},
-        "interfaces": {"type": "list", "elements": "dict"},
-        "networks": {"type": "list", "elements": "dict"},
-        "volumes": {"type": "list", "elements": "dict"},
+        "spec": {"type": "dict"},
         "wait": {"type": "bool", "default": False},
         "wait_sleep": {"type": "int", "default": 5},
         "wait_timeout": {"type": "int", "default": 120},
@@ -352,7 +322,6 @@ def main() -> None:
         required_one_of=[
             ("name", "generate_name"),
         ],
-        required_together=[("interfaces", "networks")],
         supports_check_mode=True,
     )
 

@@ -11,26 +11,29 @@
           name: u1.medium
         preference:
           name: fedora
-        interfaces:
-        - name: default
-          masquerade: {}
-        - name: bridge-network
-          bridge: {}
-        networks:
-        - name: default
-          pod: {}
-        - name: bridge-network
-          multus:
-            networkName: kindexgw
-        volumes:
-        - containerDisk:
-            image: quay.io/containerdisks/fedora:latest
-          name: containerdisk
-        - cloudInitNoCloud:
-            userData: |-
-              #cloud-config
-              # The default username is: fedora
-              ssh_authorized_keys:
-                - ssh-ed25519 AAAA...
-          name: cloudinit
+        spec:
+          domain:
+            devices:
+              interfaces:
+              - name: default
+                masquerade: {}
+              - name: bridge-network
+                bridge: {}
+          networks:
+          - name: default
+            pod: {}
+          - name: bridge-network
+            multus:
+              networkName: kindexgw
+          volumes:
+          - containerDisk:
+              image: quay.io/containerdisks/fedora:latest
+            name: containerdisk
+          - cloudInitNoCloud:
+              userData: |-
+                #cloud-config
+                # The default username is: fedora
+                ssh_authorized_keys:
+                  - ssh-ed25519 AAAA...
+            name: cloudinit
         wait: yes
