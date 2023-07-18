@@ -284,11 +284,11 @@ spec:
   {% if instancetype %}
   instancetype:
     {{ instancetype | to_yaml | indent(4) }}
-  {% endif %}
+  {%- endif %}
   {% if preference %}
   preference:
     {{ preference | to_yaml | indent(4) }}
-  {% endif %}
+  {%- endif %}
   {% if data_volume_templates %}
   dataVolumeTemplates:
     {{ data_volume_templates | to_yaml | indent(4) }}
