@@ -1,4 +1,7 @@
 name: CI
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 on:
   push:
     branches:
@@ -7,11 +10,11 @@ on:
   schedule:
     - cron: '0 6 * * *'
 jobs:
-  prereq:
+  linter:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ansible_collections/kubevirt/core
           fetch-depth: 0
@@ -19,8 +22,24 @@ jobs:
           mkdir -p /home/runner/.kube/
           cp -rp ${GITHUB_WORKSPACE}/ansible_collections/kubevirt/core/tests/.kubeconfig /home/runner/.kube/config
           cat /home/runner/.kube/config
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install yamllint, ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install yamllint ansible-core ansible-lint
+      - name: Run linter
+        run: |
+          ansible-lint --version
+          ansible-lint -v
+        working-directory: ./ansible_collections/kubevirt/core
   sanity:
     uses: ansible-network/github_actions/.github/workflows/sanity.yml@main
+    needs:
+      - linter
     with:
       matrix_include: "[]"
       matrix_exclude: >-
@@ -92,7 +111,7 @@ jobs:
   unit-source:
     uses: ansible-network/github_actions/.github/workflows/unit_source.yml@main
     needs:
-      - prereq
+      - linter
     with:
       matrix_exclude: >-
           [
@@ -153,149 +172,18 @@ jobs:
             }
           ]
       collection_pre_install: ''
-  splitter:
-    env:
-      source_dir: "./source"
-    runs-on: ubuntu-latest
-    outputs:
-      test_targets: ${{ steps.display.outputs.test_targets }}
-    steps:
-      - name: Checkout the collection repository
-        uses: actions/checkout@v3
-        with:
-          path: ${{ env.source_dir }}
-          fetch-depth: "0"
-
-      - name: list changes for pull request
-        id: splitter
-        uses: ansible-network/github_actions/.github/actions/ansible_test_splitter@main
-        with:
-          collections_to_test: ${{ env.source_dir }}
-          total_jobs: 8
-
-      - name: display targets
-        id: display
-        run: echo "test_targets=${{ steps.splitter.outputs.test_targets }}" >> $GITHUB_OUTPUT
-        shell: bash
-
   integration:
+    uses: guidograzioli/kubernetes.kubevirt/.github/workflows/integration.yml@integration_tests
     needs:
-      - splitter
-    env:
-      source: "./source"
-      cloud_common: "./cloudcommon"
-      ansible_posix: "./ansible_posix"
-      test_targets: ${{ needs.splitter.outputs.test_targets }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        ansible-version:
-          - stable-2.12
-          - milestone
-          - devel
-        python-version:
-          - "3.8"
-          - "3.9"
-        exclude:
-          - ansible-version: stable-2.9
-            python-version: 3.9
-          - ansible-version: stable-2.9
-            python-version: 3.10
-          - ansible-version: stable-2.9
-            python-version: 3.11
-          - ansible-version: stable-2.12
-            python-version: 3.11
-          - ansible-version: stable-2.13
-            python-version: 3.11
-          - ansible-version: stable-2.14
-            python-version: 3.8
-          - ansible-version: stable-2.15
-            python-version: 3.8
-          - ansible-version: milestone
-            python-version: 3.8
-          - ansible-version: devel
-            python-version: 3.8
-        enable-turbo-mode:
-          - true
-          - false
-        job-index: [1, 2, 3, 4, 5, 6, 7, 8]
-    name: "integration-py${{ matrix.python-version }}-${{ matrix.ansible-version }}-turbo-mode=${{ matrix.enable-turbo-mode }}-${{ matrix.job-index }}"
-    steps:
-      - name: Read ansible-test targets
-        id: read-targets
-        run: >-
-          echo "ansible_test_targets=$(echo "${{ env.test_targets }}" | sed s/';'/'\n'/g |
-          grep "kubernetes.core-${{ matrix.job-index }}" | cut -d ':' -f2 | sed s/','/' '/g)" >> $GITHUB_OUTPUT
-        shell: bash
+      - unit-source
+    with:
+      ansible_test_targets: >-
+          [
+            "kubevirt_vm",
+            "inventory_kubevirt"
+          ]
+    name: "integration"
 
-      - name: Display targets
-        run: >-
-          echo "targets to test: $ANSIBLE_TARGETS"
-        shell: bash
-        env:
-          ANSIBLE_TARGETS: ${{ steps.read-targets.outputs.ansible_test_targets }}
-
-      - name: Checkout kubernetes.core repository
-        uses: actions/checkout@v3
-        with:
-          path: ${{ env.source }}
-          fetch-depth: "0"
-        if: steps.read-targets.outputs.ansible_test_targets != ''
-
-      - name: checkout ansible-collections/cloud.common
-        uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
-        with:
-          repository: ansible-collections/cloud.common
-          path: ${{ env.cloud_common }}
-          ref: main
-        if: steps.read-targets.outputs.ansible_test_targets != ''
-
-      - name: checkout ansible-collections/ansible.posix
-        uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
-        with:
-          repository: ansible-collections/ansible.posix
-          path: ${{ env.ansible_posix }}
-          ref: main
-        if: steps.read-targets.outputs.ansible_test_targets != ''
-
-      - name: install kubernetes.core collection
-        id: install-collection
-        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
-        with:
-          install_python_dependencies: true
-          source_path: ${{ env.source }}
-        if: steps.read-targets.outputs.ansible_test_targets != ''
-
-      - name: install cloud.common collection
-        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
-        with:
-          install_python_dependencies: true
-          source_path: ${{ env.cloud_common }}
-        if: steps.read-targets.outputs.ansible_test_targets != ''
-
-      - name: install ansible.posix collection
-        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
-        with:
-          install_python_dependencies: true
-          source_path: ${{ env.ansible_posix }}
-        if: steps.read-targets.outputs.ansible_test_targets != ''
-
-      - name: create kubernetes cluster
-        uses: helm/kind-action@v1.4.0
-        if: steps.read-targets.outputs.ansible_test_targets != ''
-
-      - name: Run integration tests
-        uses: ansible-network/github_actions/.github/actions/ansible_test_integration@main
-        with:
-          collection_path: ${{ steps.install-collection.outputs.collection_path }}
-          python_version: ${{ matrix.python-version }}
-          ansible_version: ${{ matrix.ansible-version }}
-          ansible_test_targets: ${{ steps.read-targets.outputs.ansible_test_targets }}
-          ansible_test_environment: |
-            ENABLE_TURBO_MODE=${{ matrix.enable-turbo-mode }}
-        if: steps.read-targets.outputs.ansible_test_targets != ''
   all_green:
     if: ${{ always() }}
     needs:

@@ -62,3 +62,5 @@ jobs:
           generate_docs: true
           path: /home/runner/.ansible/collections/ansible_collections/kubevirt/core
           token: ${{ secrets.GITHUB_TOKEN }}
+          bot_email: kubevirtbot@redhat.com
+          bot_account: kubevirt-bot

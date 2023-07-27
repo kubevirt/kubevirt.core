@@ -1,19 +1,24 @@
-- name: Playbook creating a virtual machine with multus network
+---
+- name: Create VM
+  connection: local
+  gather_facts: false
   hosts: localhost
   tasks:
-    - name: Create VM
+    - name: Create a VirtualMachine
       kubevirt.core.kubevirt_vm:
         state: present
-        name: testvm
+        name: testvm3
         namespace: default
         labels:
           app: test
-        instancetype:
-          name: u1.medium
-        preference:
-          name: fedora
+        wait: true
+        wait_timeout: 600
         spec:
           domain:
+            cpu:
+              sockets: 1
+            memory:
+              guest: 1536Mi
             devices:
               interfaces:
                 - name: default
@@ -28,13 +33,11 @@
                 networkName: kindexgw
           volumes:
             - containerDisk:
-                image: quay.io/containerdisks/fedora:latest
+                image: quay.io/containerdisks/centos-stream:9
               name: containerdisk
             - cloudInitNoCloud:
                 userData: |-
                   #cloud-config
-                  # The default username is: fedora
                   ssh_authorized_keys:
-                    - ssh-ed25519 AAAA...
+                    - {{ lookup('file', 'pub_key') }}
               name: cloudinit
-        wait: yes

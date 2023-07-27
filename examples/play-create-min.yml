@@ -1,4 +1,5 @@
-- hosts: localhost
+- name: Playbook instantiating a virtual machine
+  hosts: localhost
   tasks:
     - name: Create VM
       kubevirt.core.kubevirt_vm:

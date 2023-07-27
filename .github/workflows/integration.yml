@@ -1,0 +1,224 @@
+name: Integration tests
+on:
+  workflow_call:
+    inputs:
+      matrix_exclude:
+        # https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-core-support-matrix
+        # 2.9 supports Python 3.5-3.8
+        # 2.13 supports Python 3.8-3.10
+        # 2.14 supports Python 3.9-3.11
+        # 2.15 supports Python 3.9-3.11
+        # 2.16 supports Python 3.10-3.11
+        # https://docs.ansible.com/ansible/devel/roadmap/ROADMAP_2_16.html
+        # milestone is 2.16 until after 2.16 branches from devel
+        # devel is 2.16 until 2023-09-18
+        default: >-
+          [
+            {
+              "ansible-version": "stable-2.9",
+              "python-version": "3.9"
+            },
+            {
+              "ansible-version": "stable-2.9",
+              "python-version": "3.10"
+            },
+            {
+              "ansible-version": "stable-2.9",
+              "python-version": "3.11"
+            },
+            {
+              "ansible-version": "stable-2.12",
+              "python-version": "3.11"
+            },
+            {
+              "ansible-version": "stable-2.13",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "stable-2.13",
+              "python-version": "3.11"
+            },
+            {
+              "ansible-version": "stable-2.14",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "stable-2.14",
+              "python-version": "3.8"
+            },
+            {
+              "ansible-version": "stable-2.15",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "stable-2.15",
+              "python-version": "3.8"
+            },
+            {
+              "ansible-version": "milestone",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "milestone",
+              "python-version": "3.8"
+            },
+            {
+              "ansible-version": "milestone",
+              "python-version": "3.9"
+            },
+            {
+              "ansible-version": "devel",
+              "python-version": "3.7"
+            },
+            {
+              "ansible-version": "devel",
+              "python-version": "3.8"
+            },
+            {
+              "ansible-version": "devel",
+              "python-version": "3.9"
+            }
+          ]
+        required: false
+        type: string
+      matrix_include:
+        # python 3.6 is not available after ubuntu-20.04
+        # python 3.6 is not supported on ansible 2.12+
+        default: >-
+          []
+        required: false
+        type: string
+      unstable:
+        default: >-
+          [
+            "devel",
+          ]
+        required: false
+        type: string
+      ansible_test_targets:
+        required: true
+        type: string
+jobs:
+  integration:
+    env:
+      PY_COLORS: "1"
+      source: "./source"
+      core: "./core"
+      cloud_common: "./cloudcommon"
+      ansible_posix: "./ansible_posix"
+    strategy:
+      fail-fast: false
+      matrix:
+        test-target: ${{ fromJSON(inputs.ansible_test_targets) }}
+        ansible-version:
+          - stable-2.9
+          - stable-2.12
+          - stable-2.14
+          - stable-2.15
+          - milestone
+          - devel
+        python-version:
+          - "3.8"
+          - "3.9"
+          - "3.11"
+        exclude: ${{ fromJSON(inputs.matrix_exclude) }}
+        include: ${{ fromJSON(inputs.matrix_include) }}
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ contains(fromJSON(inputs.unstable), matrix.ansible-version) }}
+
+    name: "${{ matrix.test-target }} / py${{ matrix.python-version }} / ${{ matrix.ansible-version }}"
+    steps:
+      - name: Checkout kubernetes.core repository
+        uses: actions/checkout@v3
+        with:
+          path: ${{ env.core }}
+          fetch-depth: "0"
+        if: inputs.ansible_test_targets != ''
+
+      - name: checkout ansible-collections/cloud.common
+        uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
+        with:
+          repository: ansible-collections/cloud.common
+          path: ${{ env.cloud_common }}
+          ref: main
+        if: inputs.ansible_test_targets != ''
+
+      - name: checkout ansible-collections/ansible.posix
+        uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
+        with:
+          repository: ansible-collections/ansible.posix
+          path: ${{ env.ansible_posix }}
+          ref: main
+        if: inputs.ansible_test_targets != ''
+
+      - name: Checkout kubevirt.core repository
+        uses: actions/checkout@v3
+        with:
+          path: ${{ env.source }}
+          fetch-depth: "0"
+        if: inputs.ansible_test_targets != ''
+
+      - name: install kubernetes.core collection
+        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
+        with:
+          install_python_dependencies: true
+          source_path: ${{ env.core }}
+        if: inputs.ansible_test_targets != ''
+
+      - name: install cloud.common collection
+        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
+        with:
+          install_python_dependencies: true
+          source_path: ${{ env.cloud_common }}
+        if: inputs.ansible_test_targets != ''
+
+      - name: install ansible.posix collection
+        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
+        with:
+          install_python_dependencies: true
+          source_path: ${{ env.ansible_posix }}
+        if: inputs.ansible_test_targets != ''
+
+      - name: install kubevirt.core collection
+        id: install-collection
+        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
+        with:
+          install_python_dependencies: true
+          source_path: ${{ env.source }}
+        if: inputs.ansible_test_targets != ''
+
+      - name: install kind / kubectl
+        uses: helm/kind-action@v1.8.0
+        with:
+          install_only: true
+          version: v0.20.0
+          kubectl_version: v1.27.3
+        if: inputs.ansible_test_targets != ''
+
+      - name: deploy kubevirt
+        if: inputs.ansible_test_targets != ''
+        run: >-
+          ${{ env.source }}/hack/e2e-setup.sh \
+            -v \
+            --configure-inotify-limits \
+            --configure-secondary-network \
+            --deploy-kubevirt \
+            --deploy-kubevirt-cdi \
+            --deploy-kubevirt-common-instancetypes \
+            --deploy-cnao \
+            --create-cluster \
+            --create-nad
+        shell: bash
+        env:
+          CLUSTER_NAME: kv-testing
+          KIND: kind
+          KUBECTL: kubectl
+
+      - name: Run integration tests
+        uses: ansible-network/github_actions/.github/actions/ansible_test_integration@main
+        with:
+          collection_path: ${{ steps.install-collection.outputs.collection_path }}
+          python_version: ${{ matrix.python-version }}
+          ansible_version: ${{ matrix.ansible-version }}
+          ansible_test_targets: ${{ matrix.test-target }}
+        if: inputs.ansible_test_targets != ''

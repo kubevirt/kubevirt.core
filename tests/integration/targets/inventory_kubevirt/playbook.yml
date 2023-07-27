@@ -1,0 +1,62 @@
+- name: Create VM
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Create a VirtualMachine
+      kubevirt.core.kubevirt_vm:
+        state: present
+        name: testvm
+        namespace: default
+        labels:
+          app: test
+        wait: yes
+        wait_timeout: 600
+        spec:
+          domain:
+            cpu:
+              sockets: 1
+            memory:
+              guest: 256Mi
+            devices:
+              interfaces:
+                - name: default
+                  masquerade: {}
+                - name: bridge-network
+                  bridge: {}
+          networks:
+            - name: default
+              pod: {}
+            - name: bridge-network
+              multus:
+                networkName: kindexgw
+          volumes:
+            - containerDisk:
+                image: quay.io/containerdisks/fedora:latest
+              name: containerdisk
+    - name: Create a 2nd VirtualMachine
+      kubevirt.core.kubevirt_vm:
+        state: present
+        name: testvm2
+        namespace: default
+        labels:
+          foo: bar
+        wait: yes
+        wait_timeout: 600
+        spec:
+          domain:
+            cpu:
+              sockets: 1
+            memory:
+              guest: 256Mi
+            devices:
+              interfaces:
+                - name: default
+                  masquerade: {}
+          networks:
+            - name: default
+              pod: {}
+          volumes:
+            - containerDisk:
+                image: quay.io/containerdisks/fedora:latest
+              name: containerdisk
