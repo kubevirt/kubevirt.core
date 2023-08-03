@@ -29,7 +29,7 @@ options:
   plugin:
     description: Token that ensures this is a source file for the "kubevirt" plugin.
     required: True
-    choices: ["kubevirt", "kubernetes.kubevirt.kubevirt"]
+    choices: ["kubevirt", "kubevirt.core.kubevirt"]
   host_format:
     description:
     - 'Specify the format of the host in the inventory group. Available specifiers: name, namespace, uid.'
@@ -127,7 +127,7 @@ EXAMPLES = """
 # Filename must end with kubevirt.[yml|yaml]
 
 # Authenticate with token, and return all VirtualMachineInstances for all accessible namespaces
-plugin: kubernetes.kubevirt.kubevirt
+plugin: kubevirt.core.kubevirt
 connections:
 - host: https://192.168.64.4:8443
   api_key: xxxxxxxxxxxxxxxx
@@ -135,7 +135,7 @@ connections:
 
 # Use default config (~/.kube/config) file and active context, and return VirtualMachineInstances
 # from namespace testing with interfaces connected to network bridge-network
-plugin: kubernetes.kubevirt.kubevirt
+plugin: kubevirt.core.kubevirt
 connections:
 - namespaces:
   - testing
@@ -143,14 +143,14 @@ connections:
 
 # Use default config (~/.kube/config) file and active context, and return VirtualMachineInstances
 # from namespace testing with label app=test
-plugin: kubernetes.kubevirt.kubevirt
+plugin: kubevirt.core.kubevirt
 connections:
 - namespaces:
   - testing
   label_selector: app=test
 
 # Use a custom config file, and a specific context.
-plugin: kubernetes.kubevirt.kubevirt
+plugin: kubevirt.core.kubevirt
 connections:
 - kubeconfig: /path/to/config
   context: 'awx/192-168-64-4:8443/developer'
@@ -231,7 +231,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
     This class implements the actual inventory module.
     """
 
-    NAME = "kubernetes.kubevirt.kubevirt"
+    NAME = "kubevirt.core.kubevirt"
 
     connection_plugin = "kubernetes.core.kubectl"
     transport = "kubectl"

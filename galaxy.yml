@@ -1,7 +1,7 @@
 # See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
 
-namespace: kubernetes
-name: kubevirt
+namespace: kubevirt
+name: core
 version: "0.1.0"
 readme: README.md
 authors:
@@ -20,10 +20,10 @@ tags:
   - virtualization
   - cloud
   - infrastructure
-repository: https://github.com/kubevirt/kubernetes.kubevirt
-documentation: https://github.com/kubevirt/kubernetes.kubevirt/tree/main/docs
+repository: https://github.com/kubevirt/kubevirt.core
+documentation: https://github.com/kubevirt/kubevirt.core/tree/main/docs
 homepage: https://kubevirt.io
-issues: https://github.com/kubevirt/kubernetes.kubevirt/issues
+issues: https://github.com/kubevirt/kubevirt.core/issues
 build_ignore:
   - .gitignore
   - changelogs/.plugin-cache.yaml

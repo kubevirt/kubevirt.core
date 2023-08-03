@@ -6,7 +6,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.repository == 'kubevirt/kubernetes.kubevirt'
+    if: github.repository == 'kubevirt/kubevirt.core'
     permissions:
       actions: write
       checks: write
@@ -58,8 +58,8 @@ jobs:
       - name: Create changelog and documentation
         uses: ansible-middleware/collection-docs-action@main
         with:
-          collection_fqcn: kubernetes.kubevirt
-          collection_repo: kubevirt/kubernetes.kubevirt
+          collection_fqcn: kubevirt.core
+          collection_repo: kubevirt/kubevirt.core
           dependencies: false
           commit_changelog: true
           commit_ghpages: false

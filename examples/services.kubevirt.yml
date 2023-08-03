@@ -1,4 +1,4 @@
-plugin: kubernetes.kubevirt.kubevirt
+plugin: kubevirt.core.kubevirt
 connections:
   - namespaces:
       - default

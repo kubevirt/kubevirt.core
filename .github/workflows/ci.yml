@@ -13,11 +13,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
         with:
-          path: ansible_collections/kubernetes/kubevirt
+          path: ansible_collections/kubevirt/core
           fetch-depth: 0
       - run: |
           mkdir -p /home/runner/.kube/
-          cp -rp ${GITHUB_WORKSPACE}/ansible_collections/kubernetes/kubevirt/tests/.kubeconfig /home/runner/.kube/config
+          cp -rp ${GITHUB_WORKSPACE}/ansible_collections/kubevirt/core/tests/.kubeconfig /home/runner/.kube/config
           cat /home/runner/.kube/config
   sanity:
     uses: ansible-network/github_actions/.github/workflows/sanity.yml@main
