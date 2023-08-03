@@ -1,4 +1,4 @@
-.. Red Hat kubernetes kubevirt Ansible Collection documentation main file
+.. Red Hat kubevirt core Ansible Collection documentation main file
 
 Welcome to Kubevirt Collection documentation
 =======================================

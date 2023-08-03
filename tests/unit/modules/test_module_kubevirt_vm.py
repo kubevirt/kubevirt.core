@@ -12,8 +12,8 @@ from unittest.mock import patch, ANY
 
 from ansible.module_utils import basic
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s import runner
-from ansible_collections.kubernetes.kubevirt.plugins.modules import kubevirt_vm
-from ansible_collections.kubernetes.kubevirt.tests.unit.utils.ansible_module_mock import (
+from ansible_collections.kubevirt.core.plugins.modules import kubevirt_vm
+from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock import (
     AnsibleFailJson,
     AnsibleExitJson,
     exit_json,

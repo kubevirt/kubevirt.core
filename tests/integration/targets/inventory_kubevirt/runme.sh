@@ -41,10 +41,10 @@ EOF
 #################################################
 
 # run the plugin second
-export ANSIBLE_INVENTORY_ENABLED=kubernetes.kubevirt.kubevirt
+export ANSIBLE_INVENTORY_ENABLED=kubevirt.core.kubevirt
 
 cat << EOF > "$OUTPUT_DIR/test.kubevirt.yml"
-plugin: kubernetes.kubevirt.kubevirt
+plugin: kubevirt.core.kubevirt
 connections:
   - namespaces:
     - default

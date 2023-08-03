@@ -114,7 +114,7 @@ requirements:
 
 EXAMPLES = """
 - name: Create a VirtualMachine
-  kubernetes.kubevirt.kubevirt_vm:
+  kubevirt.core.kubevirt_vm:
     state: present
     name: testvm
     namespace: default
@@ -151,7 +151,7 @@ EXAMPLES = """
         name: cloudinit
 
 - name: Create a VirtualMachine with a DataVolume template
-  kubernetes.kubevirt.kubevirt_vm:
+  kubevirt.core.kubevirt_vm:
     state: present
     name: testvm-with-dv
     namespace: default
@@ -191,7 +191,7 @@ EXAMPLES = """
     wait: yes
 
 - name: Delete a VirtualMachine
-  kubernetes.kubevirt.kubevirt_vm:
+  kubevirt.core.kubevirt_vm:
     name: testvm
     namespace: default
     state: absent
