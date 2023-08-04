@@ -1,0 +1,1863 @@
+
+.. Document meta
+
+:orphan:
+
+.. |antsibull-internal-nbsp| unicode:: 0xA0
+    :trim:
+
+.. role:: ansible-attribute-support-label
+.. role:: ansible-attribute-support-property
+.. role:: ansible-attribute-support-full
+.. role:: ansible-attribute-support-partial
+.. role:: ansible-attribute-support-none
+.. role:: ansible-attribute-support-na
+.. role:: ansible-option-type
+.. role:: ansible-option-elements
+.. role:: ansible-option-required
+.. role:: ansible-option-versionadded
+.. role:: ansible-option-aliases
+.. role:: ansible-option-choices
+.. role:: ansible-option-choices-default-mark
+.. role:: ansible-option-default-bold
+.. role:: ansible-option-configuration
+.. role:: ansible-option-returned-bold
+.. role:: ansible-option-sample-bold
+
+.. Anchors
+
+.. _ansible_collections.kubevirt.core.kubevirt_inventory:
+
+.. Anchors: short name for ansible.builtin
+
+.. Title
+
+kubevirt -- KubeVirt inventory source
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. Collection note
+
+.. note::
+    This inventory plugin is part of the `kubevirt.core collection <https://galaxy.ansible.com/kubevirt/core>`_.
+
+    To install it, use: :code:`ansible-galaxy collection install kubevirt.core`.
+    You need further requirements to be able to use this inventory plugin,
+    see :ref:`Requirements <ansible_collections.kubevirt.core.kubevirt_inventory_requirements>` for details.
+
+    To use it in a playbook, specify: :code:`kubevirt.core.kubevirt`.
+
+.. version_added
+
+
+.. contents::
+   :local:
+   :depth: 1
+
+.. Deprecated
+
+
+Synopsis
+--------
+
+.. Description
+
+- Fetch running VirtualMachineInstances for one or more namespaces with an optional label selector.
+- Groups by namespace, namespace\_vmis and labels.
+- Uses the kubectl connection plugin to access the Kubernetes cluster.
+- Uses kubevirt.(yml|yaml) YAML configuration file to set parameter values.
+
+
+.. Aliases
+
+
+.. Requirements
+
+.. _ansible_collections.kubevirt.core.kubevirt_inventory_requirements:
+
+Requirements
+------------
+The below requirements are needed on the local controller node that executes this inventory.
+
+- python \>= 3.6
+- kubernetes \>= 12.0.0
+- PyYAML \>= 3.11
+
+
+
+
+
+
+.. Options
+
+Parameters
+----------
+
+.. rst-class:: ansible-option-table
+
+.. list-table::
+  :width: 100%
+  :widths: auto
+  :header-rows: 1
+
+  * - Parameter
+    - Comments
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-cache"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-cache:
+
+      .. rst-class:: ansible-option-title
+
+      **cache**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-cache" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Toggle to enable/disable the caching of the inventory's source data, requires a cache plugin setup to work.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-configuration:`Configuration:`
+
+      - INI entry:
+
+        .. code-block::
+
+          [inventory]
+          cache = false
+
+
+      - Environment variable: :envvar:`ANSIBLE\_INVENTORY\_CACHE`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-cache_connection"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-cache_connection:
+
+      .. rst-class:: ansible-option-title
+
+      **cache_connection**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-cache_connection" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Cache connection data or path, read cache plugin documentation for specifics.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-configuration:`Configuration:`
+
+      - INI entries:
+
+        .. code-block::
+
+          [defaults]
+          fact_caching_connection = VALUE
+
+
+
+        .. code-block::
+
+          [inventory]
+          cache_connection = VALUE
+
+
+      - Environment variable: :envvar:`ANSIBLE\_CACHE\_PLUGIN\_CONNECTION`
+
+      - Environment variable: :envvar:`ANSIBLE\_INVENTORY\_CACHE\_CONNECTION`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-cache_plugin"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-cache_plugin:
+
+      .. rst-class:: ansible-option-title
+
+      **cache_plugin**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-cache_plugin" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Cache plugin to use for the inventory's source data.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"memory"`
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-configuration:`Configuration:`
+
+      - INI entries:
+
+        .. code-block::
+
+          [defaults]
+          fact_caching = memory
+
+
+
+        .. code-block::
+
+          [inventory]
+          cache_plugin = memory
+
+
+      - Environment variable: :envvar:`ANSIBLE\_CACHE\_PLUGIN`
+
+      - Environment variable: :envvar:`ANSIBLE\_INVENTORY\_CACHE\_PLUGIN`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-cache_prefix"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-cache_prefix:
+
+      .. rst-class:: ansible-option-title
+
+      **cache_prefix**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-cache_prefix" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Prefix to use for cache plugin files/tables
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"ansible\_inventory\_"`
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-configuration:`Configuration:`
+
+      - INI entries:
+
+        .. code-block::
+
+          [default]
+          fact_caching_prefix = ansible_inventory_
+
+
+        Removed in: version 2.16 of ansible.builtin
+
+
+        Why: Fixes typing error in INI section name
+
+        Alternative: Use the 'defaults' section instead
+
+
+
+        .. code-block::
+
+          [defaults]
+          fact_caching_prefix = ansible_inventory_
+
+
+
+        .. code-block::
+
+          [inventory]
+          cache_prefix = ansible_inventory_
+
+
+      - Environment variable: :envvar:`ANSIBLE\_CACHE\_PLUGIN\_PREFIX`
+
+      - Environment variable: :envvar:`ANSIBLE\_INVENTORY\_CACHE\_PLUGIN\_PREFIX`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-cache_timeout"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-cache_timeout:
+
+      .. rst-class:: ansible-option-title
+
+      **cache_timeout**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-cache_timeout" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`integer`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Cache duration in seconds
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`3600`
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-configuration:`Configuration:`
+
+      - INI entries:
+
+        .. code-block::
+
+          [defaults]
+          fact_caching_timeout = 3600
+
+
+
+        .. code-block::
+
+          [inventory]
+          cache_timeout = 3600
+
+
+      - Environment variable: :envvar:`ANSIBLE\_CACHE\_PLUGIN\_TIMEOUT`
+
+      - Environment variable: :envvar:`ANSIBLE\_INVENTORY\_CACHE\_TIMEOUT`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-compose"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-compose:
+
+      .. rst-class:: ansible-option-title
+
+      **compose**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-compose" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Create vars from jinja2 expressions.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`{}`
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections:
+
+      .. rst-class:: ansible-option-title
+
+      **connections**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Optional list of cluster connection settings. If no connections are provided, the default \ :emphasis:`~/.kube/config`\  and active context will be used, and objects will be returned for all namespaces the active user is authorized to access.
+
+
+      .. raw:: html
+
+        </div>
+    
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/api_key"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/api_key:
+
+      .. rst-class:: ansible-option-title
+
+      **api_key**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/api_key" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Token used to authenticate with the API. Can also be specified via K8S\_AUTH\_API\_KEY environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/api_version"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/api_version:
+
+      .. rst-class:: ansible-option-title
+
+      **api_version**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/api_version" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Specify the used KubeVirt API version.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"kubevirt.io/v1"`
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/ca_cert"></div>
+        <div class="ansibleOptionAnchor" id="parameter-connections/ssl_ca_cert"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/ca_cert:
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/ssl_ca_cert:
+
+      .. rst-class:: ansible-option-title
+
+      **ca_cert**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/ca_cert" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-aliases:`aliases: ssl_ca_cert`
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Path to a CA certificate used to authenticate with the API. Can also be specified via K8S\_AUTH\_SSL\_CA\_CERT environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/client_cert"></div>
+        <div class="ansibleOptionAnchor" id="parameter-connections/cert_file"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/cert_file:
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/client_cert:
+
+      .. rst-class:: ansible-option-title
+
+      **client_cert**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/client_cert" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-aliases:`aliases: cert_file`
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Path to a certificate used to authenticate with the API. Can also be specified via K8S\_AUTH\_CERT\_FILE environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/client_key"></div>
+        <div class="ansibleOptionAnchor" id="parameter-connections/key_file"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/client_key:
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/key_file:
+
+      .. rst-class:: ansible-option-title
+
+      **client_key**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/client_key" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-aliases:`aliases: key_file`
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Path to a key file used to authenticate with the API. Can also be specified via K8S\_AUTH\_KEY\_FILE environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/context"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/context:
+
+      .. rst-class:: ansible-option-title
+
+      **context**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/context" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      The name of a context found in the config file. Can also be specified via K8S\_AUTH\_CONTEXT environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/host"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/host:
+
+      .. rst-class:: ansible-option-title
+
+      **host**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/host" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Provide a URL for accessing the API. Can also be specified via K8S\_AUTH\_HOST environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/kube_secondary_dns"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/kube_secondary_dns:
+
+      .. rst-class:: ansible-option-title
+
+      **kube_secondary_dns**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/kube_secondary_dns" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Enable kubesecondarydns derived host names when using a secondary network interface.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/kubeconfig"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/kubeconfig:
+
+      .. rst-class:: ansible-option-title
+
+      **kubeconfig**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/kubeconfig" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from \ :emphasis:`~/.kube/config`\ . Can also be specified via K8S\_AUTH\_KUBECONFIG environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/label_selector"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/label_selector:
+
+      .. rst-class:: ansible-option-title
+
+      **label_selector**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/label_selector" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Define a label selector to select a subset of the fetched VirtualMachineInstances.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/name"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/name:
+
+      .. rst-class:: ansible-option-title
+
+      **name**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/name" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Optional name to assign to the cluster. If not provided, a name is constructed from the server and port.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/namespaces"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/namespaces:
+
+      .. rst-class:: ansible-option-title
+
+      **namespaces**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/namespaces" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      List of namespaces. If not specified, will fetch all VirtualMachineInstances for all namespaces the user is authorized to access.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/network_name"></div>
+        <div class="ansibleOptionAnchor" id="parameter-connections/interface_name"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/interface_name:
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/network_name:
+
+      .. rst-class:: ansible-option-title
+
+      **network_name**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/network_name" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-aliases:`aliases: interface_name`
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      In case multiple networks are attached to a VirtualMachineInstance, define which interface should be returned as primary IP address.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/password"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/password:
+
+      .. rst-class:: ansible-option-title
+
+      **password**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/password" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Provide a password for authenticating with the API. Can also be specified via K8S\_AUTH\_PASSWORD environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/use_service"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/use_service:
+
+      .. rst-class:: ansible-option-title
+
+      **use_service**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/use_service" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Enable the use of services to establish an SSH connection to the VirtualMachine.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`false`
+      - :ansible-option-choices-entry-default:`true` :ansible-option-choices-default-mark:`← (default)`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/username"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/username:
+
+      .. rst-class:: ansible-option-title
+
+      **username**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/username" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Provide a username for authenticating with the API. Can also be specified via K8S\_AUTH\_USERNAME environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/validate_certs"></div>
+        <div class="ansibleOptionAnchor" id="parameter-connections/verify_ssl"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/validate_certs:
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/verify_ssl:
+
+      .. rst-class:: ansible-option-title
+
+      **validate_certs**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/validate_certs" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-aliases:`aliases: verify_ssl`
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Whether or not to verify the API server's SSL certificates. Can also be specified via K8S\_AUTH\_VERIFY\_SSL environment variable.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`false`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-groups"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-groups:
+
+      .. rst-class:: ansible-option-title
+
+      **groups**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-groups" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Add hosts to group based on Jinja2 conditionals.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`{}`
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-host_format"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-host_format:
+
+      .. rst-class:: ansible-option-title
+
+      **host_format**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-host_format" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify the format of the host in the inventory group. Available specifiers: name, namespace, uid.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"{namespace}-{name}"`
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-keyed_groups"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-keyed_groups:
+
+      .. rst-class:: ansible-option-title
+
+      **keyed_groups**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-keyed_groups" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Add hosts to group based on the values of a variable.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`[]`
+
+      .. raw:: html
+
+        </div>
+    
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-keyed_groups/default_value"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-keyed_groups/default_value:
+
+      .. rst-class:: ansible-option-title
+
+      **default_value**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-keyed_groups/default_value" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      :ansible-option-versionadded:`added in ansible-core 2.12`
+
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      The default value when the host variable's value is an empty string.
+
+      This option is mutually exclusive with \ :literal:`trailing\_separator`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-keyed_groups/key"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-keyed_groups/key:
+
+      .. rst-class:: ansible-option-title
+
+      **key**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-keyed_groups/key" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      The key from input dictionary used to generate groups
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-keyed_groups/parent_group"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-keyed_groups/parent_group:
+
+      .. rst-class:: ansible-option-title
+
+      **parent_group**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-keyed_groups/parent_group" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      parent group for keyed group
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-keyed_groups/prefix"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-keyed_groups/prefix:
+
+      .. rst-class:: ansible-option-title
+
+      **prefix**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-keyed_groups/prefix" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      A keyed group name will start with this prefix
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`""`
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-keyed_groups/separator"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-keyed_groups/separator:
+
+      .. rst-class:: ansible-option-title
+
+      **separator**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-keyed_groups/separator" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      separator used to build the keyed group name
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"\_"`
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-keyed_groups/trailing_separator"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-keyed_groups/trailing_separator:
+
+      .. rst-class:: ansible-option-title
+
+      **trailing_separator**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-keyed_groups/trailing_separator" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+      :ansible-option-versionadded:`added in ansible-core 2.12`
+
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Set this option to \ :emphasis:`False`\  to omit the \ :literal:`separator`\  after the host variable when the value is an empty string.
+
+      This option is mutually exclusive with \ :literal:`default\_value`\ .
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`false`
+      - :ansible-option-choices-entry-default:`true` :ansible-option-choices-default-mark:`← (default)`
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-leading_separator"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-leading_separator:
+
+      .. rst-class:: ansible-option-title
+
+      **leading_separator**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-leading_separator" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+      :ansible-option-versionadded:`added in ansible-core 2.11`
+
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Use in conjunction with keyed\_groups.
+
+      By default, a keyed group that does not have a prefix or a separator provided will have a name that starts with an underscore.
+
+      This is because the default prefix is "" and the default separator is "\_".
+
+      Set this option to False to omit the leading underscore (or other separator) if no prefix is given.
+
+      If the group name is derived from a mapping the separator is still used to concatenate the items.
+
+      To not use a separator in the group name at all, set the separator for the keyed group to an empty string instead.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`false`
+      - :ansible-option-choices-entry-default:`true` :ansible-option-choices-default-mark:`← (default)`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-plugin"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-plugin:
+
+      .. rst-class:: ansible-option-title
+
+      **plugin**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-plugin" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string` / :ansible-option-required:`required`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Token that ensures this is a source file for the "kubevirt" plugin.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`"kubevirt"`
+      - :ansible-option-choices-entry:`"kubevirt.core.kubevirt"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-strict"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-strict:
+
+      .. rst-class:: ansible-option-title
+
+      **strict**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-strict" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      If \ :literal:`yes`\  make invalid entries a fatal error, otherwise skip and continue.
+
+      Since it is possible to use facts in the expressions they might not always be available and we ignore those errors by default.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-use_extra_vars"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-use_extra_vars:
+
+      .. rst-class:: ansible-option-title
+
+      **use_extra_vars**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-use_extra_vars" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+      :ansible-option-versionadded:`added in ansible-core 2.11`
+
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Merge extra vars into the available variables for composition (highest precedence).
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-configuration:`Configuration:`
+
+      - INI entry:
+
+        .. code-block::
+
+          [inventory_plugins]
+          use_extra_vars = false
+
+
+      - Environment variable: :envvar:`ANSIBLE\_INVENTORY\_USE\_EXTRA\_VARS`
+
+
+      .. raw:: html
+
+        </div>
+
+
+.. Attributes
+
+
+.. Notes
+
+
+.. Seealso
+
+
+.. Examples
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+    # Filename must end with kubevirt.[yml|yaml]
+
+    # Authenticate with token, and return all VirtualMachineInstances for all accessible namespaces
+    plugin: kubevirt.core.kubevirt
+    connections:
+    - host: https://192.168.64.4:8443
+      api_key: xxxxxxxxxxxxxxxx
+      validate_certs: false
+
+    # Use default config (~/.kube/config) file and active context, and return VirtualMachineInstances
+    # from namespace testing with interfaces connected to network bridge-network
+    plugin: kubevirt.core.kubevirt
+    connections:
+    - namespaces:
+      - testing
+      network_name: bridge-network
+
+    # Use default config (~/.kube/config) file and active context, and return VirtualMachineInstances
+    # from namespace testing with label app=test
+    plugin: kubevirt.core.kubevirt
+    connections:
+    - namespaces:
+      - testing
+      label_selector: app=test
+
+    # Use a custom config file, and a specific context.
+    plugin: kubevirt.core.kubevirt
+    connections:
+    - kubeconfig: /path/to/config
+      context: 'awx/192-168-64-4:8443/developer'
+
+
+
+
+.. Facts
+
+
+.. Return values
+
+
+..  Status (Presently only deprecated)
+
+
+.. Authors
+
+Authors
+~~~~~~~
+
+- KubeVirt.io Project 
+
+
+.. hint::
+    Configuration entries for each entry type have a low to high priority order. For example, a variable that is lower in the list will override a variable that is higher up.
+
+.. Extra links
+
+
+.. Parsing errors
+
