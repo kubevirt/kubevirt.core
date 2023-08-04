@@ -173,7 +173,7 @@ jobs:
           ]
       collection_pre_install: ''
   integration:
-    uses: guidograzioli/kubernetes.kubevirt/.github/workflows/integration.yml@integration_tests
+    uses: kubevirt/kubevirt.core/.github/workflows/integration.yml@main
     needs:
       - unit-source
     with:
