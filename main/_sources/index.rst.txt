@@ -1,7 +1,7 @@
-.. Red Hat kubevirt core Ansible Collection documentation main file
+.. Red Hat kubevirt.core Ansible Collection documentation main file
 
-Welcome to Kubevirt Collection documentation
-=======================================
+Welcome to kubevirt.core Collection documentation
+=================================================
 
 .. toctree::
    :maxdepth: 2
