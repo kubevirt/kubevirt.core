@@ -1,4 +1,5 @@
-- hosts: localhost
+- name: Playbook terminating a virtual machine
+  hosts: localhost
   tasks:
     - name: Delete VM
       kubevirt.core.kubevirt_vm:

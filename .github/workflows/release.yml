@@ -66,6 +66,8 @@ jobs:
           changelog_release: true
           generate_docs: false
           token: ${{ secrets.GITHUB_TOKEN }}
+          bot_email: kubevirtbot@redhat.com
+          bot_account: kubevirt-bot
 
       - name: Publish collection
         env:

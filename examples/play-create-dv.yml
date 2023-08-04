@@ -1,4 +1,5 @@
-- hosts: localhost
+- name: Playbook creating a virtual machine with data volume
+  hosts: localhost
   tasks:
     - name: Create VM
       kubevirt.core.kubevirt_vm:
@@ -20,7 +21,7 @@
                   url: docker://quay.io/containerdisks/fedora:latest
               storage:
                 accessModes:
-                - ReadWriteOnce
+                  - ReadWriteOnce
                 resources:
                   requests:
                     storage: 5Gi
@@ -28,14 +29,14 @@
           domain:
             devices: {}
           volumes:
-          - dataVolume:
-              name: testdv
-            name: datavolume
-          - cloudInitNoCloud:
-              userData: |-
-                #cloud-config
-                # The default username is: fedora
-                ssh_authorized_keys:
-                  - ssh-ed25519 AAAA...
-            name: cloudinit
+            - dataVolume:
+                name: testdv
+              name: datavolume
+            - cloudInitNoCloud:
+                userData: |-
+                  #cloud-config
+                  # The default username is: fedora
+                  ssh_authorized_keys:
+                    - ssh-ed25519 AAAA...
+              name: cloudinit
         wait: yes

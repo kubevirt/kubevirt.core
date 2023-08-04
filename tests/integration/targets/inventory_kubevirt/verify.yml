@@ -1,0 +1,35 @@
+---
+- name: Verify inventory
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Read empty inventory
+      ansible.builtin.include_vars:
+        file: empty.yml
+        name: inv_empty
+    - name: Read inventory after vm creation
+      ansible.builtin.include_vars:
+        file: all.yml
+        name: inv_all
+    - name: Assert two instances with different labels
+      ansible.builtin.assert:
+        that:
+          - inv_all['all']['children']['label_app_test']['hosts'] | length == 1
+          - inv_all['all']['children']['label_foo_bar']['hosts'] | length == 1
+    - name: Read filtered inventory
+      ansible.builtin.include_vars:
+        file: label.yml
+        name: inv_label
+    - name: Assert one instance with selected label
+      ansible.builtin.assert:
+        that:
+          - inv_label['all']['children']['label_app_test']['hosts'] | length == 1
+    - name: Read filtered inventory
+      ansible.builtin.include_vars:
+        file: net.yml
+        name: inv_net
+    - name: Assert one instance with selected network
+      ansible.builtin.assert:
+        that:
+          - inv_net['all']['children']['label_app_test']['hosts'] | length == 1
