@@ -1,0 +1,1994 @@
+
+.. Document meta
+
+:orphan:
+
+.. |antsibull-internal-nbsp| unicode:: 0xA0
+    :trim:
+
+.. role:: ansible-attribute-support-label
+.. role:: ansible-attribute-support-property
+.. role:: ansible-attribute-support-full
+.. role:: ansible-attribute-support-partial
+.. role:: ansible-attribute-support-none
+.. role:: ansible-attribute-support-na
+.. role:: ansible-option-type
+.. role:: ansible-option-elements
+.. role:: ansible-option-required
+.. role:: ansible-option-versionadded
+.. role:: ansible-option-aliases
+.. role:: ansible-option-choices
+.. role:: ansible-option-choices-default-mark
+.. role:: ansible-option-default-bold
+.. role:: ansible-option-configuration
+.. role:: ansible-option-returned-bold
+.. role:: ansible-option-sample-bold
+
+.. Anchors
+
+.. _ansible_collections.kubevirt.core.kubevirt_vm_module:
+
+.. Anchors: short name for ansible.builtin
+
+.. Title
+
+kubevirt_vm -- Create or delete KubeVirt VirtualMachines on Kubernetes
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. Collection note
+
+.. note::
+    This module is part of the `kubevirt.core collection <https://galaxy.ansible.com/kubevirt/core>`_.
+
+    To install it, use: :code:`ansible-galaxy collection install kubevirt.core`.
+    You need further requirements to be able to use this module,
+    see :ref:`Requirements <ansible_collections.kubevirt.core.kubevirt_vm_module_requirements>` for details.
+
+    To use it in a playbook, specify: :code:`kubevirt.core.kubevirt_vm`.
+
+.. version_added
+
+
+.. contents::
+   :local:
+   :depth: 1
+
+.. Deprecated
+
+
+Synopsis
+--------
+
+.. Description
+
+- Use the Kubernetes Python client to perform create or delete operations on KubeVirt VirtualMachines.
+- Pass options to create the VirtualMachine as module arguments.
+- Authenticate using either a config file, certificates, password or token.
+- Supports check mode.
+
+
+.. Aliases
+
+
+.. Requirements
+
+.. _ansible_collections.kubevirt.core.kubevirt_vm_module_requirements:
+
+Requirements
+------------
+The below requirements are needed on the host that executes this module.
+
+- python \>= 3.6
+- kubernetes \>= 12.0.0
+- PyYAML \>= 3.11
+- jsonpatch
+- jinja2
+
+
+
+
+
+
+.. Options
+
+Parameters
+----------
+
+.. rst-class:: ansible-option-table
+
+.. list-table::
+  :width: 100%
+  :widths: auto
+  :header-rows: 1
+
+  * - Parameter
+    - Comments
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-annotations"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-annotations:
+
+      .. rst-class:: ansible-option-title
+
+      **annotations**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-annotations" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify annotations to set on the VirtualMachine.
+
+      Only used when \ :emphasis:`state=present`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-api_key"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-api_key:
+
+      .. rst-class:: ansible-option-title
+
+      **api_key**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-api_key" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Token used to authenticate with the API. Can also be specified via K8S\_AUTH\_API\_KEY environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-api_version"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-api_version:
+
+      .. rst-class:: ansible-option-title
+
+      **api_version**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-api_version" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Use this to set the API version of KubeVirt.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"kubevirt.io/v1"`
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-ca_cert"></div>
+        <div class="ansibleOptionAnchor" id="parameter-ssl_ca_cert"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-ca_cert:
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-ssl_ca_cert:
+
+      .. rst-class:: ansible-option-title
+
+      **ca_cert**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-ca_cert" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-aliases:`aliases: ssl_ca_cert`
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`path`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path to a CA certificate used to authenticate with the API. The full certificate chain must be provided to avoid certificate validation errors. Can also be specified via K8S\_AUTH\_SSL\_CA\_CERT environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-client_cert"></div>
+        <div class="ansibleOptionAnchor" id="parameter-cert_file"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-cert_file:
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-client_cert:
+
+      .. rst-class:: ansible-option-title
+
+      **client_cert**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-client_cert" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-aliases:`aliases: cert_file`
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`path`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path to a certificate used to authenticate with the API. Can also be specified via K8S\_AUTH\_CERT\_FILE environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-client_key"></div>
+        <div class="ansibleOptionAnchor" id="parameter-key_file"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-client_key:
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-key_file:
+
+      .. rst-class:: ansible-option-title
+
+      **client_key**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-client_key" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-aliases:`aliases: key_file`
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`path`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path to a key file used to authenticate with the API. Can also be specified via K8S\_AUTH\_KEY\_FILE environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-context"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-context:
+
+      .. rst-class:: ansible-option-title
+
+      **context**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-context" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      The name of a context found in the config file. Can also be specified via K8S\_AUTH\_CONTEXT environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-data_volume_templates"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-data_volume_templates:
+
+      .. rst-class:: ansible-option-title
+
+      **data_volume_templates**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-data_volume_templates" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify the DataVolume templates of the VirtualMachine.
+
+      See: http://kubevirt.io/api-reference/v1.0.0/definitions.html#\_v1\_datavolumetemplatespec
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-delete_options"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-delete_options:
+
+      .. rst-class:: ansible-option-title
+
+      **delete_options**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-delete_options" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      :ansible-option-versionadded:`added in kubernetes.core 1.2.0`
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Configure behavior when deleting an object.
+
+      Only used when \ :emphasis:`state=absent`\ .
+
+
+      .. raw:: html
+
+        </div>
+    
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-delete_options/gracePeriodSeconds"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-delete_options/graceperiodseconds:
+
+      .. rst-class:: ansible-option-title
+
+      **gracePeriodSeconds**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-delete_options/gracePeriodSeconds" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`integer`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Specify how many seconds to wait before forcefully terminating.
+
+      Only implemented for Pod resources.
+
+      If not specified, the default grace period for the object type will be used.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-delete_options/preconditions"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-delete_options/preconditions:
+
+      .. rst-class:: ansible-option-title
+
+      **preconditions**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-delete_options/preconditions" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Specify condition that must be met for delete to proceed.
+
+
+      .. raw:: html
+
+        </div>
+    
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-delete_options/preconditions/resourceVersion"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-delete_options/preconditions/resourceversion:
+
+      .. rst-class:: ansible-option-title
+
+      **resourceVersion**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-delete_options/preconditions/resourceVersion" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Specify the resource version of the target object.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-delete_options/preconditions/uid"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-delete_options/preconditions/uid:
+
+      .. rst-class:: ansible-option-title
+
+      **uid**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-delete_options/preconditions/uid" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Specify the UID of the target object.
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-delete_options/propagationPolicy"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-delete_options/propagationpolicy:
+
+      .. rst-class:: ansible-option-title
+
+      **propagationPolicy**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-delete_options/propagationPolicy" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Use to control how dependent objects are deleted.
+
+      If not specified, the default policy for the object type will be used. This may vary across object types.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`"Foreground"`
+      - :ansible-option-choices-entry:`"Background"`
+      - :ansible-option-choices-entry:`"Orphan"`
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-force"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-force:
+
+      .. rst-class:: ansible-option-title
+
+      **force**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-force" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      If set to \ :literal:`yes`\ , and \ :emphasis:`state`\  is \ :literal:`present`\ , an existing object will be replaced.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-generate_name"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-generate_name:
+
+      .. rst-class:: ansible-option-title
+
+      **generate_name**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-generate_name" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify the basis of the VirtualMachine name and random characters will be added automatically on server to generate a unique name.
+
+      Only used when \ :emphasis:`state=present`\ .
+
+      mutually exclusive with \ :literal:`name`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-host"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-host:
+
+      .. rst-class:: ansible-option-title
+
+      **host**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-host" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Provide a URL for accessing the API. Can also be specified via K8S\_AUTH\_HOST environment variable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-impersonate_groups"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-impersonate_groups:
+
+      .. rst-class:: ansible-option-title
+
+      **impersonate_groups**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-impersonate_groups" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      :ansible-option-versionadded:`added in kubernetes.core 2.3.0`
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Group(s) to impersonate for the operation.
+
+      Can also be specified via K8S\_AUTH\_IMPERSONATE\_GROUPS environment. Example: Group1,Group2
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-impersonate_user"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-impersonate_user:
+
+      .. rst-class:: ansible-option-title
+
+      **impersonate_user**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-impersonate_user" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      :ansible-option-versionadded:`added in kubernetes.core 2.3.0`
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Username to impersonate for the operation.
+
+      Can also be specified via K8S\_AUTH\_IMPERSONATE\_USER environment.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-instancetype"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-instancetype:
+
+      .. rst-class:: ansible-option-title
+
+      **instancetype**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-instancetype" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify the instancetype matcher of the VirtualMachine.
+
+      Only used when \ :emphasis:`state=present`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-kubeconfig"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-kubeconfig:
+
+      .. rst-class:: ansible-option-title
+
+      **kubeconfig**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-kubeconfig" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`any`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from \ :emphasis:`~/.kube/config`\ . Can also be specified via K8S\_AUTH\_KUBECONFIG environment variable.
+
+      Multiple Kubernetes config file can be provided using separator ';' for Windows platform or ':' for others platforms.
+
+      The kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version \>= 17.17.0. Added in version 2.2.0.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-labels"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-labels:
+
+      .. rst-class:: ansible-option-title
+
+      **labels**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-labels" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify labels to set on the VirtualMachine.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-name"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-name:
+
+      .. rst-class:: ansible-option-title
+
+      **name**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-name" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify the name of the VirtualMachine.
+
+      This option is ignored when \ :emphasis:`state`\  is not set to \ :literal:`present`\ .
+
+      mutually exclusive with \ :literal:`generate\_name`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-namespace"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-namespace:
+
+      .. rst-class:: ansible-option-title
+
+      **namespace**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-namespace" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string` / :ansible-option-required:`required`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify the namespace of the VirtualMachine.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-no_proxy"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-no_proxy:
+
+      .. rst-class:: ansible-option-title
+
+      **no_proxy**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-no_proxy" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      :ansible-option-versionadded:`added in kubernetes.core 2.3.0`
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      The comma separated list of hosts/domains/IP/CIDR that shouldn't go through proxy. Can also be specified via K8S\_AUTH\_NO\_PROXY environment variable.
+
+      Please note that this module does not pick up typical proxy settings from the environment (e.g. NO\_PROXY).
+
+      This feature requires kubernetes\>=19.15.0. When kubernetes library is less than 19.15.0, it fails even no\_proxy set in correct.
+
+      example value is "localhost,.local,.example.com,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-password"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-password:
+
+      .. rst-class:: ansible-option-title
+
+      **password**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-password" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Provide a password for authenticating with the API. Can also be specified via K8S\_AUTH\_PASSWORD environment variable.
+
+      Please read the description of the \ :literal:`username`\  option for a discussion of when this option is applicable.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-persist_config"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-persist_config:
+
+      .. rst-class:: ansible-option-title
+
+      **persist_config**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-persist_config" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Whether or not to save the kube config refresh tokens. Can also be specified via K8S\_AUTH\_PERSIST\_CONFIG environment variable.
+
+      When the k8s context is using a user credentials with refresh tokens (like oidc or gke/gcloud auth), the token is refreshed by the k8s python client library but not saved by default. So the old refresh token can expire and the next auth might fail. Setting this flag to true will tell the k8s python client to save the new refresh token to the kube config file.
+
+      Default to false.
+
+      Please note that the current version of the k8s python client library does not support setting this flag to True yet.
+
+      The fix for this k8s python library is here: https://github.com/kubernetes-client/python-base/pull/169
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`false`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-preference"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-preference:
+
+      .. rst-class:: ansible-option-title
+
+      **preference**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-preference" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify the preference matcher of the VirtualMachine.
+
+      Only used when \ :emphasis:`state=present`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-proxy"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-proxy:
+
+      .. rst-class:: ansible-option-title
+
+      **proxy**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-proxy" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      The URL of an HTTP proxy to use for the connection. Can also be specified via K8S\_AUTH\_PROXY environment variable.
+
+      Please note that this module does not pick up typical proxy settings from the environment (e.g. HTTP\_PROXY).
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-proxy_headers"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-proxy_headers:
+
+      .. rst-class:: ansible-option-title
+
+      **proxy_headers**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-proxy_headers" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      :ansible-option-versionadded:`added in kubernetes.core 2.0.0`
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      The Header used for the HTTP proxy.
+
+      Documentation can be found here \ https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers\ .
+
+
+      .. raw:: html
+
+        </div>
+    
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-proxy_headers/basic_auth"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-proxy_headers/basic_auth:
+
+      .. rst-class:: ansible-option-title
+
+      **basic_auth**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-proxy_headers/basic_auth" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Colon-separated username:password for basic authentication header.
+
+      Can also be specified via K8S\_AUTH\_PROXY\_HEADERS\_BASIC\_AUTH environment.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-proxy_headers/proxy_basic_auth"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-proxy_headers/proxy_basic_auth:
+
+      .. rst-class:: ansible-option-title
+
+      **proxy_basic_auth**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-proxy_headers/proxy_basic_auth" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Colon-separated username:password for proxy basic authentication header.
+
+      Can also be specified via K8S\_AUTH\_PROXY\_HEADERS\_PROXY\_BASIC\_AUTH environment.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-proxy_headers/user_agent"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-proxy_headers/user_agent:
+
+      .. rst-class:: ansible-option-title
+
+      **user_agent**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-proxy_headers/user_agent" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      String representing the user-agent you want, such as foo/1.0.
+
+      Can also be specified via K8S\_AUTH\_PROXY\_HEADERS\_USER\_AGENT environment.
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-running"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-running:
+
+      .. rst-class:: ansible-option-title
+
+      **running**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-running" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify whether the VirtualMachine should be running.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`false`
+      - :ansible-option-choices-entry-default:`true` :ansible-option-choices-default-mark:`← (default)`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-spec"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-spec:
+
+      .. rst-class:: ansible-option-title
+
+      **spec**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-spec" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Specify the template spec of the VirtualMachine.
+
+      See: http://kubevirt.io/api-reference/v1.0.0/definitions.html#\_v1\_virtualmachineinstancespec
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-state"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-state:
+
+      .. rst-class:: ansible-option-title
+
+      **state**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Determines if an object should be created, patched, or deleted. When set to \ :literal:`present`\ , an object will be created, if it does not already exist. If set to \ :literal:`absent`\ , an existing object will be deleted. If set to \ :literal:`present`\ , an existing object will be patched, if its attributes differ from those specified using \ :emphasis:`resource\_definition`\  or \ :emphasis:`src`\ .
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`"absent"`
+      - :ansible-option-choices-entry-default:`"present"` :ansible-option-choices-default-mark:`← (default)`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-username"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-username:
+
+      .. rst-class:: ansible-option-title
+
+      **username**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-username" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Provide a username for authenticating with the API. Can also be specified via K8S\_AUTH\_USERNAME environment variable.
+
+      Please note that this only works with clusters configured to use HTTP Basic Auth. If your cluster has a different form of authentication (e.g. OAuth2 in OpenShift), this option will not work as expected and you should look into the \ :ref:`community.okd.k8s\_auth <ansible_collections.community.okd.k8s_auth_module>`\  module, as that might do what you need.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-validate_certs"></div>
+        <div class="ansibleOptionAnchor" id="parameter-verify_ssl"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-validate_certs:
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-verify_ssl:
+
+      .. rst-class:: ansible-option-title
+
+      **validate_certs**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-validate_certs" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-aliases:`aliases: verify_ssl`
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Whether or not to verify the API server's SSL certificates. Can also be specified via K8S\_AUTH\_VERIFY\_SSL environment variable.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`false`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-wait"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-wait:
+
+      .. rst-class:: ansible-option-title
+
+      **wait**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-wait" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Whether to wait for the VirtualMachine to end up in the ready state.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-wait_sleep"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-wait_sleep:
+
+      .. rst-class:: ansible-option-title
+
+      **wait_sleep**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-wait_sleep" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`integer`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Number of seconds to sleep between checks.
+
+      Ignored if \ :literal:`wait`\  is not set.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`5`
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-wait_timeout"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__parameter-wait_timeout:
+
+      .. rst-class:: ansible-option-title
+
+      **wait_timeout**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-wait_timeout" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`integer`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      How long in seconds to wait for the resource to end up in the desired state.
+
+      Ignored if \ :literal:`wait`\  is not set.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`120`
+
+      .. raw:: html
+
+        </div>
+
+
+.. Attributes
+
+
+.. Notes
+
+Notes
+-----
+
+.. note::
+   - To avoid SSL certificate validation errors when \ :literal:`validate\_certs`\  is \ :emphasis:`True`\ , the full certificate chain for the API server must be provided via \ :literal:`ca\_cert`\  or in the kubeconfig file.
+
+.. Seealso
+
+
+.. Examples
+
+Examples
+--------
+
+.. code-block:: yaml+jinja
+
+    
+    - name: Create a VirtualMachine
+      kubevirt.core.kubevirt_vm:
+        state: present
+        name: testvm
+        namespace: default
+        labels:
+          app: test
+        instancetype:
+          name: u1.medium
+        preference:
+          name: fedora
+        spec:
+          domain:
+            devices:
+              interfaces:
+              - name: default
+                masquerade: {}
+              - name: bridge-network
+                bridge: {}
+          networks:
+          - name: default
+            pod: {}
+          - name: bridge-network
+            multus:
+              networkName: kindexgw
+          volumes:
+          - containerDisk:
+              image: quay.io/containerdisks/fedora:latest
+            name: containerdisk
+          - cloudInitNoCloud:
+              userData: |-
+                #cloud-config
+                # The default username is: fedora
+                ssh_authorized_keys:
+                  - ssh-ed25519 AAAA...
+            name: cloudinit
+
+    - name: Create a VirtualMachine with a DataVolume template
+      kubevirt.core.kubevirt_vm:
+        state: present
+        name: testvm-with-dv
+        namespace: default
+        labels:
+          app: test
+        instancetype:
+          name: u1.medium
+        preference:
+          name: fedora
+        data_volume_templates:
+          - metadata:
+              name: testdv
+            spec:
+              source:
+                registry:
+                  url: docker://quay.io/containerdisks/fedora:latest
+              storage:
+                accessModes:
+                - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 5Gi
+        spec:
+          domain:
+            devices: {}
+          volumes:
+          - dataVolume:
+              name: testdv
+            name: datavolume
+          - cloudInitNoCloud:
+              userData: |-
+                #cloud-config
+                # The default username is: fedora
+                ssh_authorized_keys:
+                  - ssh-ed25519 AAAA...
+            name: cloudinit
+        wait: yes
+
+    - name: Delete a VirtualMachine
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: default
+        state: absent
+
+
+
+
+.. Facts
+
+
+.. Return values
+
+Return Values
+-------------
+Common return values are documented :ref:`here <common_return_values>`, the following are the fields unique to this module:
+
+.. rst-class:: ansible-option-table
+
+.. list-table::
+  :width: 100%
+  :widths: auto
+  :header-rows: 1
+
+  * - Key
+    - Description
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-result"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__return-result:
+
+      .. rst-class:: ansible-option-title
+
+      **result**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-result" title="Permalink to this return value"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`complex`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      The created object. Will be empty in the case of a deletion.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` success
+
+
+      .. raw:: html
+
+        </div>
+
+    
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-result/changed"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__return-result/changed:
+
+      .. rst-class:: ansible-option-title
+
+      **changed**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-result/changed" title="Permalink to this return value"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Whether the VirtualMachine was changed
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` success
+
+      .. rst-class:: ansible-option-line
+      .. rst-class:: ansible-option-sample
+
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-result/duration"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__return-result/duration:
+
+      .. rst-class:: ansible-option-title
+
+      **duration**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-result/duration" title="Permalink to this return value"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`integer`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      elapsed time of task in seconds
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` when \ :literal:`wait`\  is true
+
+      .. rst-class:: ansible-option-line
+      .. rst-class:: ansible-option-sample
+
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`48`
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-result/method"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_vm_module__return-result/method:
+
+      .. rst-class:: ansible-option-title
+
+      **method**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-result/method" title="Permalink to this return value"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Method executed on the Kubernetes API.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` success
+
+
+      .. raw:: html
+
+        </div>
+
+
+
+
+..  Status (Presently only deprecated)
+
+
+.. Authors
+
+Authors
+~~~~~~~
+
+- KubeVirt.io Project 
+
+
+
+.. Extra links
+
+
+.. Parsing errors
+
