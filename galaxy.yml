@@ -1,6 +1,6 @@
 namespace: kubevirt
 name: core
-version: "0.1.2"
+version: "1.0.0"
 readme: README.md
 authors:
   - KubeVirt Project (kubevirt.io)
