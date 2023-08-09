@@ -76,8 +76,8 @@ jobs:
 
       - name: Create release tag
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name kubevirt-bot
+          git config user.email kubevirtbot@redhat.com
           git tag -a ${{ steps.get_version.outputs.TAG_VERSION }} -m "Release v${{ steps.get_version.outputs.TAG_VERSION }}" || true
           git push origin --tags
 
@@ -89,3 +89,15 @@ jobs:
           tag_name: ${{ steps.get_version.outputs.TAG_VERSION }}
           files: "*.tar.gz"
           body_path: gh-release.md
+
+      - name: Run docs workflow
+        run: |
+          gh workflow run docs.yml --ref main
+          gh workflow run docs.yml --ref ${{ steps.get_version.outputs.TAG_VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run ci workflow
+        run: gh workflow run ci.yml --ref main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
