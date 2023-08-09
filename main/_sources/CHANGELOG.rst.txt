@@ -4,22 +4,12 @@ KubeVirt Collection for Ansible Release Notes
 
 .. contents:: Topics
 
+This changelog describes changes after version 1.0.0.
 
-v0.1.2
-======
-
-v0.1.1
-======
-
-Release Summary
----------------
-
-Internal release
-
-v0.1.0
+v1.0.0
 ======
 
 Release Summary
 ---------------
 
-Internal release
+Initial release
