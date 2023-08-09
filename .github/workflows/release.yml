@@ -89,3 +89,15 @@ jobs:
           tag_name: ${{ steps.get_version.outputs.TAG_VERSION }}
           files: "*.tar.gz"
           body_path: gh-release.md
+
+      - name: Run docs workflow
+        run: |
+          gh workflow run docs.yml --ref main
+          gh workflow run docs.yml --ref ${{ steps.get_version.outputs.TAG_VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run ci workflow
+        run: gh workflow run ci.yml --ref main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
