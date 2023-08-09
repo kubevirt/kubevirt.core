@@ -5,6 +5,9 @@ KubeVirt Collection for Ansible Release Notes
 .. contents:: Topics
 
 
+v0.1.2
+======
+
 v0.1.1
 ======
 
