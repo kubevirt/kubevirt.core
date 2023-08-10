@@ -7,6 +7,7 @@
   <title>kubevirt – KubeVirt inventory source &mdash; Kubevirt Ansible Collection  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/antsibull-minimal.css" type="text/css" />
       <link rel="stylesheet" href="../_static/ansible-basic-sphinx-ext.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
@@ -110,14 +111,14 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 </div>
 <nav class="contents local" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#synopsis" id="id57">Synopsis</a></p></li>
-<li><p><a class="reference internal" href="#requirements" id="id58">Requirements</a></p></li>
-<li><p><a class="reference internal" href="#parameters" id="id59">Parameters</a></p></li>
-<li><p><a class="reference internal" href="#examples" id="id60">Examples</a></p></li>
+<li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#requirements" id="id2">Requirements</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id3">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id4">Examples</a></p></li>
 </ul>
 </nav>
 <section id="synopsis">
-<h2><a class="toc-backref" href="#id57" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Fetch running VirtualMachineInstances for one or more namespaces with an optional label selector.</p></li>
 <li><p>Groups by namespace, namespace_vmis and labels.</p></li>
@@ -126,7 +127,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 </ul>
 </section>
 <section id="requirements">
-<span id="ansible-collections-kubevirt-core-kubevirt-inventory-requirements"></span><h2><a class="toc-backref" href="#id58" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<span id="ansible-collections-kubevirt-core-kubevirt-inventory-requirements"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>The below requirements are needed on the local controller node that executes this inventory.</p>
 <ul class="simple">
 <li><p>python &gt;= 3.6</p></li>
@@ -135,7 +136,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 </ul>
 </section>
 <section id="parameters">
-<h2><a class="toc-backref" href="#id59" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <table class="ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
@@ -150,8 +151,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <td><div class="ansible-option-cell"><p>Toggle to enable/disable the caching of the inventory’s source data, requires a cache plugin setup to work.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id1"><span class="problematic" id="id2">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id3"><span class="problematic" id="id4">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 <p class="ansible-option-line"><span class="ansible-option-configuration">Configuration:</span></p>
 <ul>
@@ -192,7 +193,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-cache_plugin" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Cache plugin to use for the inventory’s source data.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id5"><span class="problematic" id="id6">:ansible-option-default:`&quot;memory&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;memory&quot;</span></code></p>
 <p class="ansible-option-line"><span class="ansible-option-configuration">Configuration:</span></p>
 <ul>
 <li><p>INI entries:</p>
@@ -215,7 +216,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-cache_prefix" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Prefix to use for cache plugin files/tables</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id7"><span class="problematic" id="id8">:ansible-option-default:`&quot;ansible\_inventory\_&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;ansible_inventory_&quot;</span></code></p>
 <p class="ansible-option-line"><span class="ansible-option-configuration">Configuration:</span></p>
 <ul>
 <li><p>INI entries:</p>
@@ -245,7 +246,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-cache_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Cache duration in seconds</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id9"><span class="problematic" id="id10">:ansible-option-default:`3600`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">3600</span></code></p>
 <p class="ansible-option-line"><span class="ansible-option-configuration">Configuration:</span></p>
 <ul>
 <li><p>INI entries:</p>
@@ -268,7 +269,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-compose" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Create vars from jinja2 expressions.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id11"><span class="problematic" id="id12">:ansible-option-default:`{}`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">{}</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -290,7 +291,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-connections/api_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Specify the used KubeVirt API version.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id13"><span class="problematic" id="id14">:ansible-option-default:`&quot;kubevirt.io/v1&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;kubevirt.io/v1&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -341,8 +342,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Enable kubesecondarydns derived host names when using a secondary network interface.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id15"><span class="problematic" id="id16">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id17"><span class="problematic" id="id18">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -397,8 +398,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Enable the use of services to establish an SSH connection to the VirtualMachine.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id19"><span class="problematic" id="id20">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id21"><span class="problematic" id="id22">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">true</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
@@ -418,8 +419,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Whether or not to verify the API server’s SSL certificates. Can also be specified via K8S_AUTH_VERIFY_SSL environment variable.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id23"><span class="problematic" id="id24">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id25"><span class="problematic" id="id26">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -428,7 +429,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-groups" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Add hosts to group based on Jinja2 conditionals.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id27"><span class="problematic" id="id28">:ansible-option-default:`{}`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">{}</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -436,7 +437,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-host_format" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specify the format of the host in the inventory group. Available specifiers: name, namespace, uid.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id29"><span class="problematic" id="id30">:ansible-option-default:`&quot;{namespace}-{name}&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;{namespace}-{name}&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -444,7 +445,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-keyed_groups" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Add hosts to group based on the values of a variable.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id31"><span class="problematic" id="id32">:ansible-option-default:`[]`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -475,7 +476,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-keyed_groups/prefix" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>A keyed group name will start with this prefix</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id33"><span class="problematic" id="id34">:ansible-option-default:`&quot;&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -483,7 +484,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <a class="ansibleOptionLink" href="#parameter-keyed_groups/separator" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>separator used to build the keyed group name</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id35"><span class="problematic" id="id36">:ansible-option-default:`&quot;\_&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;_&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -495,8 +496,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <p>This option is mutually exclusive with <code class="docutils literal notranslate"><span class="pre">default_value</span></code>.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id37"><span class="problematic" id="id38">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id39"><span class="problematic" id="id40">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">true</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
@@ -513,8 +514,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <p>To not use a separator in the group name at all, set the separator for the keyed group to an empty string instead.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id41"><span class="problematic" id="id42">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id43"><span class="problematic" id="id44">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">true</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
@@ -525,8 +526,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <td><div class="ansible-option-cell"><p>Token that ensures this is a source file for the “kubevirt” plugin.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id45"><span class="problematic" id="id46">:ansible-option-choices-entry:`&quot;kubevirt&quot;`</span></a></p></li>
-<li><p><a href="#id47"><span class="problematic" id="id48">:ansible-option-choices-entry:`&quot;kubevirt.core.kubevirt&quot;`</span></a></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;kubevirt&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;kubevirt.core.kubevirt&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -538,8 +539,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <p>Since it is possible to use facts in the expressions they might not always be available and we ignore those errors by default.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id49"><span class="problematic" id="id50">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id51"><span class="problematic" id="id52">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -551,8 +552,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <td><div class="ansible-option-cell"><p>Merge extra vars into the available variables for composition (highest precedence).</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id53"><span class="problematic" id="id54">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id55"><span class="problematic" id="id56">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 <p class="ansible-option-line"><span class="ansible-option-configuration">Configuration:</span></p>
 <ul>
@@ -570,7 +571,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 </table>
 </section>
 <section id="examples">
-<h2><a class="toc-backref" href="#id60" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filename must end with kubevirt.[yml|yaml]</span>
 
 <span class="c1"># Authenticate with token, and return all VirtualMachineInstances for all accessible namespaces</span>
