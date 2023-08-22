@@ -13,11 +13,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -108,24 +108,21 @@
            <div itemprop="articleBody">
              
   <section id="lean-ansible-bindings-for-kubevirt">
-<h1>Lean Ansible bindings for KubeVirt<a class="headerlink" href="#lean-ansible-bindings-for-kubevirt" title="Permalink to this heading"></a></h1>
+<h1>Lean Ansible bindings for KubeVirt<a class="headerlink" href="#lean-ansible-bindings-for-kubevirt" title="Link to this heading"></a></h1>
 <!--start build_status -->
 <p><a class="reference external" href="https://github.com/kubevirt/kubevirt.core/actions"><img alt="Build Status" src="https://github.com/kubevirt/kubevirt.core/workflows/CI/badge.svg?event=push" /></a></p>
-<blockquote>
-<div><p><strong><em>NOTE:</em> If you are Red Hat customer, install <code class="docutils literal notranslate"><span class="pre">redhat.ocpv</span></code> from <a class="reference external" href="https://console.redhat.com/ansible/ansible-dashboard">Automation Hub</a> as the certified version of this collection.</strong></p>
-</div></blockquote>
 <!--end build_status -->
 <p>This repository hosts the <code class="docutils literal notranslate"><span class="pre">kubevirt.core</span></code> Ansible Collection, which provides virtual machine operations and inventory source for use with Ansible.</p>
 <!--start requires_ansible-->
 <section id="ansible-version-compatibility">
-<h2>Ansible version compatibility<a class="headerlink" href="#ansible-version-compatibility" title="Permalink to this heading"></a></h2>
+<h2>Ansible version compatibility<a class="headerlink" href="#ansible-version-compatibility" title="Link to this heading"></a></h2>
 <p>This collection has been tested against following Ansible versions: <strong>&gt;=2.9.10</strong>.</p>
 <!--end requires_ansible-->
 </section>
 <section id="included-content">
-<h2>Included content<a class="headerlink" href="#included-content" title="Permalink to this heading"></a></h2>
+<h2>Included content<a class="headerlink" href="#included-content" title="Link to this heading"></a></h2>
 <section id="plugins">
-<h3>Plugins<a class="headerlink" href="#plugins" title="Permalink to this heading"></a></h3>
+<h3>Plugins<a class="headerlink" href="#plugins" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">kubevirt</span></code>: inventory source for kubevirt virtual machines</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">kubevirt_vm</span></code>: create or delete kubevirt virtual machines</p></li>
@@ -133,10 +130,10 @@
 </section>
 </section>
 <section id="using-this-collection">
-<h2>Using this collection<a class="headerlink" href="#using-this-collection" title="Permalink to this heading"></a></h2>
+<h2>Using this collection<a class="headerlink" href="#using-this-collection" title="Link to this heading"></a></h2>
 <!--start galaxy_download -->
 <section id="installing-the-collection-from-ansible-galaxy">
-<h3>Installing the Collection from Ansible Galaxy<a class="headerlink" href="#installing-the-collection-from-ansible-galaxy" title="Permalink to this heading"></a></h3>
+<h3>Installing the Collection from Ansible Galaxy<a class="headerlink" href="#installing-the-collection-from-ansible-galaxy" title="Link to this heading"></a></h3>
 <p>Before using this collection, you need to install it with the Ansible Galaxy command-line tool:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>kubevirt.core
 </pre></div>
@@ -144,7 +141,7 @@
 <!--end galaxy_download -->
 </section>
 <section id="build-and-install-locally">
-<h3>Build and install locally<a class="headerlink" href="#build-and-install-locally" title="Permalink to this heading"></a></h3>
+<h3>Build and install locally<a class="headerlink" href="#build-and-install-locally" title="Link to this heading"></a></h3>
 <p>Clone the repository, checkout the tag you want to build, or pick the main branch for the development version; then:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>build<span class="w"> </span>.
 ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>kubevirt-kubevirt.core-*.tar.gz
@@ -152,9 +149,9 @@ ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<
 </div>
 </section>
 <section id="dependencies">
-<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h3>
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h3>
 <section id="ansible-collections">
-<h4>Ansible collections<a class="headerlink" href="#ansible-collections" title="Permalink to this heading"></a></h4>
+<h4>Ansible collections<a class="headerlink" href="#ansible-collections" title="Link to this heading"></a></h4>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.ansible.com/ansible/latest/collections/kubernetes/core/index.html">kubernetes.core</a></p></li>
 </ul>
@@ -166,7 +163,7 @@ ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<
 </div>
 </section>
 <section id="python-libraries">
-<h4>Python libraries<a class="headerlink" href="#python-libraries" title="Permalink to this heading"></a></h4>
+<h4>Python libraries<a class="headerlink" href="#python-libraries" title="Link to this heading"></a></h4>
 <ul class="simple">
 <li><p>kubernetes</p></li>
 <li><p>PyYaml</p></li>
@@ -183,11 +180,11 @@ ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<
 </section>
 </section>
 <section id="code-of-conduct">
-<h2>Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Permalink to this heading"></a></h2>
+<h2>Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Link to this heading"></a></h2>
 <p>We follow the <a class="reference external" href="https://github.com/kubevirt/kubevirt/blob/main/CODE_OF_CONDUCT.md">KubeVirt Code of Conduct</a>.</p>
 </section>
 <section id="contributing-to-this-collection">
-<h2>Contributing to this collection<a class="headerlink" href="#contributing-to-this-collection" title="Permalink to this heading"></a></h2>
+<h2>Contributing to this collection<a class="headerlink" href="#contributing-to-this-collection" title="Link to this heading"></a></h2>
 <p>The content of this collection is made by people like you, a community of individuals collaborating on making the world better through developing automation software.</p>
 <p>We are actively accepting new contributors.</p>
 <p>Any kind of contribution is very welcome.</p>
@@ -202,12 +199,12 @@ ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<
 </ul>
 </section>
 <section id="collection-maintenance">
-<h2>Collection maintenance<a class="headerlink" href="#collection-maintenance" title="Permalink to this heading"></a></h2>
+<h2>Collection maintenance<a class="headerlink" href="#collection-maintenance" title="Link to this heading"></a></h2>
 <p>The current maintainers are listed in the <a class="reference internal" href="#OWNERS"><span class="xref myst">OWNERS</span></a> file. If you have questions or need help, feel free to mention them in the proposals.</p>
 <p>To learn how to maintain / become a maintainer of this collection, refer to the <a class="reference external" href="https://docs.ansible.com/ansible/devel/community/maintainers.html">Maintainer guidelines</a>.</p>
 </section>
 <section id="governance">
-<h2>Governance<a class="headerlink" href="#governance" title="Permalink to this heading"></a></h2>
+<h2>Governance<a class="headerlink" href="#governance" title="Link to this heading"></a></h2>
 <p>The process of decision making in this collection is based on discussing and finding consensus among participants.</p>
 <p>Every voice is important. If you have something on your mind, create an issue or dedicated discussion and let’s discuss it!</p>
 <!--end community_readme -->
@@ -215,7 +212,7 @@ ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<
 <!--end support -->
 </section>
 <section id="licensing">
-<h2>Licensing<a class="headerlink" href="#licensing" title="Permalink to this heading"></a></h2>
+<h2>Licensing<a class="headerlink" href="#licensing" title="Link to this heading"></a></h2>
 <p>GNU General Public License v3.0 or later.</p>
 <p>See <a class="reference internal" href="#./LICENSE"><span class="xref myst">LICENSE</span></a> to see the full text.</p>
 </section>
