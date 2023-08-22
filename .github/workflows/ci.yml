@@ -184,7 +184,7 @@ jobs:
   integration:
     uses: kubevirt/kubevirt.core/.github/workflows/integration.yml@main
     needs:
-      - unit-source
+      - linter
     with:
       ansible_test_targets: >-
           [

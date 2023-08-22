@@ -128,29 +128,6 @@ jobs:
 
     name: "${{ matrix.test-target }} / py${{ matrix.python-version }} / ${{ matrix.ansible-version }}"
     steps:
-      - name: Checkout kubernetes.core repository
-        uses: actions/checkout@v3
-        with:
-          path: ${{ env.core }}
-          fetch-depth: "0"
-        if: inputs.ansible_test_targets != ''
-
-      - name: checkout ansible-collections/cloud.common
-        uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
-        with:
-          repository: ansible-collections/cloud.common
-          path: ${{ env.cloud_common }}
-          ref: main
-        if: inputs.ansible_test_targets != ''
-
-      - name: checkout ansible-collections/ansible.posix
-        uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
-        with:
-          repository: ansible-collections/ansible.posix
-          path: ${{ env.ansible_posix }}
-          ref: main
-        if: inputs.ansible_test_targets != ''
-
       - name: Checkout kubevirt.core repository
         uses: actions/checkout@v3
         with:
@@ -158,25 +135,11 @@ jobs:
           fetch-depth: "0"
         if: inputs.ansible_test_targets != ''
 
-      - name: install kubernetes.core collection
-        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
-        with:
-          install_python_dependencies: true
-          source_path: ${{ env.core }}
-        if: inputs.ansible_test_targets != ''
-
-      - name: install cloud.common collection
-        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
-        with:
-          install_python_dependencies: true
-          source_path: ${{ env.cloud_common }}
-        if: inputs.ansible_test_targets != ''
-
-      - name: install ansible.posix collection
-        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
-        with:
-          install_python_dependencies: true
-          source_path: ${{ env.ansible_posix }}
+      - name: install dependencies collection
+        run: |
+          ansible-galaxy collection install ansible.posix --force --pre -p /home/runner/collections
+          ansible-galaxy collection install cloud.common --force --pre -p /home/runner/collections
+          ansible-galaxy collection install kubernetes.core --force --pre -p /home/runner/collections
         if: inputs.ansible_test_targets != ''
 
       - name: install kubevirt.core collection
@@ -222,3 +185,5 @@ jobs:
           ansible_version: ${{ matrix.ansible-version }}
           ansible_test_targets: ${{ matrix.test-target }}
         if: inputs.ansible_test_targets != ''
+        env:
+          ANSIBLE_COLLECTIONS_PATHS: /home/runner/collections
