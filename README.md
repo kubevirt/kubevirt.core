@@ -1,8 +1,6 @@
 # Lean Ansible bindings for KubeVirt
 <!--start build_status -->
 [![Build Status](https://github.com/kubevirt/kubevirt.core/workflows/CI/badge.svg?event=push)](https://github.com/kubevirt/kubevirt.core/actions)
-
-> **_NOTE:_ If you are Red Hat customer, install `redhat.ocpv` from [Automation Hub](https://console.redhat.com/ansible/ansible-dashboard) as the certified version of this collection.**
 <!--end build_status -->
 
 This repository hosts the `kubevirt.core` Ansible Collection, which provides virtual machine operations and inventory source for use with Ansible.
