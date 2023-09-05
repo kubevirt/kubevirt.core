@@ -2,3 +2,4 @@ plugin: kubevirt.core.kubevirt
 connections:
   - namespaces:
       - default
+    create_groups: yes
