@@ -444,18 +444,12 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
         services = self.get_ssh_services_for_namespace(client, namespace)
 
-        namespace_group = f"namespace_{namespace}"
-        namespace_vmis_group = f"{namespace_group}_vmis"
-
         name = self._sanitize_group_name(name)
-        namespace_group = self._sanitize_group_name(namespace_group)
-        namespace_vmis_group = self._sanitize_group_name(namespace_vmis_group)
+        namespace_group = self._sanitize_group_name(f"namespace_{namespace}")
 
         self.inventory.add_group(name)
         self.inventory.add_group(namespace_group)
         self.inventory.add_child(name, namespace_group)
-        self.inventory.add_group(namespace_vmis_group)
-        self.inventory.add_child(namespace_group, namespace_vmis_group)
 
         for vmi in vmi_list.items:
             if not (vmi.status and vmi.status.interfaces):
@@ -500,7 +494,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
             # Add vmi to the namespace group, and to each label_value group
             self.inventory.add_host(vmi_name)
-            self.inventory.add_child(namespace_vmis_group, vmi_name)
+            self.inventory.add_child(namespace_group, vmi_name)
             for group in vmi_groups:
                 self.inventory.add_child(group, vmi_name)
 
