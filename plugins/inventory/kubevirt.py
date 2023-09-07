@@ -112,6 +112,11 @@ options:
         - Enable the use of services to establish an SSH connection to the VirtualMachine.
         type: bool
         default: True
+      create_groups:
+        description:
+        - Enable the creation of groups from labels on VirtualMachines.
+        type: bool
+        default: False
       api_version:
         description:
         - Specify the used KubeVirt API version.
@@ -211,6 +216,7 @@ class GetVmiOptions:
     network_name: Optional[str] = None
     kube_secondary_dns: Optional[bool] = None
     use_service: Optional[bool] = None
+    create_groups: Optional[bool] = None
     base_domain: Optional[str] = None
     host_format: Optional[str] = None
 
@@ -222,6 +228,8 @@ class GetVmiOptions:
             self.kube_secondary_dns = False
         if self.use_service is None:
             self.use_service = True
+        if self.create_groups is None:
+            self.create_groups = False
         if self.host_format is None:
             self.host_format = "{namespace}-{name}"
 
@@ -374,6 +382,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                     connection.get("network_name", connection.get("interface_name")),
                     connection.get("kube_secondary_dns"),
                     connection.get("use_service"),
+                    connection.get("create_groups"),
                     connection.get("base_domain", self.get_cluster_domain(client)),
                     self.host_format,
                 )
@@ -444,18 +453,12 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
         services = self.get_ssh_services_for_namespace(client, namespace)
 
-        namespace_group = f"namespace_{namespace}"
-        namespace_vmis_group = f"{namespace_group}_vmis"
-
         name = self._sanitize_group_name(name)
-        namespace_group = self._sanitize_group_name(namespace_group)
-        namespace_vmis_group = self._sanitize_group_name(namespace_vmis_group)
+        namespace_group = self._sanitize_group_name(f"namespace_{namespace}")
 
         self.inventory.add_group(name)
         self.inventory.add_group(namespace_group)
         self.inventory.add_child(name, namespace_group)
-        self.inventory.add_group(namespace_vmis_group)
-        self.inventory.add_child(namespace_group, namespace_vmis_group)
 
         for vmi in vmi_list.items:
             if not (vmi.status and vmi.status.interfaces):
@@ -479,30 +482,33 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 name=vmi.metadata.name,
                 uid=vmi.metadata.uid,
             )
-            vmi_groups = []
             vmi_annotations = (
                 {}
                 if not vmi.metadata.annotations
                 else self.__resource_field_to_dict(vmi.metadata.annotations)
             )
+            vmi_labels = (
+                {}
+                if not vmi.metadata.labels
+                else self.__resource_field_to_dict(vmi.metadata.labels)
+            )
 
-            if vmi.metadata.labels:
-                # create a group for each label_value
+            # Add vmi to the namespace group
+            self.inventory.add_host(vmi_name)
+            self.inventory.add_child(namespace_group, vmi_name)
+
+            # Create label groups and add vmi to it if enabled
+            if vmi.metadata.labels and opts.create_groups:
+                # Create a group for each label_value
+                vmi_groups = []
                 for key, value in vmi.metadata.labels:
-                    group_name = f"label_{key}_{value}"
-                    group_name = self._sanitize_group_name(group_name)
+                    group_name = self._sanitize_group_name(f"label_{key}_{value}")
                     if group_name not in vmi_groups:
                         vmi_groups.append(group_name)
-                    self.inventory.add_group(group_name)
-                vmi_labels = self.__resource_field_to_dict(vmi.metadata.labels)
-            else:
-                vmi_labels = {}
-
-            # Add vmi to the namespace group, and to each label_value group
-            self.inventory.add_host(vmi_name)
-            self.inventory.add_child(namespace_vmis_group, vmi_name)
-            for group in vmi_groups:
-                self.inventory.add_child(group, vmi_name)
+                # Add vmi to each label_value group
+                for group in vmi_groups:
+                    self.inventory.add_group(group)
+                    self.inventory.add_child(group, vmi_name)
 
             # Set up the connection
             self.inventory.set_variable(vmi_name, "ansible_connection", "ssh")
