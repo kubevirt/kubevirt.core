@@ -13,3 +13,9 @@ Release Summary
 ---------------
 
 Initial release
+
+Minor Changes
+-------------
+
+- inventory: Allow to control creation of additional groups
+- inventory: Drop creation of the namespace_vmis_group as it is redundant

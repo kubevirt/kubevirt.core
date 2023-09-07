@@ -758,6 +758,51 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-connections/create_groups"></div>
+
+      .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/create_groups:
+
+      .. rst-class:: ansible-option-title
+
+      **create_groups**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-connections/create_groups" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`boolean`
+
+
+
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Enable the creation of groups from labels on VirtualMachines.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-connections/host"></div>
 
       .. _ansible_collections.kubevirt.core.kubevirt_inventory__parameter-connections/host:
