@@ -1,0 +1,2 @@
+major_changes:
+  - "Add kubevirt_vm_info module to describe existing VirtualMachines"

@@ -1,0 +1,11 @@
+- name: Playbook describing a virtual machine
+  hosts: localhost
+  tasks:
+    - name: Describe VM
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: default
+      register: result
+    - name: Print return information from the previous task
+      ansible.builtin.debug:
+        var: result

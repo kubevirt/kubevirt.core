@@ -189,6 +189,7 @@ jobs:
       ansible_test_targets: >-
           [
             "kubevirt_vm",
+            "kubevirt_vm_info",
             "inventory_kubevirt"
           ]
     name: "integration"
