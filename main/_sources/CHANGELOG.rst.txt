@@ -14,6 +14,11 @@ Release Summary
 
 Initial release
 
+Major Changes
+-------------
+
+- Add kubevirt_vm_info module to describe existing VirtualMachines
+
 Minor Changes
 -------------
 

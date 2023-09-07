@@ -12,4 +12,5 @@ Plugin Index
    :maxdepth: 0
 
    kubevirt_vm
+   kubevirt_vm_info
 
