@@ -111,15 +111,11 @@ jobs:
       matrix:
         test-target: ${{ fromJSON(inputs.ansible_test_targets) }}
         ansible-version:
-          - stable-2.9
-          - stable-2.12
           - stable-2.14
           - stable-2.15
           - milestone
           - devel
         python-version:
-          - "3.8"
-          - "3.9"
           - "3.11"
         exclude: ${{ fromJSON(inputs.matrix_exclude) }}
         include: ${{ fromJSON(inputs.matrix_include) }}
