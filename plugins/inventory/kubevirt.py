@@ -131,7 +131,6 @@ requirements:
 EXAMPLES = """
 # Filename must end with kubevirt.[yml|yaml]
 
----
 # Authenticate with token, and return all VirtualMachineInstances for all accessible namespaces
 plugin: kubevirt.core.kubevirt
 connections:
@@ -139,7 +138,6 @@ connections:
     api_key: xxxxxxxxxxxxxxxx
     validate_certs: false
 
----
 # Use default config (~/.kube/config) file and active context, and return VirtualMachineInstances
 # from namespace testing with interfaces connected to network bridge-network
 plugin: kubevirt.core.kubevirt
@@ -148,7 +146,6 @@ connections:
       - testing
     network_name: bridge-network
 
----
 # Use default config (~/.kube/config) file and active context, and return VirtualMachineInstances
 # from namespace testing with label app=test
 plugin: kubevirt.core.kubevirt
@@ -157,7 +154,6 @@ connections:
       - testing
     label_selector: app=test
 
----
 # Use a custom config file, and a specific context.
 plugin: kubevirt.core.kubevirt
 connections:

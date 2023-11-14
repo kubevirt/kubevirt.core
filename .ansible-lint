@@ -27,6 +27,7 @@ warn_list:
   - run-once[task]
   - var-naming[no-role-prefix]
   - galaxy[version-incorrect]
+  - yaml[key-duplicates]
 
 skip_list:
   - jinja[spacing]
