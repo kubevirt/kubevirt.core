@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<meta content="2.5.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>kubevirt_vm_info – Describe VirtualMachines on Kubernetes &mdash; Kubevirt Ansible Collection  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/antsibull-minimal.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/ansible-basic-sphinx-ext.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5707b69d" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/antsibull-minimal.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/ansible-basic-sphinx-ext.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -106,7 +109,9 @@
 <h1>kubevirt_vm_info – Describe VirtualMachines on Kubernetes<a class="headerlink" href="#kubevirt-vm-info-describe-virtualmachines-on-kubernetes" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/kubevirt/core">kubevirt.core collection</a>.</p>
+<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/kubevirt/core/">kubevirt.core collection</a>.</p>
+<p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
+To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">kubevirt.core</span></code>.
 You need further requirements to be able to use this module,
 see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubevirt-vm-info-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
@@ -141,257 +146,426 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 </section>
 <section id="parameters">
 <h2><a class="toc-backref" href="#id3" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
-<table class="ansible-option-table docutils align-default" style="width: 100%">
+<table class="colwidths-auto ansible-option-table docutils align-default" style="width: 100%">
 <thead>
-<tr class="row-odd"><th class="head"><p>Parameter</p></th>
-<th class="head"><p>Comments</p></th>
+<tr class="row-odd">
+  <th class="head"><p>Parameter</p></th>
+  <th class="head"><p>Comments</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-api_key"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-api-key"><strong>api_key</strong></p>
-<a class="ansibleOptionLink" href="#parameter-api_key" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Token used to authenticate with the API. Can also be specified via K8S_AUTH_API_KEY environment variable.</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-api_key"></div>
+    <p class="ansible-option-title"><strong>api_key</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-api_key" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Token used to authenticate with the API. Can also be specified via K8S_AUTH_API_KEY environment variable.</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-api_version"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-api-version"><strong>api_version</strong></p>
-<a class="ansibleOptionLink" href="#parameter-api_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Use this to set the API version of KubeVirt.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;kubevirt.io/v1&quot;</span></code></p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-api_version"></div>
+    <p class="ansible-option-title"><strong>api_version</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-api_version" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Use this to set the API version of KubeVirt.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">&#34;kubevirt.io/v1&#34;</code></p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-ca_cert"></div>
-<div class="ansibleOptionAnchor" id="parameter-ssl_ca_cert"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-ssl-ca-cert"><span id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-ca-cert"></span><strong>ca_cert</strong></p>
-<a class="ansibleOptionLink" href="#parameter-ca_cert" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: ssl_ca_cert</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">path</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Path to a CA certificate used to authenticate with the API. The full certificate chain must be provided to avoid certificate validation errors. Can also be specified via K8S_AUTH_SSL_CA_CERT environment variable.</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-ca_cert"></div>
+    <div class="ansibleOptionAnchor" id="parameter-ssl_ca_cert"></div>
+    <p class="ansible-option-title"><strong>ca_cert</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-ca_cert" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: ssl_ca_cert</span></p>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">path</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Path to a CA certificate used to authenticate with the API. The full certificate chain must be provided to avoid certificate validation errors. Can also be specified via K8S_AUTH_SSL_CA_CERT environment variable.</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-client_cert"></div>
-<div class="ansibleOptionAnchor" id="parameter-cert_file"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-client-cert"><span id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-cert-file"></span><strong>client_cert</strong></p>
-<a class="ansibleOptionLink" href="#parameter-client_cert" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: cert_file</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">path</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Path to a certificate used to authenticate with the API. Can also be specified via K8S_AUTH_CERT_FILE environment variable.</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-client_cert"></div>
+    <div class="ansibleOptionAnchor" id="parameter-cert_file"></div>
+    <p class="ansible-option-title"><strong>client_cert</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-client_cert" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: cert_file</span></p>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">path</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Path to a certificate used to authenticate with the API. Can also be specified via K8S_AUTH_CERT_FILE environment variable.</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-client_key"></div>
-<div class="ansibleOptionAnchor" id="parameter-key_file"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-key-file"><span id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-client-key"></span><strong>client_key</strong></p>
-<a class="ansibleOptionLink" href="#parameter-client_key" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: key_file</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">path</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Path to a key file used to authenticate with the API. Can also be specified via K8S_AUTH_KEY_FILE environment variable.</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-client_key"></div>
+    <div class="ansibleOptionAnchor" id="parameter-key_file"></div>
+    <p class="ansible-option-title"><strong>client_key</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-client_key" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: key_file</span></p>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">path</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Path to a key file used to authenticate with the API. Can also be specified via K8S_AUTH_KEY_FILE environment variable.</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-context"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-context"><strong>context</strong></p>
-<a class="ansibleOptionLink" href="#parameter-context" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The name of a context found in the config file. Can also be specified via K8S_AUTH_CONTEXT environment variable.</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-context"></div>
+    <p class="ansible-option-title"><strong>context</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-context" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>The name of a context found in the config file. Can also be specified via K8S_AUTH_CONTEXT environment variable.</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-field_selectors"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-field-selectors"><strong>field_selectors</strong></p>
-<a class="ansibleOptionLink" href="#parameter-field_selectors" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>List of field selectors to use to filter results</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[]</span></code></p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-field_selectors"></div>
+    <p class="ansible-option-title"><strong>field_selectors</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-field_selectors" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">list</span>
+      / <span class="ansible-option-elements">elements=string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>List of field selectors to use to filter results</p>
+    <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">[]</code></p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-host"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-host"><strong>host</strong></p>
-<a class="ansibleOptionLink" href="#parameter-host" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-host"></div>
+    <p class="ansible-option-title"><strong>host</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-host" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-impersonate_groups"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-impersonate-groups"><strong>impersonate_groups</strong></p>
-<a class="ansibleOptionLink" href="#parameter-impersonate_groups" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
-<p><span class="ansible-option-versionadded">added in kubernetes.core 2.3.0</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Group(s) to impersonate for the operation.</p>
-<p>Can also be specified via K8S_AUTH_IMPERSONATE_GROUPS environment. Example: Group1,Group2</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-impersonate_groups"></div>
+    <p class="ansible-option-title"><strong>impersonate_groups</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-impersonate_groups" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">list</span>
+      / <span class="ansible-option-elements">elements=string</span>
+    </p>
+    <p><em class="ansible-option-versionadded">added in kubernetes.core 2.3.0</em></p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Group(s) to impersonate for the operation.</p>
+    <p>Can also be specified via K8S_AUTH_IMPERSONATE_GROUPS environment. Example: Group1,Group2</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-impersonate_user"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-impersonate-user"><strong>impersonate_user</strong></p>
-<a class="ansibleOptionLink" href="#parameter-impersonate_user" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><span class="ansible-option-versionadded">added in kubernetes.core 2.3.0</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Username to impersonate for the operation.</p>
-<p>Can also be specified via K8S_AUTH_IMPERSONATE_USER environment.</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-impersonate_user"></div>
+    <p class="ansible-option-title"><strong>impersonate_user</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-impersonate_user" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+    <p><em class="ansible-option-versionadded">added in kubernetes.core 2.3.0</em></p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Username to impersonate for the operation.</p>
+    <p>Can also be specified via K8S_AUTH_IMPERSONATE_USER environment.</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-kubeconfig"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-kubeconfig"><strong>kubeconfig</strong></p>
-<a class="ansibleOptionLink" href="#parameter-kubeconfig" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">any</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from <em>~/.kube/config</em>. Can also be specified via K8S_AUTH_KUBECONFIG environment variable.</p>
-<p>Multiple Kubernetes config file can be provided using separator ‘;’ for Windows platform or ‘:’ for others platforms.</p>
-<p>The kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version &gt;= 17.17.0. Added in version 2.2.0.</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-kubeconfig"></div>
+    <p class="ansible-option-title"><strong>kubeconfig</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-kubeconfig" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">any</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from <em>~/.kube/config</em>. Can also be specified via K8S_AUTH_KUBECONFIG environment variable.</p>
+    <p>Multiple Kubernetes config file can be provided using separator &#x27;;&#x27; for Windows platform or &#x27;:&#x27; for others platforms.</p>
+    <p>The kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version &gt;= 17.17.0. Added in version 2.2.0.</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-label_selectors"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-label-selectors"><strong>label_selectors</strong></p>
-<a class="ansibleOptionLink" href="#parameter-label_selectors" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>List of label selectors to use to filter results</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[]</span></code></p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-label_selectors"></div>
+    <p class="ansible-option-title"><strong>label_selectors</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-label_selectors" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">list</span>
+      / <span class="ansible-option-elements">elements=string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>List of label selectors to use to filter results</p>
+    <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">[]</code></p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-name"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-name"><strong>name</strong></p>
-<a class="ansibleOptionLink" href="#parameter-name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Specify the name of the VirtualMachine.</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-name"></div>
+    <p class="ansible-option-title"><strong>name</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-name" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Specify the name of the VirtualMachine.</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-namespace"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-namespace"><strong>namespace</strong></p>
-<a class="ansibleOptionLink" href="#parameter-namespace" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Specify the namespace of VirtualMachines.</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-namespace"></div>
+    <p class="ansible-option-title"><strong>namespace</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-namespace" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Specify the namespace of VirtualMachines.</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-no_proxy"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-no-proxy"><strong>no_proxy</strong></p>
-<a class="ansibleOptionLink" href="#parameter-no_proxy" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><span class="ansible-option-versionadded">added in kubernetes.core 2.3.0</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The comma separated list of hosts/domains/IP/CIDR that shouldn’t go through proxy. Can also be specified via K8S_AUTH_NO_PROXY environment variable.</p>
-<p>Please note that this module does not pick up typical proxy settings from the environment (e.g. NO_PROXY).</p>
-<p>This feature requires kubernetes&gt;=19.15.0. When kubernetes library is less than 19.15.0, it fails even no_proxy set in correct.</p>
-<p>example value is “localhost,.local,.example.com,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16”</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-no_proxy"></div>
+    <p class="ansible-option-title"><strong>no_proxy</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-no_proxy" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+    <p><em class="ansible-option-versionadded">added in kubernetes.core 2.3.0</em></p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>The comma separated list of hosts/domains/IP/CIDR that shouldn&#x27;t go through proxy. Can also be specified via K8S_AUTH_NO_PROXY environment variable.</p>
+    <p>Please note that this module does not pick up typical proxy settings from the environment (e.g. NO_PROXY).</p>
+    <p>This feature requires kubernetes&gt;=19.15.0. When kubernetes library is less than 19.15.0, it fails even no_proxy set in correct.</p>
+    <p>example value is "localhost,.local,.example.com,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-password"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-password"><strong>password</strong></p>
-<a class="ansibleOptionLink" href="#parameter-password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Provide a password for authenticating with the API. Can also be specified via K8S_AUTH_PASSWORD environment variable.</p>
-<p>Please read the description of the <code class="docutils literal notranslate"><span class="pre">username</span></code> option for a discussion of when this option is applicable.</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-password"></div>
+    <p class="ansible-option-title"><strong>password</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-password" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Provide a password for authenticating with the API. Can also be specified via K8S_AUTH_PASSWORD environment variable.</p>
+    <p>Please read the description of the <code class='docutils literal notranslate'>username</code> option for a discussion of when this option is applicable.</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-persist_config"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-persist-config"><strong>persist_config</strong></p>
-<a class="ansibleOptionLink" href="#parameter-persist_config" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Whether or not to save the kube config refresh tokens. Can also be specified via K8S_AUTH_PERSIST_CONFIG environment variable.</p>
-<p>When the k8s context is using a user credentials with refresh tokens (like oidc or gke/gcloud auth), the token is refreshed by the k8s python client library but not saved by default. So the old refresh token can expire and the next auth might fail. Setting this flag to true will tell the k8s python client to save the new refresh token to the kube config file.</p>
-<p>Default to false.</p>
-<p>Please note that the current version of the k8s python client library does not support setting this flag to True yet.</p>
-<p>The fix for this k8s python library is here: <a class="reference external" href="https://github.com/kubernetes-client/python-base/pull/169">https://github.com/kubernetes-client/python-base/pull/169</a></p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
-<ul class="simple">
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
-</ul>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-persist_config"></div>
+    <p class="ansible-option-title"><strong>persist_config</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-persist_config" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">boolean</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Whether or not to save the kube config refresh tokens. Can also be specified via K8S_AUTH_PERSIST_CONFIG environment variable.</p>
+    <p>When the k8s context is using a user credentials with refresh tokens (like oidc or gke/gcloud auth), the token is refreshed by the k8s python client library but not saved by default. So the old refresh token can expire and the next auth might fail. Setting this flag to true will tell the k8s python client to save the new refresh token to the kube config file.</p>
+    <p>Default to false.</p>
+    <p>Please note that the current version of the k8s python client library does not support setting this flag to True yet.</p>
+    <p>The fix for this k8s python library is here: https://github.com/kubernetes-client/python-base/pull/169</p>
+    <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+    <ul class="simple">
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">true</code></p></li>
+    </ul>
+
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-proxy"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-proxy"><strong>proxy</strong></p>
-<a class="ansibleOptionLink" href="#parameter-proxy" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The URL of an HTTP proxy to use for the connection. Can also be specified via K8S_AUTH_PROXY environment variable.</p>
-<p>Please note that this module does not pick up typical proxy settings from the environment (e.g. HTTP_PROXY).</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-proxy"></div>
+    <p class="ansible-option-title"><strong>proxy</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-proxy" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>The URL of an HTTP proxy to use for the connection. Can also be specified via K8S_AUTH_PROXY environment variable.</p>
+    <p>Please note that this module does not pick up typical proxy settings from the environment (e.g. HTTP_PROXY).</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-proxy_headers"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-proxy-headers"><strong>proxy_headers</strong></p>
-<a class="ansibleOptionLink" href="#parameter-proxy_headers" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-<p><span class="ansible-option-versionadded">added in kubernetes.core 2.0.0</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The Header used for the HTTP proxy.</p>
-<p>Documentation can be found here <a class="reference external" href="https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers">https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers</a>.</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-proxy_headers"></div>
+    <p class="ansible-option-title"><strong>proxy_headers</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-proxy_headers" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">dictionary</span>
+    </p>
+    <p><em class="ansible-option-versionadded">added in kubernetes.core 2.0.0</em></p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>The Header used for the HTTP proxy.</p>
+    <p>Documentation can be found here <a href='https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers'>https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers</a>.</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-proxy_headers/basic_auth"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-proxy-headers-basic-auth"><strong>basic_auth</strong></p>
-<a class="ansibleOptionLink" href="#parameter-proxy_headers/basic_auth" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Colon-separated username:password for basic authentication header.</p>
-<p>Can also be specified via K8S_AUTH_PROXY_HEADERS_BASIC_AUTH environment.</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-proxy_headers/basic_auth"></div>
+    <p class="ansible-option-title"><strong>basic_auth</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-proxy_headers/basic_auth" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+    <p>Colon-separated username:password for basic authentication header.</p>
+    <p>Can also be specified via K8S_AUTH_PROXY_HEADERS_BASIC_AUTH environment.</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-proxy_headers/proxy_basic_auth"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-proxy-headers-proxy-basic-auth"><strong>proxy_basic_auth</strong></p>
-<a class="ansibleOptionLink" href="#parameter-proxy_headers/proxy_basic_auth" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Colon-separated username:password for proxy basic authentication header.</p>
-<p>Can also be specified via K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH environment.</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-proxy_headers/proxy_basic_auth"></div>
+    <p class="ansible-option-title"><strong>proxy_basic_auth</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-proxy_headers/proxy_basic_auth" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+    <p>Colon-separated username:password for proxy basic authentication header.</p>
+    <p>Can also be specified via K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH environment.</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-proxy_headers/user_agent"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-proxy-headers-user-agent"><strong>user_agent</strong></p>
-<a class="ansibleOptionLink" href="#parameter-proxy_headers/user_agent" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>String representing the user-agent you want, such as foo/1.0.</p>
-<p>Can also be specified via K8S_AUTH_PROXY_HEADERS_USER_AGENT environment.</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-proxy_headers/user_agent"></div>
+    <p class="ansible-option-title"><strong>user_agent</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-proxy_headers/user_agent" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+    <p>String representing the user-agent you want, such as foo/1.0.</p>
+    <p>Can also be specified via K8S_AUTH_PROXY_HEADERS_USER_AGENT environment.</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-username"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-username"><strong>username</strong></p>
-<a class="ansibleOptionLink" href="#parameter-username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Provide a username for authenticating with the API. Can also be specified via K8S_AUTH_USERNAME environment variable.</p>
-<p>Please note that this only works with clusters configured to use HTTP Basic Auth. If your cluster has a different form of authentication (e.g. OAuth2 in OpenShift), this option will not work as expected and you should look into the <a class="reference external" href="https://docs.ansible.com/ansible/latest/collections/community/okd/k8s_auth_module.html#ansible-collections-community-okd-k8s-auth-module" title="(in Ansible v8)"><span class="xref std std-ref">community.okd.k8s_auth</span></a> module, as that might do what you need.</p>
-</div></td>
+
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-username"></div>
+    <p class="ansible-option-title"><strong>username</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-username" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Provide a username for authenticating with the API. Can also be specified via K8S_AUTH_USERNAME environment variable.</p>
+    <p>Please note that this only works with clusters configured to use HTTP Basic Auth. If your cluster has a different form of authentication (e.g. OAuth2 in OpenShift), this option will not work as expected and you should look into the <a href='../../community/okd/k8s_auth_module.html' class='module'>community.okd.k8s_auth</a> module, as that might do what you need.</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-validate_certs"></div>
-<div class="ansibleOptionAnchor" id="parameter-verify_ssl"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-verify-ssl"><span id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-validate-certs"></span><strong>validate_certs</strong></p>
-<a class="ansibleOptionLink" href="#parameter-validate_certs" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: verify_ssl</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Whether or not to verify the API server’s SSL certificates. Can also be specified via K8S_AUTH_VERIFY_SSL environment variable.</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
-<ul class="simple">
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
-</ul>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-validate_certs"></div>
+    <div class="ansibleOptionAnchor" id="parameter-verify_ssl"></div>
+    <p class="ansible-option-title"><strong>validate_certs</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-validate_certs" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: verify_ssl</span></p>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">boolean</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Whether or not to verify the API server&#x27;s SSL certificates. Can also be specified via K8S_AUTH_VERIFY_SSL environment variable.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+    <ul class="simple">
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">true</code></p></li>
+    </ul>
+
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-wait"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-wait"><strong>wait</strong></p>
-<a class="ansibleOptionLink" href="#parameter-wait" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Whether to wait for the VirtualMachine to end up in the ready state.</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
-<ul class="simple">
-<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
-</ul>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-wait"></div>
+    <p class="ansible-option-title"><strong>wait</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-wait" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">boolean</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Whether to wait for the VirtualMachine to end up in the ready state.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+    <ul class="simple">
+      <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>false</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">true</code></p></li>
+    </ul>
+
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-wait_sleep"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-wait-sleep"><strong>wait_sleep</strong></p>
-<a class="ansibleOptionLink" href="#parameter-wait_sleep" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Number of seconds to sleep between checks.</p>
-<p>Ignored if <code class="docutils literal notranslate"><span class="pre">wait</span></code> is not set.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">5</span></code></p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-wait_sleep"></div>
+    <p class="ansible-option-title"><strong>wait_sleep</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-wait_sleep" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">integer</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Number of seconds to sleep between checks.</p>
+    <p>Ignored if <code class='docutils literal notranslate'>wait</code> is not set.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">5</code></p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-wait_timeout"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-wait-timeout"><strong>wait_timeout</strong></p>
-<a class="ansibleOptionLink" href="#parameter-wait_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>How long in seconds to wait for the resource to end up in the desired state.</p>
-<p>Ignored if <code class="docutils literal notranslate"><span class="pre">wait</span></code> is not set.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">120</span></code></p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-wait_timeout"></div>
+    <p class="ansible-option-title"><strong>wait_timeout</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-wait_timeout" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">integer</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>How long in seconds to wait for the resource to end up in the desired state.</p>
+    <p>Ignored if <code class='docutils literal notranslate'>wait</code> is not set.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">120</code></p>
+  </div></td>
 </tr>
 </tbody>
-</table>
-</section>
+</table></section>
 <section id="notes">
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Notes</a><a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
 <div class="admonition note">
@@ -433,73 +607,116 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 </section>
 <section id="return-values">
 <h2><a class="toc-backref" href="#id6" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Link to this heading"></a></h2>
-<p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/ansible/latest/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible v8)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
-<table class="ansible-option-table docutils align-default" style="width: 100%">
+<p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/ansible/latest/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible v9)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
+<table class="colwidths-auto ansible-option-table docutils align-default" style="width: 100%">
 <thead>
-<tr class="row-odd"><th class="head"><p>Key</p></th>
-<th class="head"><p>Description</p></th>
+<tr class="row-odd">
+  <th class="head"><p>Key</p></th>
+  <th class="head"><p>Description</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-api_found"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-return-api-found"><strong>api_found</strong></p>
-<a class="ansibleOptionLink" href="#return-api_found" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Whether the specified api_version and VirtualMachine kind were successfully mapped to an existing API on the targeted cluster.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="return-api_found"></div>
+    <p class="ansible-option-title"><strong>api_found</strong></p>
+    <a class="ansibleOptionLink" href="#return-api_found" title="Permalink to this return value"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">boolean</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Whether the specified api_version and VirtualMachine kind were successfully mapped to an existing API on the targeted cluster.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-resources"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-return-resources"><strong>resources</strong></p>
-<a class="ansibleOptionLink" href="#return-resources" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">complex</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The VirtualMachine(s) that exists</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> success</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="return-resources"></div>
+    <p class="ansible-option-title"><strong>resources</strong></p>
+    <a class="ansibleOptionLink" href="#return-resources" title="Permalink to this return value"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">complex</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>The VirtualMachine(s) that exists</p>
+    <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-resources/api_version"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-return-resources-api-version"><strong>api_version</strong></p>
-<a class="ansibleOptionLink" href="#return-resources/api_version" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The versioned schema of this representation of an object.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> success</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="return-resources/api_version"></div>
+    <p class="ansible-option-title"><strong>api_version</strong></p>
+    <a class="ansibleOptionLink" href="#return-resources/api_version" title="Permalink to this return value"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+    <p>The versioned schema of this representation of an object.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-resources/kind"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-return-resources-kind"><strong>kind</strong></p>
-<a class="ansibleOptionLink" href="#return-resources/kind" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Represents the REST resource this object represents.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> success</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="return-resources/kind"></div>
+    <p class="ansible-option-title"><strong>kind</strong></p>
+    <a class="ansibleOptionLink" href="#return-resources/kind" title="Permalink to this return value"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">string</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+    <p>Represents the REST resource this object represents.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-resources/metadata"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-return-resources-metadata"><strong>metadata</strong></p>
-<a class="ansibleOptionLink" href="#return-resources/metadata" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Standard object metadata. Includes name, namespace, annotations, labels, etc.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> success</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="return-resources/metadata"></div>
+    <p class="ansible-option-title"><strong>metadata</strong></p>
+    <a class="ansibleOptionLink" href="#return-resources/metadata" title="Permalink to this return value"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">dictionary</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+    <p>Standard object metadata. Includes name, namespace, annotations, labels, etc.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+  </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-resources/spec"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-return-resources-spec"><strong>spec</strong></p>
-<a class="ansibleOptionLink" href="#return-resources/spec" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Specific attributes of the VirtualMachine. Can vary based on the <em>api_version</em>.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> success</p>
-</div></td>
+<tr class="row-odd">
+  <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="return-resources/spec"></div>
+    <p class="ansible-option-title"><strong>spec</strong></p>
+    <a class="ansibleOptionLink" href="#return-resources/spec" title="Permalink to this return value"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">dictionary</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+    <p>Specific attributes of the VirtualMachine. Can vary based on the <em>api_version</em>.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+  </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-resources/status"></div><p class="ansible-option-title" id="ansible-collections-kubevirt-core-kubevirt-vm-info-module-return-resources-status"><strong>status</strong></p>
-<a class="ansibleOptionLink" href="#return-resources/status" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Current status details for the VirtualMachine.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> success</p>
-</div></td>
+<tr class="row-even">
+  <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="return-resources/status"></div>
+    <p class="ansible-option-title"><strong>status</strong></p>
+    <a class="ansibleOptionLink" href="#return-resources/status" title="Permalink to this return value"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">dictionary</span>
+    </p>
+  </div></td>
+  <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+    <p>Current status details for the VirtualMachine.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+  </div></td>
 </tr>
+
 </tbody>
-</table>
-<section id="authors">
+</table><section id="authors">
 <h3>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>KubeVirt.io Project</p></li>

@@ -8,7 +8,7 @@ This repository hosts the `kubevirt.core` Ansible Collection, which provides vir
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
-This collection has been tested against following Ansible versions: **>=2.9.10**.
+This collection has been tested against following Ansible versions: **>=2.14.0**.
 <!--end requires_ansible-->
 
 ## Included content
