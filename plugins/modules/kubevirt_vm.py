@@ -128,27 +128,27 @@ EXAMPLES = """
       domain:
         devices:
           interfaces:
-          - name: default
-            masquerade: {}
-          - name: bridge-network
-            bridge: {}
+            - name: default
+              masquerade: {}
+            - name: bridge-network
+              bridge: {}
       networks:
-      - name: default
-        pod: {}
-      - name: bridge-network
-        multus:
-          networkName: kindexgw
+        - name: default
+          pod: {}
+        - name: bridge-network
+          multus:
+            networkName: kindexgw
       volumes:
-      - containerDisk:
-          image: quay.io/containerdisks/fedora:latest
-        name: containerdisk
-      - cloudInitNoCloud:
-          userData: |-
-            #cloud-config
-            # The default username is: fedora
-            ssh_authorized_keys:
-              - ssh-ed25519 AAAA...
-        name: cloudinit
+        - containerDisk:
+            image: quay.io/containerdisks/fedora:latest
+          name: containerdisk
+        - cloudInitNoCloud:
+            userData: |-
+              #cloud-config
+              # The default username is: fedora
+              ssh_authorized_keys:
+                - ssh-ed25519 AAAA...
+          name: cloudinit
 
 - name: Create a VirtualMachine with a DataVolume template
   kubevirt.core.kubevirt_vm:
@@ -170,7 +170,7 @@ EXAMPLES = """
               url: docker://quay.io/containerdisks/fedora:latest
           storage:
             accessModes:
-            - ReadWriteOnce
+              - ReadWriteOnce
             resources:
               requests:
                 storage: 5Gi
@@ -178,16 +178,16 @@ EXAMPLES = """
       domain:
         devices: {}
       volumes:
-      - dataVolume:
-          name: testdv
-        name: datavolume
-      - cloudInitNoCloud:
-          userData: |-
-            #cloud-config
-            # The default username is: fedora
-            ssh_authorized_keys:
-              - ssh-ed25519 AAAA...
-        name: cloudinit
+        - dataVolume:
+            name: testdv
+          name: datavolume
+        - cloudInitNoCloud:
+            userData: |-
+              #cloud-config
+              # The default username is: fedora
+              ssh_authorized_keys:
+                - ssh-ed25519 AAAA...
+          name: cloudinit
     wait: yes
 
 - name: Delete a VirtualMachine
