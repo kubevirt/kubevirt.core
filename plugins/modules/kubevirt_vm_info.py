@@ -97,7 +97,7 @@ EXAMPLES = """
   kubevirt.core.kubevirt_vm_info:
     name: testvm
     namespace: default
-    wait: yes
+    wait: true
 """
 
 RETURN = """

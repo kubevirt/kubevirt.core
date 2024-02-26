@@ -2,4 +2,4 @@ plugin: kubevirt.core.kubevirt
 connections:
   - namespaces:
       - default
-    use_service: yes
+    use_service: true

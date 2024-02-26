@@ -1,0 +1,2 @@
+modules:
+  python_requires: ">=3.11.0,<3.12.0"

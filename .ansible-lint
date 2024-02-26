@@ -1,37 +1,11 @@
 # .ansible-lint
 exclude_paths:
-  - .cache/
   - .github/
-  - molecule/
-  - .ansible-lint
-  - .yamllint
-  - meta/
-  - playbooks/roles/
-  - changelogs/changelog.yaml
 
 enable_list:
   - fqcn-builtins  # opt-in
   - no-log-password  # opt-in
+  - yaml
 
-warn_list:
-  - experimental
-  - ignore-errors
-  - no-handler
-  - fqcn-builtins
-  - no-log-password
-  - no-empty-data-files
-  - name[template]
-  - fqcn[keyword]
-  - schema[meta]
-  - no-free-form
-  - run-once[task]
-  - var-naming[no-role-prefix]
-  - galaxy[version-incorrect]
-  - yaml[key-duplicates]
-
-skip_list:
-  - jinja[spacing]
-  - yaml[truthy]
-
-use_default_rules: true
+profile: production
 parseable: true

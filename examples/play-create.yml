@@ -37,4 +37,4 @@
                   ssh_authorized_keys:
                     - ssh-ed25519 AAAA...
               name: cloudinit
-        wait: yes
+        wait: true

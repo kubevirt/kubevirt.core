@@ -3,4 +3,4 @@ connections:
   - namespaces:
       - default
     network_name: bridge-network
-    kube_secondary_dns: yes
+    kube_secondary_dns: true
