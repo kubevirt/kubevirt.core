@@ -21,8 +21,19 @@ jobs:
           fetch-depth: 0
       - run: |
           mkdir -p /home/runner/.kube/
-          cp -rp ${GITHUB_WORKSPACE}/ansible_collections/kubevirt/core/tests/.kubeconfig /home/runner/.kube/config
-          cat /home/runner/.kube/config
+          cat <<- EOF > /home/runner/.kube/config
+          apiVersion: v1
+          kind: Config
+          clusters:
+          - cluster:
+              server: http://localhost:12345
+            name: default
+          contexts:
+          - context:
+              cluster: default
+            name: default
+          current-context: default
+          EOF
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
