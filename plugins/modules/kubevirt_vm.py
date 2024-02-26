@@ -188,7 +188,7 @@ EXAMPLES = """
               ssh_authorized_keys:
                 - ssh-ed25519 AAAA...
           name: cloudinit
-    wait: yes
+    wait: true
 
 - name: Delete a VirtualMachine
   kubevirt.core.kubevirt_vm:

@@ -10,7 +10,7 @@
         namespace: default
         labels:
           app: test
-        wait: yes
+        wait: true
         wait_timeout: 600
         spec:
           domain:
@@ -41,7 +41,7 @@
         namespace: default
         labels:
           foo: bar
-        wait: yes
+        wait: true
         wait_timeout: 600
         spec:
           domain:

@@ -6,4 +6,4 @@
         name: testvm-with-dv
         namespace: default
         state: absent
-        wait: yes
+        wait: true

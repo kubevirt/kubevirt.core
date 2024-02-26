@@ -6,4 +6,4 @@
         name: testvm
         namespace: default
         state: absent
-        wait: yes
+        wait: true

@@ -6,4 +6,4 @@
         state: present
         name: testvm
         namespace: default
-        running: no
+        running: false
