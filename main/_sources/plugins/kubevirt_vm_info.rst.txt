@@ -7,7 +7,7 @@
     :trim:
 
 .. meta::
-  :antsibull-docs: 2.5.0
+  :antsibull-docs: 2.7.0
 
 .. Anchors
 
@@ -550,7 +550,7 @@ Examples
       kubevirt.core.kubevirt_vm_info:
         name: testvm
         namespace: default
-        wait: yes
+        wait: true
 
 
 

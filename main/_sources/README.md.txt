@@ -6,9 +6,9 @@
 This repository hosts the `kubevirt.core` Ansible Collection, which provides virtual machine operations and inventory source for use with Ansible.
 
 <!--start requires_ansible-->
-## Ansible version compatibility
+## Ansible and Python version compatibility
 
-This collection has been tested against following Ansible versions: **>=2.14.0**.
+This collection has been tested against following Ansible versions **>=2.14.0** and the following Python versions **>=3.11.0,<3.12.0**.
 <!--end requires_ansible-->
 
 ## Included content
