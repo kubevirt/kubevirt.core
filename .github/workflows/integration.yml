@@ -125,10 +125,10 @@ jobs:
     name: "${{ matrix.test-target }} / py${{ matrix.python-version }} / ${{ matrix.ansible-version }}"
     steps:
       - name: Checkout kubevirt.core repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: ${{ env.source }}
-          fetch-depth: "0"
+          fetch-depth: 0
         if: inputs.ansible_test_targets != ''
 
       - name: install dependencies collection
@@ -147,11 +147,9 @@ jobs:
         if: inputs.ansible_test_targets != ''
 
       - name: install kind / kubectl
-        uses: helm/kind-action@v1.8.0
+        uses: helm/kind-action@v1.9.0
         with:
           install_only: true
-          version: v0.20.0
-          kubectl_version: v1.27.3
         if: inputs.ansible_test_targets != ''
 
       - name: deploy kubevirt
