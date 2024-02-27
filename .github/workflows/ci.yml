@@ -37,8 +37,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'
+          python-version: 3.x
+          cache: pip
       - name: Install yamllint, ansible
         run: |
           python -m pip install --upgrade pip
@@ -55,61 +55,59 @@ jobs:
     with:
       matrix_include: "[]"
       matrix_exclude: >-
-          [
-            {
-              "ansible-version": "stable-2.12"
-            },
-            {
-              "ansible-version": "stable-2.13"
-            },
-            {
-              "python-version": "3.7"
-            },
-            {
-              "python-version": "3.8"
-            },
-            {
-              "python-version": "3.9"
-            },
-            {
-              "python-version": "3.10"
-            },
-            {
-              "python-version": "3.12"
-            }
-          ]
+        [
+          {
+            "ansible-version": "stable-2.14",
+            "python-version": "3.12"
+          },
+          {
+            "ansible-version": "stable-2.15",
+            "python-version": "3.12"
+          },
+          {
+            "ansible-version": "stable-2.16",
+            "python-version": "3.9"
+          },
+          {
+            "ansible-version": "milestone",
+            "python-version": "3.9"
+          },
+          {
+            "ansible-version": "devel",
+            "python-version": "3.9"
+          }
+        ]
   unit-source:
     uses: ansible-network/github_actions/.github/workflows/unit_source.yml@main
     needs:
       - linter
     with:
       matrix_exclude: >-
-          [
-            {
-              "ansible-version": "stable-2.12"
-            },
-            {
-              "ansible-version": "stable-2.13"
-            },
-            {
-              "python-version": "3.7"
-            },
-            {
-              "python-version": "3.8"
-            },
-            {
-              "python-version": "3.9"
-            },
-            {
-              "python-version": "3.10"
-            },
-            {
-              "python-version": "3.12"
-            }
-          ]
+        [
+          {
+            "ansible-version": "stable-2.14",
+            "python-version": "3.12"
+          },
+          {
+            "ansible-version": "stable-2.15",
+            "python-version": "3.12"
+          },
+          {
+            "ansible-version": "stable-2.16",
+            "python-version": "3.9"
+          },
+          {
+            "ansible-version": "milestone",
+            "python-version": "3.9"
+          },
+          {
+            "ansible-version": "devel",
+            "python-version": "3.9"
+          }
+        ]
       collection_pre_install: ''
   integration:
-    uses: kubevirt/kubevirt.core/.github/workflows/integration.yml@main
+    uses: ./.github/workflows/integration.yml
     needs:
       - linter
     with:
