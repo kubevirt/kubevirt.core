@@ -1,3 +1,4 @@
+---
 - name: Playbook instantiating a virtual machine
   hosts: localhost
   tasks:
