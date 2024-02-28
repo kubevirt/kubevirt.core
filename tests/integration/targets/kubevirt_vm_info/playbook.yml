@@ -11,7 +11,7 @@
         instancetype:
           name: u1.small
         preference:
-          name: centos.9.stream
+          name: centos.stream9
         spec:
           domain:
             devices: {}
