@@ -69,7 +69,7 @@ extends_documentation_fragment:
 
 requirements:
   - "python >= 3.6"
-  - "kubernetes >= 12.0.0"
+  - "kubernetes >= 28.1.0"
 """
 
 EXAMPLES = """
