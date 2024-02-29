@@ -55,10 +55,10 @@ collections:
 
 #### Python libraries
 
-- kubernetes
-- PyYaml
-- jsonpatch
 - jinja2
+- jsonpatch
+- kubernetes>=28.1.0
+- PyYAML>=3.11
 
 To install all the dependencies:
 ```bash
