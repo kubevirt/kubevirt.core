@@ -106,7 +106,6 @@ jobs:
 
       - name: Deploy kubevirt
         if: inputs.ansible_test_targets != ''
-        shell: bash
         run: >-
           ${{ env.source_directory }}/hack/e2e-setup.sh \
             -v \
