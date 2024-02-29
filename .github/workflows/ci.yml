@@ -1,59 +1,55 @@
+---
 name: CI
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
+# yamllint disable-line rule:truthy
 on:
   push:
     branches:
       - main
   pull_request:
   workflow_dispatch:
+  # Run CI once per day (at 06:00 UTC)
+  # This ensures that even if there haven't been commits that we are still
+  # testing against latest version of ansible-test for each ansible-base version
   schedule:
-    - cron: '0 6 * * *'
+    - cron: "0 6 * * *"
 jobs:
   linter:
     runs-on: ubuntu-latest
+    env:
+      collection_dir: ansible_collections/kubevirt/core
     steps:
+
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          path: ansible_collections/kubevirt/core
+          path: ${{ env.collection_dir }}
           fetch-depth: 0
-      - run: |
-          mkdir -p /home/runner/.kube/
-          cat <<- EOF > /home/runner/.kube/config
-          apiVersion: v1
-          kind: Config
-          clusters:
-          - cluster:
-              server: http://localhost:12345
-            name: default
-          contexts:
-          - context:
-              cluster: default
-            name: default
-          current-context: default
-          EOF
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: 3.x
           cache: pip
+
       - name: Install yamllint, ansible
         run: |
           python -m pip install --upgrade pip
           pip install yamllint ansible-core ansible-lint
+
       - name: Run linter
         run: |
           ansible-lint --version
           ansible-lint -v
-        working-directory: ./ansible_collections/kubevirt/core
+        working-directory: ${{ env.collection_dir }}
+
   sanity:
     uses: ansible-network/github_actions/.github/workflows/sanity.yml@main
     needs:
       - linter
     with:
-      matrix_include: "[]"
       matrix_exclude: >-
         [
           {
@@ -77,6 +73,7 @@ jobs:
             "python-version": "3.9"
           }
         ]
+
   unit-source:
     uses: ansible-network/github_actions/.github/workflows/unit_source.yml@main
     needs:
@@ -105,33 +102,32 @@ jobs:
             "python-version": "3.9"
           }
         ]
-      collection_pre_install: ''
+
   integration:
     uses: ./.github/workflows/integration.yml
     needs:
       - linter
     with:
       ansible_test_targets: >-
-          [
-            "kubevirt_vm",
-            "kubevirt_vm_info",
-            "inventory_kubevirt"
-          ]
-    name: "integration"
+        [
+          "kubevirt_vm",
+          "kubevirt_vm_info",
+          "inventory_kubevirt"
+        ]
 
   all_green:
+    runs-on: ubuntu-latest
     if: ${{ always() }}
     needs:
+      - linter
       - sanity
       - unit-source
       - integration
-    runs-on: ubuntu-latest
     steps:
       - run: >-
           python -c "assert set([
+          '${{ needs.linter.result }}',
+          '${{ needs.sanity.result }}',
           '${{ needs.unit-source.result }}',
           '${{ needs.integration.result }}'
           ]) == {'success'}"
-      - run: >-
-          python -c "assert '${{ needs.sanity.result }}'
-          in ['success', 'failure']"

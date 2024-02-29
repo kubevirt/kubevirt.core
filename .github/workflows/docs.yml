@@ -1,5 +1,6 @@
 ---
 name: Documentation
+# yamllint disable-line rule:truthy
 on:
   push:
     branches:
@@ -8,27 +9,22 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+"
   workflow_dispatch:
 
-env:
-  COLORTERM: 'yes'
-  TERM: 'xterm-256color'
-  PYTEST_ADDOPTS: '--color=yes'
-
 jobs:
   docs:
     runs-on: ubuntu-latest
+    # Do not run in private forks
     if: github.repository == 'kubevirt/kubevirt.core'
     permissions:
-      actions: write
-      checks: write
       contents: write
-      deployments: write
-      packages: write
-      pages: write
+    env:
+      collection_dir: ansible_collections/kubevirt/core
+      work_dir: /home/runner/.ansible/collections
     steps:
+
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          path: ansible_collections/kubevirt/core
+          path: ${{ env.collection_dir }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -39,16 +35,21 @@ jobs:
 
       - name: Install doc dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r ansible_collections/kubevirt/core/docs/requirements.txt
-          pip install -r ansible_collections/kubevirt/core/requirements.txt
-          ansible-galaxy collection install -r ansible_collections/kubevirt/core/requirements.yml -p /home/runner/.ansible/collections --force-with-deps
+          python -m pip install --upgrade pip setuptools
+          pip install \
+            -r ${{ env.collection_dir }}/docs/requirements.txt
+          pip install \
+            -r ${{ env.collection_dir }}/requirements.txt
+          mkdir -p ${{ env.work_dir }}
+          ansible-galaxy collection install \
+            -r ${{ env.collection_dir }}/requirements.yml \
+            -p ${{ env.work_dir }} --force-with-deps
           sudo apt install -y sed hub
 
-      - name: Create default collection path
+      - name: Move collection to work dir
         run: |
-          mkdir -p /home/runner/.ansible/
-          cp -rp ${GITHUB_WORKSPACE}/ansible_collections /home/runner/.ansible/collections/
+          cp -rp ansible_collections \
+            ${{ env.work_dir }}
 
       - name: Create changelog and documentation
         uses: ansible-middleware/collection-docs-action@main
@@ -60,7 +61,7 @@ jobs:
           commit_ghpages: true
           changelog_release: false
           generate_docs: true
-          path: /home/runner/.ansible/collections/ansible_collections/kubevirt/core
+          path: ${{ env.work_dir }}/${{ env.collection_dir }}
           token: ${{ secrets.GITHUB_TOKEN }}
           bot_email: kubevirtbot@redhat.com
           bot_account: kubevirt-bot
