@@ -124,7 +124,7 @@ options:
 
 requirements:
 - "python >= 3.6"
-- "kubernetes >= 12.0.0"
+- "kubernetes >= 28.1.0"
 - "PyYAML >= 3.11"
 """
 
@@ -160,6 +160,7 @@ EXAMPLES = """
 """
 
 from dataclasses import dataclass
+from collections import defaultdict
 from json import loads
 from typing import (
     Any,
@@ -170,15 +171,24 @@ from typing import (
     Union,
 )
 
+
+# Handle import errors of python kubernetes client.
+# HAS_K8S_MODULE_HELPER imported below will print a warning to the user if the client is missing.
 try:
-    from kubernetes.dynamic.resource import ResourceField
-    from kubernetes.dynamic.exceptions import DynamicApiError
+    from kubernetes.dynamic.resource import Resource, ResourceField
+    from kubernetes.dynamic.exceptions import DynamicApiError, ServiceUnavailableError
 except ImportError:
+
+    class Resource:
+        pass
 
     class ResourceField:
         pass
 
     class DynamicApiError(Exception):
+        pass
+
+    class ServiceUnavailableError(Exception):
         pass
 
 
@@ -189,10 +199,35 @@ from ansible_collections.kubernetes.core.plugins.module_utils.common import (
     k8s_import_exception,
 )
 
+# Handle import errors of python kubernetes client.
+# HAS_K8S_MODULE_HELPER imported above will print a warning to the user if the client is missing.
+try:
+    from ansible_collections.kubernetes.core.plugins.module_utils.client.discovery import (
+        Discoverer,
+    )
+except ImportError:
+
+    class Discoverer:
+        pass
+
+
+# Handle import errors of python kubernetes client.
+# HAS_K8S_MODULE_HELPER imported above will print a warning to the user if the client is missing.
+try:
+    from ansible_collections.kubernetes.core.plugins.module_utils.client.resource import (
+        ResourceList,
+    )
+except ImportError:
+
+    class ResourceList:
+        pass
+
+
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s.client import (
     get_api_client,
     K8SClient,
 )
+
 
 LABEL_KUBEVIRT_IO_DOMAIN = "kubevirt.io/domain"
 TYPE_LOADBALANCER = "LoadBalancer"
@@ -309,6 +344,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
     def __init__(self) -> None:
         super().__init__()
         self.host_format = None
+
+        # Monkey patch the Discoverers method, see end of file for an explanation.
+        Discoverer.get_resources_for_api_version = _get_resources_for_api_version
 
     def verify_file(self, path: str) -> None:
         """
@@ -690,3 +728,68 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             return [self.__resource_field_to_dict(item) for item in field]
 
         return field
+
+
+# This function is copied from the kubernetes.core sources and a fix to handle apis of the format a/b/c was applied.
+# To ensure compatibility with KubeVirt >=1.1.0 the kubernetes.core Discoverers original method is monkey patched with this one.
+# TODO: Remove this once the fix was applied to the upstream kubernetes.core collection.
+#
+# See:
+# https://github.com/ansible-collections/kubernetes.core/blob/main/plugins/module_utils/client/discovery.py
+# https://github.com/ansible-collections/kubernetes.core/issues/685
+# https://github.com/kubernetes-client/python/issues/2091
+# https://github.com/kubernetes-client/python/pull/2095
+def _get_resources_for_api_version(self, prefix, group, version, preferred):
+    """returns a dictionary of resources associated with provided (prefix, group, version)"""
+
+    resources = defaultdict(list)
+    subresources = defaultdict(dict)
+
+    path = "/".join(filter(None, [prefix, group, version]))
+    try:
+        resources_response = self.client.request("GET", path).resources or []
+    except ServiceUnavailableError:
+        resources_response = []
+
+    resources_raw = list(
+        filter(lambda resource: "/" not in resource["name"], resources_response)
+    )
+    subresources_raw = list(
+        filter(lambda resource: "/" in resource["name"], resources_response)
+    )
+    for subresource in subresources_raw:
+        resource, name = subresource["name"].split("/", 1)
+        subresources[resource][name] = subresource
+
+    for resource in resources_raw:
+        # Prevent duplicate keys
+        for key in ("prefix", "group", "api_version", "client", "preferred"):
+            resource.pop(key, None)
+
+        resourceobj = Resource(
+            prefix=prefix,
+            group=group,
+            api_version=version,
+            client=self.client,
+            preferred=preferred,
+            subresources=subresources.get(resource["name"]),
+            **resource,
+        )
+        resources[resource["kind"]].append(resourceobj)
+
+        resource_lookup = {
+            "prefix": prefix,
+            "group": group,
+            "api_version": version,
+            "kind": resourceobj.kind,
+            "name": resourceobj.name,
+        }
+        resource_list = ResourceList(
+            self.client,
+            group=group,
+            api_version=version,
+            base_kind=resource["kind"],
+            base_resource_lookup=resource_lookup,
+        )
+        resources[resource_list.kind].append(resource_list)
+    return resources
