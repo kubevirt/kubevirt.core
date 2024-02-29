@@ -1,3 +1,4 @@
+---
 - name: Playbook terminating a virtual machine
   hosts: localhost
   tasks:

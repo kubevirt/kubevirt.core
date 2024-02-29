@@ -1,3 +1,4 @@
+---
 - name: Create VM
   connection: local
   gather_facts: false

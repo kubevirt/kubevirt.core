@@ -1,3 +1,4 @@
+---
 - name: Playbook terminating a virtual machine with data volume
   hosts: localhost
   tasks:

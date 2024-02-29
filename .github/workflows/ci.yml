@@ -39,7 +39,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install yamllint ansible-core ansible-lint
 
-      - name: Run linter
+      - name: Run yamllint
+        run: |
+          yamllint .
+        working-directory: ${{ env.collection_dir }}
+
+      - name: Run ansible-lint
         run: |
           ansible-lint --version
           ansible-lint -v

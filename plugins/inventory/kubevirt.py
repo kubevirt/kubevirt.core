@@ -138,7 +138,7 @@ EXAMPLES = """
       api_key: xxxxxxxxxxxxxxxx
       validate_certs: false
 
-- name: Use default ~/.kube/config and return VirtualMachineInstances from namespace testing with interfaces connected to network bridge-network
+- name: Use default ~/.kube/config and return VirtualMachineInstances from namespace testing connected to network bridge-network
   plugin: kubevirt.core.kubevirt
   connections:
     - namespaces:

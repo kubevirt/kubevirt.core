@@ -92,7 +92,6 @@ jobs:
       - name: Install kubevirt.core collection
         id: install
         if: inputs.ansible_test_targets != ''
-        # yamllint disable-line rule:line-length
         uses: ansible-network/github_actions/.github/actions/build_install_collection@main
         with:
           install_python_dependencies: true
@@ -124,7 +123,6 @@ jobs:
 
       - name: Run integration tests
         if: inputs.ansible_test_targets != ''
-        # yamllint disable-line rule:line-length
         uses: ansible-network/github_actions/.github/actions/ansible_test_integration@main
         with:
           collection_path: ${{ steps.install.outputs.collection_path }}
