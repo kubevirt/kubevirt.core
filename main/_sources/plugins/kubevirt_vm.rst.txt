@@ -17,8 +17,8 @@
 
 .. Title
 
-kubevirt_vm -- Create or delete KubeVirt VirtualMachines on Kubernetes
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+kubevirt_vm -- Create or delete KubeVirt VirtualMachines
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 

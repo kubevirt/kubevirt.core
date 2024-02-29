@@ -17,8 +17,8 @@
 
 .. Title
 
-kubevirt -- KubeVirt inventory source
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+kubevirt -- Inventory source for KubeVirt VirtualMachines
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 

@@ -17,8 +17,8 @@
 
 .. Title
 
-kubevirt_vm_info -- Describe VirtualMachines on Kubernetes
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+kubevirt_vm_info -- Describe KubeVirt VirtualMachines
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
