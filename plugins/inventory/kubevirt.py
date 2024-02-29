@@ -167,22 +167,17 @@ from typing import (
     Dict,
     List,
     Optional,
-    Tuple,
-    Union,
 )
 
 
 # Handle import errors of python kubernetes client.
 # HAS_K8S_MODULE_HELPER imported below will print a warning to the user if the client is missing.
 try:
-    from kubernetes.dynamic.resource import Resource, ResourceField
+    from kubernetes.dynamic.resource import Resource
     from kubernetes.dynamic.exceptions import DynamicApiError, ServiceUnavailableError
 except ImportError:
 
     class Resource:
-        pass
-
-    class ResourceField:
         pass
 
     class DynamicApiError(Exception):
@@ -521,12 +516,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             vmi_annotations = (
                 {}
                 if not vmi.metadata.annotations
-                else self.__resource_field_to_dict(vmi.metadata.annotations)
+                else vmi.metadata.annotations.to_dict()
             )
             vmi_labels = (
-                {}
-                if not vmi.metadata.labels
-                else self.__resource_field_to_dict(vmi.metadata.labels)
+                {} if not vmi.metadata.labels else vmi.metadata.labels.to_dict()
             )
 
             # Add vmi to the namespace group
@@ -570,21 +563,17 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
             # Add hostvars from status
             vmi_active_pods = (
-                {}
-                if not vmi.status.activePods
-                else self.__resource_field_to_dict(vmi.status.activePods)
+                {} if not vmi.status.activePods else vmi.status.activePods.to_dict()
             )
             self.inventory.set_variable(vmi_name, "vmi_active_pods", vmi_active_pods)
             vmi_conditions = (
                 []
                 if not vmi.status.conditions
-                else [self.__resource_field_to_dict(c) for c in vmi.status.conditions]
+                else [c.to_dict() for c in vmi.status.conditions]
             )
             self.inventory.set_variable(vmi_name, "vmi_conditions", vmi_conditions)
             vmi_guest_os_info = (
-                {}
-                if not vmi.status.guestOSInfo
-                else self.__resource_field_to_dict(vmi.status.guestOSInfo)
+                {} if not vmi.status.guestOSInfo else vmi.status.guestOSInfo.to_dict()
             )
             self.inventory.set_variable(
                 vmi_name, "vmi_guest_os_info", vmi_guest_os_info
@@ -592,7 +581,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             vmi_interfaces = (
                 []
                 if not vmi.status.interfaces
-                else [self.__resource_field_to_dict(i) for i in vmi.status.interfaces]
+                else [i.to_dict() for i in vmi.status.interfaces]
             )
             self.inventory.set_variable(vmi_name, "vmi_interfaces", vmi_interfaces)
             self.inventory.set_variable(
@@ -611,10 +600,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             vmi_phase_transition_timestamps = (
                 []
                 if not vmi.status.phaseTransitionTimestamps
-                else [
-                    self.__resource_field_to_dict(p)
-                    for p in vmi.status.phaseTransitionTimestamps
-                ]
+                else [p.to_dict() for p in vmi.status.phaseTransitionTimestamps]
             )
             self.inventory.set_variable(
                 vmi_name,
@@ -630,7 +616,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             vmi_volume_status = (
                 []
                 if not vmi.status.volumeStatus
-                else [self.__resource_field_to_dict(v) for v in vmi.status.volumeStatus]
+                else [v.to_dict() for v in vmi.status.volumeStatus]
             )
             self.inventory.set_variable(
                 vmi_name, "vmi_volume_status", vmi_volume_status
@@ -709,25 +695,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             ansible_host = ip_address
 
         self.inventory.set_variable(vmi_name, "ansible_host", ansible_host)
-
-    def __resource_field_to_dict(
-        self, field: Union[Dict, List, ResourceField, Tuple]
-    ) -> Dict:
-        """
-        Replace this with ResourceField.to_dict() once available in a stable release of
-        the Kubernetes Python client
-        See
-        https://github.com/kubernetes-client/python/blob/main/kubernetes/base/dynamic/resource.py#L393
-        """
-        if isinstance(field, ResourceField):
-            return {
-                k: self.__resource_field_to_dict(v) for k, v in field.__dict__.items()
-            }
-
-        if isinstance(field, (list, tuple)):
-            return [self.__resource_field_to_dict(item) for item in field]
-
-        return field
 
 
 # This function is copied from the kubernetes.core sources and a fix to handle apis of the format a/b/c was applied.
