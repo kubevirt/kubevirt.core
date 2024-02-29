@@ -10,7 +10,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 name: kubevirt
 
-short_description: KubeVirt inventory source
+short_description: Inventory source for KubeVirt VirtualMachines
 
 author:
 - "KubeVirt.io Project (!UNKNOWN)"

@@ -11,7 +11,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 module: kubevirt_vm_info
 
-short_description: Describe VirtualMachines on Kubernetes
+short_description: Describe KubeVirt VirtualMachines
 
 author:
 - "KubeVirt.io Project (!UNKNOWN)"

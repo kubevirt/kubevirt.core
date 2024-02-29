@@ -11,7 +11,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 module: kubevirt_vm
 
-short_description: Create or delete KubeVirt VirtualMachines on Kubernetes
+short_description: Create or delete KubeVirt VirtualMachines
 
 author:
 - "KubeVirt.io Project (!UNKNOWN)"
