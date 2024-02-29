@@ -1,4 +1,4 @@
-kubernetes>=28.1.0
-PyYaml
-jsonpatch
 jinja2
+jsonpatch
+kubernetes>=28.1.0
+PyYAML>=3.11

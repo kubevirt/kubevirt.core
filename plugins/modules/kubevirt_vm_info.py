@@ -68,8 +68,9 @@ extends_documentation_fragment:
   - kubernetes.core.k8s_auth_options
 
 requirements:
-  - "python >= 3.6"
+  - "python >= 3.9"
   - "kubernetes >= 28.1.0"
+  - "PyYAML >= 3.11"
 """
 
 EXAMPLES = """
