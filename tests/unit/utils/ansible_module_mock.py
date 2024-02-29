@@ -47,5 +47,5 @@ def fail_json(*args, **kwargs):
 
 
 def get_api_client(*args, **kwargs):
-    """function to patch over get_api_client """
+    """function to patch over get_api_client"""
     pass

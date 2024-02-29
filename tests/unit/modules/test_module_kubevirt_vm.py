@@ -19,7 +19,7 @@ from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock impo
     exit_json,
     fail_json,
     set_module_args,
-    get_api_client
+    get_api_client,
 )
 
 FIXTURE1 = {
@@ -28,24 +28,15 @@ FIXTURE1 = {
     "metadata": {
         "name": "testvm",
         "namespace": "default",
-        "labels": {
-            "environment": "staging",
-            "service": "loadbalancer"
-        }
+        "labels": {"environment": "staging", "service": "loadbalancer"},
     },
     "spec": {
         "running": True,
-        "instancetype": {
-            "name": "u1.medium"
-        },
-        "preference": {
-            "name": "fedora"
-        },
+        "instancetype": {"name": "u1.medium"},
+        "preference": {"name": "fedora"},
         "dataVolumeTemplates": [
             {
-                "metadata": {
-                    "name": "testdv"
-                },
+                "metadata": {"name": "testdv"},
                 "spec": {
                     "source": {
                         "registry": {
@@ -53,36 +44,22 @@ FIXTURE1 = {
                         },
                     },
                     "storage": {
-                        "accessModes": [
-                            "ReadWriteOnce"
-                        ],
-                        "resources": {
-                            "requests": {
-                                "storage": "5Gi"
-                            }
-                        }
-                    }
-                }
+                        "accessModes": ["ReadWriteOnce"],
+                        "resources": {"requests": {"storage": "5Gi"}},
+                    },
+                },
             }
         ],
         "template": {
             "metadata": {
-                "labels": {
-                    "environment": "staging",
-                    "service": "loadbalancer"
-                }
+                "labels": {"environment": "staging", "service": "loadbalancer"}
             },
-            "spec": {
-                "domain": {
-                    "devices": {}
-                },
-                "terminationGracePeriodSeconds": 180
-            }
-        }
-    }
+            "spec": {"domain": {"devices": {}}, "terminationGracePeriodSeconds": 180},
+        },
+    },
 }
 
-METADATA = '''apiVersion: kubevirt.io/v1
+METADATA = """apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
   name: "testvm"
@@ -118,78 +95,70 @@ spec:
       domain:
         devices: {}
       terminationGracePeriodSeconds: 180
-'''
+"""
 
 FIXTURE2 = {
-    'name': 'testvm',
-    'namespace': 'default',
-    'state': 'present',
-    'labels': {
-        'service': 'loadbalancer',
-        'environment': 'staging'
-    },
-    'instancetype': {
-        'name': 'u1.medium'
-    },
-    'preference': {
-        'name': 'fedora'
-    },
-    'data_volume_templates': [
+    "name": "testvm",
+    "namespace": "default",
+    "state": "present",
+    "labels": {"service": "loadbalancer", "environment": "staging"},
+    "instancetype": {"name": "u1.medium"},
+    "preference": {"name": "fedora"},
+    "data_volume_templates": [
         {
-            'metadata': {
-                'name': 'testdv'
-            },
-            'spec': {
-                'source': {
-                    'registry': {
-                        'url': 'docker://quay.io/containerdisks/fedora:latest'
+            "metadata": {"name": "testdv"},
+            "spec": {
+                "source": {
+                    "registry": {
+                        "url": "docker://quay.io/containerdisks/fedora:latest"
                     },
                 },
-                'storage': {
-                    'accessModes': [
-                        'ReadWriteOnce'
-                    ],
-                    'resources': {
-                        'requests': {
-                            'storage': '5Gi'
-                        }
-                    }
-                }
-            }
+                "storage": {
+                    "accessModes": ["ReadWriteOnce"],
+                    "resources": {"requests": {"storage": "5Gi"}},
+                },
+            },
         }
     ],
-    'spec': {
-        'domain': {
-            'devices': {}
-        },
-        'terminationGracePeriodSeconds': 180
-    },
-    'api_version': 'kubevirt.io/v1', 'running': True, 'wait': False, 'wait_sleep': 5, 'wait_timeout': 120, 'force': False,
-    'generate_name': None, 'annotations': None, 'kubeconfig': None, 'context': None, 'host': None, 'api_key': None,
-    'username': None, 'password': None, 'validate_certs': None, 'ca_cert': None, 'client_cert': None, 'client_key': None,
-    'proxy': None, 'no_proxy': None, 'proxy_headers': None, 'persist_config': None, 'impersonate_user': None,
-    'impersonate_groups': None, 'delete_options': None,
-    'resource_definition': METADATA,
-    'wait_condition': {
-        'type': 'Ready',
-        'status': True
-    }
+    "spec": {"domain": {"devices": {}}, "terminationGracePeriodSeconds": 180},
+    "api_version": "kubevirt.io/v1",
+    "running": True,
+    "wait": False,
+    "wait_sleep": 5,
+    "wait_timeout": 120,
+    "force": False,
+    "generate_name": None,
+    "annotations": None,
+    "kubeconfig": None,
+    "context": None,
+    "host": None,
+    "api_key": None,
+    "username": None,
+    "password": None,
+    "validate_certs": None,
+    "ca_cert": None,
+    "client_cert": None,
+    "client_key": None,
+    "proxy": None,
+    "no_proxy": None,
+    "proxy_headers": None,
+    "persist_config": None,
+    "impersonate_user": None,
+    "impersonate_groups": None,
+    "delete_options": None,
+    "resource_definition": METADATA,
+    "wait_condition": {"type": "Ready", "status": True},
 }
 
 
 class TestCreateVM(unittest.TestCase):
     def setUp(self):
         self.mock_module_helper = patch.multiple(
-            basic.AnsibleModule,
-            exit_json=exit_json,
-            fail_json=fail_json
+            basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json
         )
         self.mock_module_helper.start()
 
-        self.mock_runner = patch.multiple(
-            runner,
-            get_api_client=get_api_client
-        )
+        self.mock_runner = patch.multiple(runner, get_api_client=get_api_client)
         self.mock_runner.start()
 
         # Stop the patch after test execution
@@ -208,56 +177,37 @@ class TestCreateVM(unittest.TestCase):
                 "name": "testvm",
                 "namespace": "default",
                 "state": "present",
-                "labels": {
-                    "service": "loadbalancer",
-                    "environment": "staging"
-                },
-                'instancetype': {
-                    'name': 'u1.medium'
-                },
-                'preference': {
-                    'name': 'fedora'
-                },
-                'data_volume_templates': [
+                "labels": {"service": "loadbalancer", "environment": "staging"},
+                "instancetype": {"name": "u1.medium"},
+                "preference": {"name": "fedora"},
+                "data_volume_templates": [
                     {
-                        'metadata': {
-                            'name': 'testdv'
-                        },
-                        'spec': {
-                            'source': {
-                                'registry': {
-                                    'url': 'docker://quay.io/containerdisks/fedora:latest'
+                        "metadata": {"name": "testdv"},
+                        "spec": {
+                            "source": {
+                                "registry": {
+                                    "url": "docker://quay.io/containerdisks/fedora:latest"
                                 },
                             },
-                            'storage': {
-                                'accessModes': [
-                                    'ReadWriteOnce'
-                                ],
-                                'resources': {
-                                    'requests': {
-                                        'storage': '5Gi'
-                                    }
-                                }
-                            }
-                        }
+                            "storage": {
+                                "accessModes": ["ReadWriteOnce"],
+                                "resources": {"requests": {"storage": "5Gi"}},
+                            },
+                        },
                     }
                 ],
-                'spec': {
-                    'domain': {
-                        'devices': {}
-                    },
-                    'terminationGracePeriodSeconds': 180
-                }
+                "spec": {
+                    "domain": {"devices": {}},
+                    "terminationGracePeriodSeconds": 180,
+                },
             }
         )
         with patch.object(runner, "perform_action") as mock_run_command:
-            mock_run_command.return_value = (
-                {
-                    "method": "create",
-                    "changed": True,
-                    "result": "success"
-                }
-            )  # successful execution
+            mock_run_command.return_value = {
+                "method": "create",
+                "changed": True,
+                "result": "success",
+            }  # successful execution
             with self.assertRaises(AnsibleExitJson) as result:
                 kubevirt_vm.main()
             mock_run_command.assert_called_once_with(
