@@ -105,7 +105,7 @@ options:
     type: int
 
 requirements:
-- "python >= 3.6"
+- "python >= 3.9"
 - "kubernetes >= 28.1.0"
 - "PyYAML >= 3.11"
 - "jsonpatch"

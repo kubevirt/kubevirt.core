@@ -123,7 +123,7 @@ options:
         default: "kubevirt.io/v1"
 
 requirements:
-- "python >= 3.6"
+- "python >= 3.9"
 - "kubernetes >= 28.1.0"
 - "PyYAML >= 3.11"
 """
