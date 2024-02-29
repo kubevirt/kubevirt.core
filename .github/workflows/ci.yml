@@ -34,10 +34,11 @@ jobs:
           python-version: 3.x
           cache: pip
 
-      - name: Install yamllint, ansible
+      - name: Install yamllint, ansible, shellcheck
         run: |
           python -m pip install --upgrade pip
           pip install yamllint ansible-core ansible-lint
+          sudo apt install -y shellcheck
 
       - name: Run yamllint
         run: |
@@ -48,6 +49,11 @@ jobs:
         run: |
           ansible-lint --version
           ansible-lint -v
+        working-directory: ${{ env.collection_dir }}
+
+      - name: Run shellcheck
+        run: |
+          find . -type f -iname '*.sh' -exec shellcheck {} \;
         working-directory: ${{ env.collection_dir }}
 
   sanity:
