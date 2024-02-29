@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath("../plugins/module_utils/"))
 
 # -- Project information -----------------------------------------------------
 
-project = "Kubevirt Ansible Collection"
+project = "KubeVirt Ansible Collection"
 copyright = "{y} Red Hat, Inc.".format(y=datetime.date.today().year)
 author = "Red Hat, Inc."
 
@@ -110,7 +110,7 @@ html_static_path = []
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "KubevirtCollectionDoc"
+htmlhelp_basename = "KubeVirtCollectionDoc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -136,8 +136,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "KubevirtCollection.tex",
-        "Red Hat Kubevirt Ansible Collection Documentation",
+        "KubeVirtCollection.tex",
+        "Red Hat KubeVirt Ansible Collection Documentation",
         "Red Hat, Inc.",
         "manual",
     ),
@@ -151,8 +151,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "KubevirtCollection",
-        "Red Hat Kubevirt Ansible Collection Documentation",
+        "KubeVirtCollection",
+        "Red Hat KubeVirt Ansible Collection Documentation",
         [author],
         1,
     )
@@ -167,10 +167,10 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "KubevirtCollection",
-        "Red Hat Kubevirt Ansible Collection Documentation",
+        "KubeVirtCollection",
+        "Red Hat KubeVirt Ansible Collection Documentation",
         author,
-        "KubevirtCollection",
+        "KubeVirtCollection",
         "One line description of project.",
         "Miscellaneous",
     ),

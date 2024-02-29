@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Kubevirt Ansible Collection documentation index</title>
+    <title>KubeVirt Ansible Collection documentation index</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://ansible-middleware.github.io/amq/main/_static/pygments.css" type="text/css" />
@@ -19,7 +19,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="#" class="icon icon-home"> Kubevirt Ansible Collection</a>
+            <a href="#" class="icon icon-home"> KubeVirt Ansible Collection</a>
         </div>
       </div>
     </nav>
@@ -29,7 +29,7 @@
             <div role="navigation" aria-label="Page navigation">
               <ul class="wy-breadcrumbs">
                   <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-                  <li>Welcome to Kubevirt Collection documentation</li>
+                  <li>Welcome to KubeVirt Collection documentation</li>
                   <li class="wy-breadcrumbs-aside"></li>
               </ul>
               <hr/>
@@ -37,7 +37,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
              <div itemprop="articleBody">
                 <section id="welcome-to-amq-collection-documentation">
-                  <h1>Welcome to Kubevirt Collection documentation<a class="headerlink" href="#welcome-to-amq-collection-documentation" title="Permalink to this headline"></a></h1>
+                  <h1>Welcome to KubeVirt Collection documentation<a class="headerlink" href="#welcome-to-amq-collection-documentation" title="Permalink to this headline"></a></h1>
                     <div class="toctree-wrapper compound">
                       <p class="caption" role="heading"><span class="caption-text">Pick collection version:</span></p>
                         <ul>
