@@ -2,9 +2,6 @@
 set -eux
 set -o pipefail
 
-{
-export ANSIBLE_CALLBACKS_ENABLED=profile_tasks
+export ANSIBLE_CALLBACKS_ENABLED=ansible.posix.profile_tasks
+
 ansible-playbook playbook.yml "$@"
-} || {
-    exit 1
-}
