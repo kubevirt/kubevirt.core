@@ -4,7 +4,7 @@
   gather_facts: false
   hosts: localhost
   tasks:
-    - name: Create a VirtualMachine
+    - name: Create a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
         namespace: default
@@ -19,7 +19,6 @@
             - containerDisk:
                 image: quay.io/containerdisks/centos-stream:9
               name: containerdisk
-        state: present
         wait: true
         wait_timeout: 600
 
@@ -28,7 +27,7 @@
   gather_facts: false
   hosts: localhost
   tasks:
-    - name: Describe a VirtualMachine
+    - name: Describe a VM
       kubevirt.core.kubevirt_vm_info:
         name: testvm
         namespace: default
@@ -44,7 +43,7 @@
   gather_facts: false
   hosts: localhost
   tasks:
-    - name: Delete a VirtualMachine
+    - name: Delete a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
         namespace: default
@@ -56,7 +55,7 @@
   gather_facts: false
   hosts: localhost
   tasks:
-    - name: Delete a VirtualMachine
+    - name: Delete a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
         namespace: default
