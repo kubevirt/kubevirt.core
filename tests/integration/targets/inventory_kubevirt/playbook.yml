@@ -1,22 +1,18 @@
 ---
-- name: Create VM
+- name: Create VMs
   connection: local
   gather_facts: false
   hosts: localhost
   tasks:
-    - name: Create a VirtualMachine
+    - name: Create a VM
       kubevirt.core.kubevirt_vm:
         state: present
-        name: testvm
+        name: testvm1
         namespace: default
         labels:
           app: test
-        wait: true
-        wait_timeout: 600
         spec:
           domain:
-            cpu:
-              sockets: 1
             memory:
               guest: 256Mi
             devices:
@@ -33,31 +29,26 @@
                 networkName: kindexgw
           volumes:
             - containerDisk:
-                image: quay.io/containerdisks/fedora:latest
+                image: quay.io/containerdisks/centos-stream:9
               name: containerdisk
-    - name: Create a 2nd VirtualMachine
+        wait: true
+        wait_timeout: 600
+
+    - name: Create another VM
       kubevirt.core.kubevirt_vm:
         state: present
         name: testvm2
         namespace: default
         labels:
           foo: bar
-        wait: true
-        wait_timeout: 600
         spec:
           domain:
-            cpu:
-              sockets: 1
             memory:
               guest: 256Mi
-            devices:
-              interfaces:
-                - name: default
-                  masquerade: {}
-          networks:
-            - name: default
-              pod: {}
+            devices: {}
           volumes:
             - containerDisk:
-                image: quay.io/containerdisks/fedora:latest
+                image: quay.io/containerdisks/centos-stream:9
               name: containerdisk
+        wait: true
+        wait_timeout: 600

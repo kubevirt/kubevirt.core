@@ -8,7 +8,11 @@
       ansible.builtin.include_vars:
         file: empty.yml
         name: inv_empty
-    - name: Read inventory after vm creation
+    - name: Assert empty inventory
+      ansible.builtin.assert:
+        that:
+          - inv_empty['all'] is not defined or inv_empty['all']['children']['test']['children']['namespace_default']['hosts'] is not defined
+    - name: Read inventory after VM creation
       ansible.builtin.include_vars:
         file: all.yml
         name: inv_all
