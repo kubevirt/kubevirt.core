@@ -4,21 +4,18 @@
   gather_facts: false
   hosts: localhost
   tasks:
-    - name: Create a VirtualMachine
+    - name: Create a VM
       kubevirt.core.kubevirt_vm:
-        state: present
-        name: testvm3
+        name: testvm
         namespace: default
         labels:
           app: test
-        wait: true
-        wait_timeout: 600
+        instancetype:
+          name: u1.small
+        preference:
+          name: centos.stream9
         spec:
           domain:
-            cpu:
-              sockets: 1
-            memory:
-              guest: 1536Mi
             devices:
               interfaces:
                 - name: default
@@ -39,5 +36,7 @@
                 userData: |-
                   #cloud-config
                   ssh_authorized_keys:
-                    - {{ lookup('file', 'pub_key') }}
-              name: cloudinit
+                    - {{ lookup('file', 'testkey.pub') }}
+              name: cloudinitdisk
+        wait: true
+        wait_timeout: 600

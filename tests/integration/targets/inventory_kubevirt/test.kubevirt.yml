@@ -1,6 +1,7 @@
 ---
 plugin: kubevirt.core.kubevirt
 connections:
-  - namespaces:
+  - name: test
+    namespaces:
       - default
     create_groups: true

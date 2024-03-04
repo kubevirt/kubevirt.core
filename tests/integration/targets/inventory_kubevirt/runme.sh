@@ -2,14 +2,8 @@
 set -eux
 set -o pipefail
 
-export ANSIBLE_ROLES_PATH="../"
-
-USER_CREDENTIALS_DIR=$(pwd)
-export USER_CREDENTIALS_DIR
-
-export ANSIBLE_CALLBACKS_ENABLED=profile_tasks
-export ANSIBLE_INVENTORY_ENABLED=kubevirt.core.kubevirt,yaml
-export ANSIBLE_PYTHON_INTERPRETER=auto_silent
+export ANSIBLE_CALLBACKS_ENABLED=ansible.posix.profile_tasks
+export ANSIBLE_INVENTORY_ENABLED=kubevirt.core.kubevirt
 
 ansible-inventory -i test.kubevirt.yml -y --list --output empty.yml "$@"
 

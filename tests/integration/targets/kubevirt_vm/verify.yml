@@ -1,5 +1,5 @@
 ---
-- name: Wait for ssh
+- name: Wait for SSH
   connection: local
   gather_facts: false
   hosts: localhost
@@ -7,18 +7,18 @@
     - name: Wait up to 900 seconds for port 22 to become open
       ansible.builtin.wait_for:
         port: 22
-        host: "{{ hostvars['default-testvm3'].ansible_host }}"
+        host: "{{ hostvars['default-testvm'].ansible_host }}"
         delay: 30
         timeout: 900
 
 - name: Connect to VM
   gather_facts: true
-  hosts: default-testvm3
+  hosts: default-testvm
   remote_user: cloud-user
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:
-    - name: Print out virtual machine facts
+    - name: Print VM facts
       ansible.builtin.debug:
         var: ansible_facts
 
@@ -27,10 +27,9 @@
   gather_facts: false
   hosts: localhost
   tasks:
-    - name: Create a VirtualMachine
+    - name: Create a VM
       kubevirt.core.kubevirt_vm:
-        state: present
-        name: testvm3
+        name: testvm
         namespace: default
         labels:
           app: test
@@ -45,11 +44,11 @@
   gather_facts: false
   hosts: localhost
   tasks:
-    - name: Delete a VirtualMachine
+    - name: Delete a VM
       kubevirt.core.kubevirt_vm:
-        state: absent
-        name: testvm3
+        name: testvm
         namespace: default
+        state: absent
         wait: true
 
 - name: Verify VM deletion
@@ -57,11 +56,11 @@
   gather_facts: false
   hosts: localhost
   tasks:
-    - name: Delete a VirtualMachine
+    - name: Delete a VM
       kubevirt.core.kubevirt_vm:
-        state: absent
-        name: testvm3
+        name: testvm
         namespace: default
+        state: absent
       register: delete
     - name: Assert module reported no changes
       ansible.builtin.assert:
