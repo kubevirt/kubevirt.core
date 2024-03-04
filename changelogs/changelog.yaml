@@ -19,3 +19,10 @@ releases:
     release_date: '2023-09-21'
   1.2.0:
     release_date: '2024-03-04'
+    changes:
+      release_summary: Not released due to issues in the release process
+  1.2.1:
+    release_date: '2024-03-04'
+    changes:
+      release_summary: >-
+        Mostly code cleanups and dependency updates to ensure compatibility with KubeVirt >= 1.1.0
