@@ -125,20 +125,3 @@ jobs:
           "kubevirt_vm_info",
           "inventory_kubevirt"
         ]
-
-  all_green:
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    needs:
-      - linter
-      - sanity
-      - unit-source
-      - integration
-    steps:
-      - run: >-
-          python -c "assert set([
-          '${{ needs.linter.result }}',
-          '${{ needs.sanity.result }}',
-          '${{ needs.unit-source.result }}',
-          '${{ needs.integration.result }}'
-          ]) == {'success'}"
