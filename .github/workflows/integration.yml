@@ -88,6 +88,9 @@ jobs:
           ansible-galaxy collection install \
             -r ${{ env.source_directory }}/requirements.yml \
             -p /home/runner/collections --force-with-deps
+          # Install ansible.posix to have the ansible.posix.profile_task callback available
+          ansible-galaxy collection install ansible.posix \
+            -p /home/runner/collections --force-with-deps
 
       - name: Install kubevirt.core collection
         id: install
@@ -106,7 +109,6 @@ jobs:
 
       - name: Deploy kubevirt
         if: inputs.ansible_test_targets != ''
-        shell: bash
         run: >-
           ${{ env.source_directory }}/hack/e2e-setup.sh \
             -v \

@@ -14,7 +14,7 @@
 - name: Connect to VM
   gather_facts: true
   hosts: default-testvm3
-  remote_user: centos
+  remote_user: cloud-user
   vars:
     ansible_python_interpreter: /usr/bin/python3
   tasks:

@@ -36,7 +36,7 @@ jobs:
       - name: Check if tag exists
         id: exists
         run: |
-          EXISTS=$(git tag | grep ${{ steps.version.outputs.VERSION }})
+          EXISTS=$(git tag | grep ${{ steps.version.outputs.VERSION }} || true)
           echo "EXISTS=$EXISTS" >> $GITHUB_OUTPUT
 
       - name: Fail if tag exists
