@@ -157,12 +157,10 @@ ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<
 <section id="ansible-collections">
 <h4>Ansible collections<a class="headerlink" href="#ansible-collections" title="Link to this heading"></a></h4>
 <ul class="simple">
-<li><p><a class="reference external" href="https://docs.ansible.com/ansible/latest/collections/kubernetes/core/index.html">kubernetes.core</a></p></li>
+<li><p><a class="reference external" href="https://docs.ansible.com/ansible/latest/collections/kubernetes/core/index.html">kubernetes.core</a>&gt;=3.0.1</p></li>
 </ul>
-<p>You can also include it in a <code class="docutils literal notranslate"><span class="pre">requirements.yml</span></code> file and install it with <code class="docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.yml</span></code>, using the format:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="nt">collections</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubevirt.core</span>
+<p>To install all the dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
 </pre></div>
 </div>
 </section>
