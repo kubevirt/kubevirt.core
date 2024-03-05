@@ -44,13 +44,11 @@ ansible-galaxy collection install kubevirt-kubevirt.core-*.tar.gz
 
 #### Ansible collections
 
-* [kubernetes.core](https://docs.ansible.com/ansible/latest/collections/kubernetes/core/index.html)
+* [kubernetes.core](https://docs.ansible.com/ansible/latest/collections/kubernetes/core/index.html)>=3.0.1
 
-You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
-```yaml
----
-collections:
-  - name: kubevirt.core
+To install all the dependencies:
+```bash
+ansible-galaxy collection install -r requirements.yml
 ```
 
 #### Python libraries
