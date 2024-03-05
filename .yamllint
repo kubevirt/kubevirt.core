@@ -4,3 +4,15 @@ extends: default
 rules:
   line-length:
     max: 140
+  document-start:
+    ignore:
+      - /changelogs/changelog.yaml
+  indentation:
+    ignore:
+      - /changelogs/changelog.yaml
+
+ignore:
+  - /tests/integration/targets/inventory_kubevirt/all.yml
+  - /tests/integration/targets/inventory_kubevirt/label.yml
+  - /tests/integration/targets/inventory_kubevirt/net.yml
+  - /tests/integration/targets/inventory_kubevirt/empty.yml
