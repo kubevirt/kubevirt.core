@@ -136,3 +136,5 @@ dmypy.json
 .vscode/
 .idea/
 bin/
+*.tar.gz
+*.zip
