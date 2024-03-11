@@ -25,3 +25,8 @@ releases:
       release_summary: Mostly code cleanups and dependency updates to ensure compatibility
         with KubeVirt >= 1.1.0
     release_date: '2024-03-04'
+  1.2.2:
+    changes:
+      release_summary: No functional changes, only cleanup of files included in the release
+        tarball and vendoring of documentation fragments.
+    release_date: '2024-03-11'
