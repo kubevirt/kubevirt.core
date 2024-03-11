@@ -19,7 +19,7 @@ description:
 - Fetch running VirtualMachineInstances for one or more namespaces with an optional label selector.
 - Groups by namespace, namespace_vmis and labels.
 - Uses the kubectl connection plugin to access the Kubernetes cluster.
-- Uses kubevirt.(yml|yaml) YAML configuration file to set parameter values.
+- Uses *.kubevirt.(yml|yaml) YAML configuration file to set parameter values.
 
 extends_documentation_fragment:
 - inventory_cache
