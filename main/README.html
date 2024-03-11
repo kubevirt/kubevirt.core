@@ -114,7 +114,7 @@
 <!--start build_status -->
 <p><a class="reference external" href="https://github.com/kubevirt/kubevirt.core/actions"><img alt="Build Status" src="https://github.com/kubevirt/kubevirt.core/workflows/CI/badge.svg?event=push" /></a></p>
 <!--end build_status -->
-<p>This repository hosts the <code class="docutils literal notranslate"><span class="pre">kubevirt.core</span></code> Ansible Collection, which provides virtual machine operations and inventory source for use with Ansible.</p>
+<p>This repository hosts the <code class="docutils literal notranslate"><span class="pre">kubevirt.core</span></code> Ansible Collection, which provides virtual machine operations and an inventory source for use with Ansible.</p>
 <!--start requires_ansible-->
 <section id="ansible-and-python-version-compatibility">
 <h2>Ansible and Python version compatibility<a class="headerlink" href="#ansible-and-python-version-compatibility" title="Link to this heading"></a></h2>
@@ -154,15 +154,17 @@ ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<
 </section>
 <section id="dependencies">
 <h3>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h3>
+<!--start collection_dependencies -->
 <section id="ansible-collections">
 <h4>Ansible collections<a class="headerlink" href="#ansible-collections" title="Link to this heading"></a></h4>
 <ul class="simple">
-<li><p><a class="reference external" href="https://docs.ansible.com/ansible/latest/collections/kubernetes/core/index.html">kubernetes.core</a>&gt;=3.0.1</p></li>
+<li><p><a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/kubernetes/core">kubernetes.core</a>&gt;=3.0.1</p></li>
 </ul>
 <p>To install all the dependencies:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
 </pre></div>
 </div>
+<!--end collection_dependencies -->
 </section>
 <section id="python-libraries">
 <h4>Python libraries<a class="headerlink" href="#python-libraries" title="Link to this heading"></a></h4>

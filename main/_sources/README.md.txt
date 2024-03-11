@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/kubevirt/kubevirt.core/workflows/CI/badge.svg?event=push)](https://github.com/kubevirt/kubevirt.core/actions)
 <!--end build_status -->
 
-This repository hosts the `kubevirt.core` Ansible Collection, which provides virtual machine operations and inventory source for use with Ansible.
+This repository hosts the `kubevirt.core` Ansible Collection, which provides virtual machine operations and an inventory source for use with Ansible.
 
 <!--start requires_ansible-->
 ## Ansible and Python version compatibility
@@ -42,14 +42,16 @@ ansible-galaxy collection install kubevirt-kubevirt.core-*.tar.gz
 
 ### Dependencies
 
+<!--start collection_dependencies -->
 #### Ansible collections
 
-* [kubernetes.core](https://docs.ansible.com/ansible/latest/collections/kubernetes/core/index.html)>=3.0.1
+* [kubernetes.core](https://galaxy.ansible.com/ui/repo/published/kubernetes/core)>=3.0.1
 
 To install all the dependencies:
 ```bash
 ansible-galaxy collection install -r requirements.yml
 ```
+<!--end collection_dependencies -->
 
 #### Python libraries
 
