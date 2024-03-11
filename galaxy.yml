@@ -22,16 +22,24 @@ documentation: https://kubevirt.github.io/kubevirt.core
 homepage: https://kubevirt.io
 issues: https://github.com/kubevirt/kubevirt.core/issues
 build_ignore:
-  - .gitignore
-  - changelogs/.plugin-cache.yaml
-  - .github
   - .ansible-lint
+  - .git
+  - .gitignore
+  - .github
   - .yamllint
+  - bin
+  - changelogs
+  - CODE_OF_CONDUCT.md
+  - CONTRIBUTING.md
+  - examples
+  - hack
+  - Makefile
+  - OWNERS
+  - REVIEW_CHECKLIST.md
   - '*.tar.gz'
   - '*.zip'
-  - molecule
-  - changelogs
   - docs/_gh_include
   - docs/conf.py
+  - docs/CONTRIBUTING.md
   - docs/roles.rst.template
   - docs/requirements.yml
