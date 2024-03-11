@@ -30,7 +30,6 @@ build_ignore:
   - bin
   - changelogs
   - CODE_OF_CONDUCT.md
-  - CONTRIBUTING.md
   - examples
   - hack
   - Makefile
@@ -40,6 +39,5 @@ build_ignore:
   - '*.zip'
   - docs/_gh_include
   - docs/conf.py
-  - docs/CONTRIBUTING.md
   - docs/roles.rst.template
-  - docs/requirements.yml
+  - docs/requirements.txt
