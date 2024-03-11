@@ -78,13 +78,13 @@ options:
   data_volume_templates:
     description:
     - Specify the DataVolume templates of the VirtualMachine.
-    - 'See: http://kubevirt.io/api-reference/v1.0.0/definitions.html#_v1_datavolumetemplatespec'
+    - 'See: https://kubevirt.io/api-reference/main/definitions.html#_v1_datavolumetemplatespec'
     type: list
     elements: 'dict'
   spec:
     description:
     - Specify the template spec of the VirtualMachine.
-    - 'See: http://kubevirt.io/api-reference/v1.0.0/definitions.html#_v1_virtualmachineinstancespec'
+    - 'See: https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec'
     type: dict
   wait:
     description:
