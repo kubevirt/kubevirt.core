@@ -23,9 +23,9 @@ description:
 - Supports check mode.
 
 extends_documentation_fragment:
-- kubernetes.core.k8s_auth_options
-- kubernetes.core.k8s_state_options
-- kubernetes.core.k8s_delete_options
+- kubevirt.core.k8s_auth_options
+- kubevirt.core.k8s_state_options
+- kubevirt.core.k8s_delete_options
 
 options:
   api_version:

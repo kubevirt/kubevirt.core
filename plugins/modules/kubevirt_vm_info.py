@@ -65,7 +65,7 @@ options:
     type: int
 
 extends_documentation_fragment:
-  - kubernetes.core.k8s_auth_options
+  - kubevirt.core.k8s_auth_options
 
 requirements:
   - "python >= 3.9"
