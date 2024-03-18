@@ -30,3 +30,8 @@ releases:
       release_summary: No functional changes, only cleanup of files included in the
         release tarball and vendoring of documentation fragments.
     release_date: '2024-03-11'
+  1.2.3:
+    changes:
+      release_summary: No functional changes, hotfix release to retrigger the downstream
+        build and to keep in sync with Ansible Automation Hub.
+    release_date: '2024-03-18'
