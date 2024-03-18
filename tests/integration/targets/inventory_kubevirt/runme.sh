@@ -13,4 +13,6 @@ ansible-inventory -i test.kubevirt.yml -y --list --output all.yml "$@"
 ansible-inventory -i test.label.kubevirt.yml -y --list --output label.yml "$@"
 ansible-inventory -i test.net.kubevirt.yml -y --list --output net.yml "$@"
 
+ansible-playbook cleanup.yml "$@"
+
 ansible-playbook verify.yml "$@"
