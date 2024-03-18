@@ -1,0 +1,16 @@
+Plugin Index
+============
+
+.. toctree::
+   :caption: inventory plugins
+   :maxdepth: 0
+
+   kubevirt
+
+.. toctree::
+   :caption: modules plugins
+   :maxdepth: 0
+
+   kubevirt_vm
+   kubevirt_vm_info
+
