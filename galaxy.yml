@@ -41,3 +41,5 @@ build_ignore:
   - docs/conf.py
   - docs/roles.rst.template
   - docs/requirements.txt
+  - tests/integration/targets/inventory_kubevirt/.gitignore
+  - tests/integration/targets/kubevirt_vm/.gitignore
