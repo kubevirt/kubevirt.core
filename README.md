@@ -96,6 +96,10 @@ The current maintainers are listed in the [OWNERS](OWNERS) file. If you have que
 
 To learn how to maintain / become a maintainer of this collection, refer to the [Maintainer guidelines](https://docs.ansible.com/ansible/devel/community/maintainers.html).
 
+## Release policy
+
+The release policy of the collection can be found at [docs/releasing.md](docs/releasing.md).
+
 ## Governance
 
 The process of decision making in this collection is based on discussing and finding consensus among participants.
