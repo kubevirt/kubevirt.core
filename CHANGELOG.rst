@@ -41,14 +41,10 @@ Not released due to issues in the release process
 v1.1.0
 ======
 
-Major Changes
--------------
-
-- Add kubevirt_vm_info module to describe existing VirtualMachines
-
 Minor Changes
 -------------
 
+- Add kubevirt_vm_info module to describe existing VirtualMachines
 - inventory: Allow to control creation of additional groups
 - inventory: Drop creation of the namespace_vmis_group as it is redundant
 
