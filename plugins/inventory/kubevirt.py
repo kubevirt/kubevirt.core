@@ -448,6 +448,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 f"Error fetching VirtualMachineInstance list: {self.format_dynamic_api_exc(exc)}"
             ) from exc
 
+        if not vmi_list.items:
+            # Return early if no VMIs were found to avoid adding empty groups.
+            return
+
         services = self.get_ssh_services_for_namespace(client, namespace)
 
         name = self._sanitize_group_name(name)
