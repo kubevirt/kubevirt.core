@@ -591,10 +591,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def set_composable_vars(self, vmi_name):
         """
-        set_composable_vars sets vars per 
+        set_composable_vars sets vars per
         https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html
         """
-        host_vars  = self.inventory.get_host(vmi_name).get_vars()
+        host_vars = self.inventory.get_host(vmi_name).get_vars()
         strict = self.get_option("strict")
         self._set_composite_vars(self.get_option("compose"), host_vars, vmi_name, strict=True)
         self._add_host_to_composed_groups(self.get_option("groups"), host_vars, vmi_name, strict=strict)
