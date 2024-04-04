@@ -651,7 +651,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         Secondary interfaces have priority over a service exposing SSH
         """
         ansible_host = None
-        ansible_port = None
         if opts.kube_secondary_dns and opts.network_name is not None:
             # Set ansible_host to the kubesecondarydns derived host name if enabled
             # See https://github.com/kubevirt/kubesecondarydns#parameters
@@ -667,11 +666,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             port = self.get_port_from_service(service)
             if host is not None and port is not None:
                 ansible_host = host
-                ansible_port = port
+                self.inventory.set_variable(vmi_name, "ansible_port", port)
 
         # Default to the IP address of the interface if ansible_host was not set prior
         if ansible_host is None:
             ansible_host = ip_address
 
         self.inventory.set_variable(vmi_name, "ansible_host", ansible_host)
-        self.inventory.set_variable(vmi_name, "ansible_port", ansible_port)
