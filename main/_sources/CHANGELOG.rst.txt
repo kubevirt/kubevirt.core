@@ -17,6 +17,11 @@ No functional changes, hotfix release to retrigger the downstream build and to k
 Minor Changes
 -------------
 
+- feat: Add append_base_domain option to connections `#72 <https://github.com/kubevirt/kubevirt.core/pull/72>`_
+
+Bugfixes
+--------
+
 - fix: Explicity set ansible_port `#70 <https://github.com/kubevirt/kubevirt.core/pull/70>`_
 
 v1.2.2

@@ -322,6 +322,40 @@ Parameters
   </tr>
   <tr class="row-odd">
     <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+      <div class="ansibleOptionAnchor" id="parameter-connections/append_base_domain"></div>
+      <p class="ansible-option-title"><strong>append_base_domain</strong></p>
+      <a class="ansibleOptionLink" href="#parameter-connections/append_base_domain" title="Permalink to this option"></a>
+      <p class="ansible-option-type-line">
+        <span class="ansible-option-type">boolean</span>
+      </p>
+
+    </div></td>
+    <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+      <p>Append the base domain of the cluster to host names constructed from SSH services of type NodePort.</p>
+      <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+      <ul class="simple">
+        <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>false</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+        <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">true</code></p></li>
+      </ul>
+
+    </div></td>
+  </tr>
+  <tr class="row-even">
+    <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+      <div class="ansibleOptionAnchor" id="parameter-connections/base_domain"></div>
+      <p class="ansible-option-title"><strong>base_domain</strong></p>
+      <a class="ansibleOptionLink" href="#parameter-connections/base_domain" title="Permalink to this option"></a>
+      <p class="ansible-option-type-line">
+        <span class="ansible-option-type">string</span>
+      </p>
+
+    </div></td>
+    <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+      <p>Override the base domain used to construct host names of VirtualMachines. Used in case of kubesecondarydns or services of type NodePort if append_base_domain is set.</p>
+    </div></td>
+  </tr>
+  <tr class="row-odd">
+    <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-connections/ca_cert"></div>
       <div class="ansibleOptionAnchor" id="parameter-connections/ssl_ca_cert"></div>
       <p class="ansible-option-title"><strong>ca_cert</strong></p>
