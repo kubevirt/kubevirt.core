@@ -117,6 +117,15 @@ options:
         - Enable the creation of groups from labels on VirtualMachines.
         type: bool
         default: False
+      base_domain:
+        description:
+        - Override the base domain used to construct host names of VirtualMachines. Used in case of
+          kubesecondarydns or services of type NodePort if append_base_domain is set.
+      append_base_domain:
+        description:
+        - Append the base domain of the cluster to host names constructed from SSH services of type NodePort.
+        type: bool
+        default: False
       api_version:
         description:
         - Specify the used KubeVirt API version.
@@ -215,6 +224,7 @@ class GetVmiOptions:
     use_service: Optional[bool] = None
     create_groups: Optional[bool] = None
     base_domain: Optional[str] = None
+    append_base_domain: Optional[bool] = None
     host_format: Optional[str] = None
 
     def __post_init__(self):
@@ -227,6 +237,8 @@ class GetVmiOptions:
             self.use_service = True
         if self.create_groups is None:
             self.create_groups = False
+        if self.append_base_domain is None:
+            self.append_base_domain = False
         if self.host_format is None:
             self.host_format = "{namespace}-{name}"
 
@@ -381,6 +393,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                     connection.get("use_service"),
                     connection.get("create_groups"),
                     connection.get("base_domain", self.get_cluster_domain(client)),
+                    connection.get("append_base_domain"),
                     self.host_format,
                 )
                 for namespace in namespaces:
@@ -651,7 +664,8 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         elif opts.use_service and service is not None:
             # Set ansible_host and ansible_port to the host and port from the LoadBalancer
             # or NodePort service exposing SSH
-            host = self.get_host_from_service(service, vmi.status.nodeName)
+            node_name = f"{vmi.status.nodeName}.{opts.base_domain}" if opts.append_base_domain else vmi.status.nodeName
+            host = self.get_host_from_service(service, node_name)
             port = self.get_port_from_service(service)
             if host is not None and port is not None:
                 ansible_host = host
