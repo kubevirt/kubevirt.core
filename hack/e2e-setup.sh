@@ -35,8 +35,12 @@ set_default_params() {
 
   CNAO_VERSION=${CNAO_VERSION:-v0.91.0}
 
+  REGISTRY_NAME=${REGISTRY_NAME:-kind-registry}
+  REGISTRY_PORT=${REGISTRY_PORT:-5001}
+  REGISTRY_IMAGE=${REGISTRY_IMAGE:-registry:2}
+
   CLUSTER_NAME=${CLUSTER_NAME:-kind}
-  SECONDARY_NETWORK_NAME=${NETWORK_NAME:-kindexgw}
+  SECONDARY_NETWORK_NAME=${SECONDARY_NETWORK_NAME:-kindexgw}
   SECONDARY_NETWORK_SUBNET=${SECONDARY_NETWORK_SUBNET:-172.19.0.0/16}
   SECONDARY_NETWORK_RANGE_START=${SECONDARY_NETWORK_RANGE_START:-172.19.1.1}
   SECONDARY_NETWORK_RANGE_END=${SECONDARY_NETWORK_RANGE_END:-172.19.255.254}
@@ -110,15 +114,71 @@ configure_inotify_limits() {
   sudo sysctl fs.inotify.max_user_watches=1048576
 }
 
+# Taken from:
+# https://kind.sigs.k8s.io/docs/user/local-registry
+create_registry() {
+  if [ "$(${_cri_bin} inspect -f '{{.State.Running}}' "${REGISTRY_NAME}" 2>/dev/null || true)" != 'true' ]; then
+    echo "Creating registry"
+    ${_cri_bin} run -d --restart=always -p "127.0.0.1:${REGISTRY_PORT}:5000" --network bridge --name "${REGISTRY_NAME}" "${REGISTRY_IMAGE}"
+  fi
+}
+
+# Registry configuration taken from:
+# https://kind.sigs.k8s.io/docs/user/local-registry
 create_cluster() {
-  echo "Creating cluster with kind"
-  DOCKER_HOST=unix://${_cri_socket} ${KIND} create cluster --wait 2m --name "${CLUSTER_NAME}"
+  if [ "${OPT_CREATE_REGISTRY}" == true ]; then
+    echo "Creating kind cluster with containerd registry config dir enabled"
+    cat <<EOF | DOCKER_HOST=unix://${_cri_socket} ${KIND} create cluster --wait 2m --name "${CLUSTER_NAME}" --config=-
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry]
+    config_path = "/etc/containerd/certs.d"
+EOF
+  else
+    echo "Creating cluster with kind"
+    DOCKER_HOST=unix://${_cri_socket} ${KIND} create cluster --wait 2m --name "${CLUSTER_NAME}"
+  fi
 
   echo "Waiting for the network to be ready"
   ${KUBECTL} wait --for=condition=ready pods --namespace=kube-system -l k8s-app=kube-dns --timeout=2m
 
   echo "K8S cluster is up:"
   ${KUBECTL} get nodes -o wide
+}
+
+# Adapted from:
+# https://kind.sigs.k8s.io/docs/user/local-registry
+configure_registry() {
+  echo "Adding the registry config to the nodes"
+  # Name of the single kind node
+  local node=${CLUSTER_NAME}-control-plane
+  # The containerd registry config dir
+  local registry_dir="/etc/containerd/certs.d/localhost:${REGISTRY_PORT}"
+
+  ${_cri_bin} exec "${node}" mkdir -p "${registry_dir}"
+  cat <<EOF | ${_cri_bin} exec -i "${node}" cp /dev/stdin "${registry_dir}/hosts.toml"
+[host."http://${REGISTRY_NAME}:5000"]
+EOF
+
+  echo "Connecting the registry to the cluster network"
+  if [ "$(${_cri_bin} inspect -f='{{json .NetworkSettings.Networks.kind}}' "${REGISTRY_NAME}")" = 'null' ]; then
+    ${_cri_bin} network connect "kind" "${REGISTRY_NAME}"
+  fi
+
+  echo "Documenting the local registry"
+  cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: local-registry-hosting
+  namespace: kube-public
+data:
+  localRegistryHosting.v1: |
+    host: "localhost:${REGISTRY_PORT}"
+    help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
+EOF
 }
 
 configure_secondary_network() {
@@ -247,18 +307,20 @@ EOF
 }
 
 cleanup() {
+  ${_cri_bin} rm -f "${REGISTRY_NAME}"
   DOCKER_HOST=unix://${_cri_socket} ${KIND} delete cluster --name "${CLUSTER_NAME}"
   ${_cri_bin} network rm "${SECONDARY_NETWORK_NAME}"
 }
 
 usage() {
-  echo -n "$0 [--install-kind] [--install-kubectl] [--configure-inotify-limits] [--create-cluster] [--deploy-kubevirt] [--deploy-kubevirt-common-instancetypes] [--deploy-cnao] [--create-nad] [--cleanup] [--namespace]"
+  echo -n "$0 [--install-kind] [--install-kubectl] [--configure-inotify-limits] [--create-registry] [--create-cluster] [--deploy-kubevirt] [--deploy-kubevirt-common-instancetypes] [--deploy-cnao] [--create-nad] [--cleanup] [--namespace]"
 }
 
 set_default_options() {
   OPT_INSTALL_KIND=false
   OPT_INSTALL_KUBECTL=false
   OPT_CONFIGURE_INOTIFY_LIMITS=false
+  OPT_CREATE_REGISTRY=false
   OPT_CREATE_CLUSTER=false
   OPT_CONFIGURE_SECONDARY_NETWORK=false
   OPT_DEPLOY_KUBEVIRT=false
@@ -275,6 +337,7 @@ parse_args() {
     --install-kind) OPT_INSTALL_KIND=true ;;
     --install-kubectl) OPT_INSTALL_KUBECTL=true ;;
     --configure-inotify-limits) OPT_CONFIGURE_INOTIFY_LIMITS=true ;;
+    --create-registry) OPT_CREATE_REGISTRY=true ;;
     --create-cluster) OPT_CREATE_CLUSTER=true ;;
     --configure-secondary-network) OPT_CONFIGURE_SECONDARY_NETWORK=true ;;
     --deploy-kubevirt) OPT_DEPLOY_KUBEVIRT=true ;;
@@ -316,6 +379,7 @@ set -euo pipefail
 if [ "${ARGCOUNT}" -eq "0" ]; then
   OPT_INSTALL_KIND=true
   OPT_INSTALL_KUBECTL=true
+  OPT_CREATE_REGISTRY=false
   OPT_CREATE_CLUSTER=true
   OPT_CONFIGURE_SECONDARY_NETWORK=true
   OPT_DEPLOY_KUBEVIRT=true
@@ -342,8 +406,16 @@ if [ "${OPT_CONFIGURE_INOTIFY_LIMITS}" == true ]; then
   configure_inotify_limits
 fi
 
+if [ "${OPT_CREATE_REGISTRY}" == true ]; then
+  create_registry
+fi
+
 if [ "${OPT_CREATE_CLUSTER}" == true ]; then
   create_cluster
+fi
+
+if [ "${OPT_CREATE_REGISTRY}" == true ]; then
+  configure_registry
 fi
 
 if [ "${OPT_CONFIGURE_SECONDARY_NETWORK}" == true ]; then
