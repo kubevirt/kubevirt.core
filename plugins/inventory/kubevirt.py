@@ -110,6 +110,7 @@ options:
       use_service:
         description:
         - Enable the use of services to establish an SSH connection to the VirtualMachine.
+        - Services are only used if no network_name was provided.
         type: bool
         default: True
       create_groups:
@@ -665,10 +666,14 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             )
             if opts.base_domain is not None:
                 ansible_host += f".{opts.base_domain}"
-        elif opts.use_service and service is not None:
+        elif opts.use_service and service is not None and opts.network_name is None:
             # Set ansible_host and ansible_port to the host and port from the LoadBalancer
             # or NodePort service exposing SSH
-            node_name = f"{vmi.status.nodeName}.{opts.base_domain}" if opts.append_base_domain else vmi.status.nodeName
+            node_name = (
+                f"{vmi.status.nodeName}.{opts.base_domain}"
+                if opts.append_base_domain
+                else vmi.status.nodeName
+            )
             host = self.get_host_from_service(service, node_name)
             port = self.get_port_from_service(service)
             if host is not None and port is not None:
