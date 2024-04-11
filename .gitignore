@@ -136,8 +136,9 @@ bin/
 *.tar.gz
 *.zip
 
-# pytest-ansible
+# pytest-ansible and tox-ansible
 collections/
+kubevirt.core
 
 # Collection specific ignores
 /changelogs/.plugin-cache.yaml
