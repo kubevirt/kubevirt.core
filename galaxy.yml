@@ -26,6 +26,7 @@ build_ignore:
   - .git
   - .gitignore
   - .github
+  - .vscode
   - .yamllint
   - bin
   - changelogs

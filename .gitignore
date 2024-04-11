@@ -130,7 +130,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.vscode/
+# Allow specific vscode configuration
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Local files
 .idea/
 bin/
 *.tar.gz
