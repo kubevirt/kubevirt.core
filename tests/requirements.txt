@@ -1,0 +1,2 @@
+# No additional requirements at this moment
+# Have a look at /requirements.txt and /test-requirements.txt

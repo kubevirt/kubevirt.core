@@ -136,6 +136,9 @@ bin/
 *.tar.gz
 *.zip
 
+# pytest-ansible
+collections/
+
 # Collection specific ignores
 /changelogs/.plugin-cache.yaml
 /tests/output/
