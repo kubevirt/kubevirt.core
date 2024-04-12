@@ -6,8 +6,7 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-from unittest import TestCase
-from unittest.mock import patch
+import pytest
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s.service import (
@@ -19,12 +18,10 @@ from ansible_collections.kubevirt.core.plugins.modules import (
 from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock import (
     AnsibleExitJson,
     exit_json,
-    fail_json,
     set_module_args,
-    get_api_client,
 )
 
-FIXTURE1 = {
+FIND_ARGS_DEFAULT = {
     "kind": "VirtualMachine",
     "api_version": "kubevirt.io/v1",
     "name": None,
@@ -37,7 +34,7 @@ FIXTURE1 = {
     "condition": {"type": "Ready", "status": True},
 }
 
-FIXTURE2 = {
+FIND_ARGS_NAME_NAMESPACE = {
     "kind": "VirtualMachine",
     "api_version": "kubevirt.io/v1",
     "name": "testvm",
@@ -51,43 +48,26 @@ FIXTURE2 = {
 }
 
 
-class TestDescribeVM(TestCase):
-    def setUp(self):
-        self.mock_module_helper = patch.multiple(
-            AnsibleModule, exit_json=exit_json, fail_json=fail_json
-        )
-        self.mock_module_helper.start()
+@pytest.mark.parametrize(
+    "module_args,find_args",
+    [
+        ({}, FIND_ARGS_DEFAULT),
+        ({"name": "testvm", "namespace": "default"}, FIND_ARGS_NAME_NAMESPACE),
+    ],
+)
+def test_module(monkeypatch, mocker, module_args, find_args):
+    monkeypatch.setattr(AnsibleModule, "exit_json", exit_json)
+    monkeypatch.setattr(kubevirt_vm_info, "get_api_client", lambda _: None)
 
-        self.mock_main = patch.multiple(kubevirt_vm_info, get_api_client=get_api_client)
-        self.mock_main.start()
+    set_module_args(module_args)
 
-        # Stop the patch after test execution
-        # like tearDown but executed also when the setup failed
-        self.addCleanup(self.mock_module_helper.stop)
-        self.addCleanup(self.mock_main.stop)
+    find = mocker.patch.object(K8sService, "find")
+    find.return_value = {
+        "api_found": True,
+        "failed": False,
+        "resources": [],
+    }
 
-    def run_module(self, fixture):
-        with patch.object(K8sService, "find") as mock_find_command:
-            mock_find_command.return_value = {
-                "api_found": True,
-                "failed": False,
-                "resources": [],
-            }  # successful execution
-            with self.assertRaises(AnsibleExitJson):
-                kubevirt_vm_info.main()
-            mock_find_command.assert_called_once_with(
-                **fixture,
-            )
-
-    def test_describe_without_args(self):
-        set_module_args({})
-        self.run_module(FIXTURE1)
-
-    def test_describe_with_args(self):
-        set_module_args(
-            {
-                "name": "testvm",
-                "namespace": "default",
-            }
-        )
-        self.run_module(FIXTURE2)
+    with pytest.raises(AnsibleExitJson):
+        kubevirt_vm_info.main()
+    find.assert_called_once_with(**find_args)
