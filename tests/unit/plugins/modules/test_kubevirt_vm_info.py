@@ -21,41 +21,47 @@ from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock impo
     set_module_args,
 )
 
-FIND_ARGS_DEFAULT = {
-    "kind": "VirtualMachine",
-    "api_version": "kubevirt.io/v1",
-    "name": None,
-    "namespace": None,
-    "label_selectors": [],
-    "field_selectors": [],
-    "wait": False,
-    "wait_sleep": 5,
-    "wait_timeout": 120,
-    "condition": {"type": "Ready", "status": True},
-}
 
-FIND_ARGS_NAME_NAMESPACE = {
-    "kind": "VirtualMachine",
-    "api_version": "kubevirt.io/v1",
-    "name": "testvm",
-    "namespace": "default",
-    "label_selectors": [],
-    "field_selectors": [],
-    "wait": False,
-    "wait_sleep": 5,
-    "wait_timeout": 120,
-    "condition": {"type": "Ready", "status": True},
-}
+@pytest.fixture(scope="module")
+def find_args_default():
+    return {
+        "kind": "VirtualMachine",
+        "api_version": "kubevirt.io/v1",
+        "name": None,
+        "namespace": None,
+        "label_selectors": [],
+        "field_selectors": [],
+        "wait": False,
+        "wait_sleep": 5,
+        "wait_timeout": 120,
+        "condition": {"type": "Ready", "status": True},
+    }
+
+
+@pytest.fixture(scope="module")
+def find_args_name_namespace():
+    return {
+        "kind": "VirtualMachine",
+        "api_version": "kubevirt.io/v1",
+        "name": "testvm",
+        "namespace": "default",
+        "label_selectors": [],
+        "field_selectors": [],
+        "wait": False,
+        "wait_sleep": 5,
+        "wait_timeout": 120,
+        "condition": {"type": "Ready", "status": True},
+    }
 
 
 @pytest.mark.parametrize(
     "module_args,find_args",
     [
-        ({}, FIND_ARGS_DEFAULT),
-        ({"name": "testvm", "namespace": "default"}, FIND_ARGS_NAME_NAMESPACE),
+        ({}, "find_args_default"),
+        ({"name": "testvm", "namespace": "default"}, "find_args_name_namespace"),
     ],
 )
-def test_module(monkeypatch, mocker, module_args, find_args):
+def test_module(request, monkeypatch, mocker, module_args, find_args):
     monkeypatch.setattr(AnsibleModule, "exit_json", exit_json)
     monkeypatch.setattr(kubevirt_vm_info, "get_api_client", lambda _: None)
 
@@ -70,4 +76,4 @@ def test_module(monkeypatch, mocker, module_args, find_args):
 
     with pytest.raises(AnsibleExitJson):
         kubevirt_vm_info.main()
-    find.assert_called_once_with(**find_args)
+    find.assert_called_once_with(**request.getfixturevalue(find_args))
