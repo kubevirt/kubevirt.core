@@ -614,9 +614,15 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         """
         host_vars = self.inventory.get_host(vmi_name).get_vars()
         strict = self.get_option("strict")
-        self._set_composite_vars(self.get_option("compose"), host_vars, vmi_name, strict=True)
-        self._add_host_to_composed_groups(self.get_option("groups"), host_vars, vmi_name, strict=strict)
-        self._add_host_to_keyed_groups(self.get_option("keyed_groups"), host_vars, vmi_name, strict=strict)
+        self._set_composite_vars(
+            self.get_option("compose"), host_vars, vmi_name, strict=True
+        )
+        self._add_host_to_composed_groups(
+            self.get_option("groups"), host_vars, vmi_name, strict=strict
+        )
+        self._add_host_to_keyed_groups(
+            self.get_option("keyed_groups"), host_vars, vmi_name, strict=strict
+        )
 
     def get_ssh_services_for_namespace(self, client: K8SClient, namespace: str) -> Dict:
         """
