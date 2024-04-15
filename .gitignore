@@ -130,11 +130,20 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.vscode/
+# Allow specific vscode configuration
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Local files
 .idea/
 bin/
 *.tar.gz
 *.zip
+
+# pytest-ansible and tox-ansible
+collections/
+kubevirt.core
 
 # Collection specific ignores
 /changelogs/.plugin-cache.yaml

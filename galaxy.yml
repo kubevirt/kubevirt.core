@@ -26,6 +26,7 @@ build_ignore:
   - .git
   - .gitignore
   - .github
+  - .vscode
   - .yamllint
   - bin
   - changelogs
@@ -35,6 +36,7 @@ build_ignore:
   - Makefile
   - OWNERS
   - REVIEW_CHECKLIST.md
+  - tox.ini
   - '*.tar.gz'
   - '*.zip'
   - docs/_gh_include
