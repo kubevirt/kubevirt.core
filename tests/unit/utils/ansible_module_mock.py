@@ -2,7 +2,8 @@
 # Copyright: (c) 2021, Ansible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# This module maock the AnsibleModule class for more information please visite
+# This file allows to run modules in unit tests.
+# It was taken from:
 # https://docs.ansible.com/ansible/latest/dev_guide/testing_units_modules.html#module-argument-processing
 
 from __future__ import absolute_import, division, print_function
@@ -23,13 +24,11 @@ def set_module_args(args):
 
 class AnsibleExitJson(Exception):
     """Exception class to be raised by module.exit_json and caught by the test case"""
-
     pass
 
 
 class AnsibleFailJson(Exception):
     """Exception class to be raised by module.fail_json and caught by the test case"""
-
     pass
 
 
@@ -44,8 +43,3 @@ def fail_json(*args, **kwargs):
     """function to patch over fail_json; package return data into an exception"""
     kwargs["failed"] = True
     raise AnsibleFailJson(kwargs)
-
-
-def get_api_client(*args, **kwargs):
-    """function to patch over get_api_client"""
-    pass
