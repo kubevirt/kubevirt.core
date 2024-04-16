@@ -202,10 +202,13 @@ from ansible_collections.kubernetes.core.plugins.module_utils.k8s.client import 
     K8SClient,
 )
 
-
+ANNOTATION_KUBEVIRT_IO_CLUSTER_PREFERENCE_NAME = "kubevirt.io/cluster-preference-name"
+ANNOTATION_KUBEVIRT_IO_PREFERENCE_NAME = "kubevirt.io/preference-name"
+ANNOTATION_VM_KUBEVIRT_IO_OS = "vm.kubevirt.io/os"
 LABEL_KUBEVIRT_IO_DOMAIN = "kubevirt.io/domain"
 TYPE_LOADBALANCER = "LoadBalancer"
 TYPE_NODEPORT = "NodePort"
+ID_MSWINDOWS = "mswindows"
 
 
 class KubeVirtInventoryException(Exception):
@@ -317,6 +320,26 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             return service["spec"]["ports"][0]["nodePort"]
 
         return None
+
+    @staticmethod
+    def is_windows(guest_os_info: Dict, annotations: Dict) -> bool:
+        if "id" in guest_os_info:
+            return guest_os_info["id"] == ID_MSWINDOWS
+
+        if ANNOTATION_KUBEVIRT_IO_CLUSTER_PREFERENCE_NAME in annotations:
+            return annotations[
+                ANNOTATION_KUBEVIRT_IO_CLUSTER_PREFERENCE_NAME
+            ].startswith("windows")
+
+        if ANNOTATION_KUBEVIRT_IO_PREFERENCE_NAME in annotations:
+            return annotations[ANNOTATION_KUBEVIRT_IO_PREFERENCE_NAME].startswith(
+                "windows"
+            )
+
+        if ANNOTATION_VM_KUBEVIRT_IO_OS in annotations:
+            return annotations[ANNOTATION_VM_KUBEVIRT_IO_OS].startswith("windows")
+
+        return False
 
     def __init__(self) -> None:
         super().__init__()
@@ -523,16 +546,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                     self.inventory.add_group(group)
                     self.inventory.add_child(group, vmi_name)
 
-            # Set up the connection
-            self.inventory.set_variable(vmi_name, "ansible_connection", "ssh")
-            self.set_ansible_host_and_port(
-                vmi,
-                vmi_name,
-                interface.ipAddress,
-                services.get(vmi.metadata.labels.get(LABEL_KUBEVIRT_IO_DOMAIN)),
-                opts,
-            )
-
             # Add hostvars from metadata
             self.inventory.set_variable(vmi_name, "object_type", "vmi")
             self.inventory.set_variable(vmi_name, "labels", vmi_labels)
@@ -605,6 +618,23 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             self.inventory.set_variable(
                 vmi_name, "vmi_volume_status", vmi_volume_status
             )
+
+            # Set up the connection
+            service = None
+            if self.is_windows(vmi_guest_os_info, vmi_annotations):
+                self.inventory.set_variable(vmi_name, "ansible_connection", "winrm")
+            else:
+                service = services.get(
+                    vmi.metadata.labels.get(LABEL_KUBEVIRT_IO_DOMAIN)
+                )
+            self.set_ansible_host_and_port(
+                vmi,
+                vmi_name,
+                interface.ipAddress,
+                service,
+                opts,
+            )
+
             self.set_composable_vars(vmi_name)
 
     def set_composable_vars(self, vmi_name):
@@ -614,9 +644,15 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         """
         host_vars = self.inventory.get_host(vmi_name).get_vars()
         strict = self.get_option("strict")
-        self._set_composite_vars(self.get_option("compose"), host_vars, vmi_name, strict=True)
-        self._add_host_to_composed_groups(self.get_option("groups"), host_vars, vmi_name, strict=strict)
-        self._add_host_to_keyed_groups(self.get_option("keyed_groups"), host_vars, vmi_name, strict=strict)
+        self._set_composite_vars(
+            self.get_option("compose"), host_vars, vmi_name, strict=True
+        )
+        self._add_host_to_composed_groups(
+            self.get_option("groups"), host_vars, vmi_name, strict=strict
+        )
+        self._add_host_to_keyed_groups(
+            self.get_option("keyed_groups"), host_vars, vmi_name, strict=strict
+        )
 
     def get_ssh_services_for_namespace(self, client: K8SClient, namespace: str) -> Dict:
         """
