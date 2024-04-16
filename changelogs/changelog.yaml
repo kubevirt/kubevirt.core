@@ -34,3 +34,29 @@ releases:
       release_summary: No functional changes, hotfix release to retrigger the downstream
         build and to keep in sync with Ansible Automation Hub.
     release_date: '2024-03-18'
+  1.3.0:
+    changes:
+      bugfixes:
+      - 'feat: Set ansible_connection to winrm for Windows hosts `#75 <https://github.com/kubevirt/kubevirt.core/pull/75>`_
+
+        '
+      - 'fix: Explicity set ansible_port `#70 <https://github.com/kubevirt/kubevirt.core/pull/70>`_
+
+        '
+      - 'fix: Return early to avoid adding empty groups. `#73 <https://github.com/kubevirt/kubevirt.core/pull/73>`_
+
+        '
+      minor_changes:
+      - 'feat: Add append_base_domain option to connections `#72 <https://github.com/kubevirt/kubevirt.core/pull/72>`_
+
+        '
+      - 'feat: Give secondary interfaces a higher priority over services `#76 <https://github.com/kubevirt/kubevirt.core/pull/76>`_
+
+        '
+    fragments:
+    - 70.yaml
+    - 72.yaml
+    - 73.yaml
+    - 75.yaml
+    - 76.yaml
+    release_date: '2024-04-16'

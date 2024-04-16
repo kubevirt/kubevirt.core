@@ -6,6 +6,22 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v1.3.0
+======
+
+Minor Changes
+-------------
+
+- feat: Add append_base_domain option to connections `#72 <https://github.com/kubevirt/kubevirt.core/pull/72>`_
+- feat: Give secondary interfaces a higher priority over services `#76 <https://github.com/kubevirt/kubevirt.core/pull/76>`_
+
+Bugfixes
+--------
+
+- feat: Set ansible_connection to winrm for Windows hosts `#75 <https://github.com/kubevirt/kubevirt.core/pull/75>`_
+- fix: Explicity set ansible_port `#70 <https://github.com/kubevirt/kubevirt.core/pull/70>`_
+- fix: Return early to avoid adding empty groups. `#73 <https://github.com/kubevirt/kubevirt.core/pull/73>`_
+
 v1.2.3
 ======
 
