@@ -1,0 +1,9 @@
+# This file is required by ansible-test units
+jinja2
+jsonpatch
+kubernetes>=28.1.0
+PyYAML>=3.11
+addict
+pytest
+pytest-mock
+pytest-xdist
