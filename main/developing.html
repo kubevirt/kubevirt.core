@@ -18,7 +18,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -56,6 +56,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Contributor’s Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#development-environment">Development environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#virtualenv-for-development">Virtualenv for development</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html">Collection Versioning Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">General</span></p>
@@ -102,6 +106,24 @@
 <li><p>All arguments have a specification in <code class="docutils literal notranslate"><span class="pre">meta/argument_specs.yml</span></code></p></li>
 <li><p>All playbooks/roles should be focused on compatibility with Ansible Automation Platform</p></li>
 </ul>
+</section>
+<section id="development-environment">
+<h1>Development environment<a class="headerlink" href="#development-environment" title="Link to this heading"></a></h1>
+<p>To develop and to run tests you need to install <code class="docutils literal notranslate"><span class="pre">tox</span></code> and <code class="docutils literal notranslate"><span class="pre">tox-ansible</span></code> on
+your machine.</p>
+<div class="highlight-YAML+Jinja notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">pip install --user tox tox-ansible</span>
+</pre></div>
+</div>
+<section id="virtualenv-for-development">
+<h2>Virtualenv for development<a class="headerlink" href="#virtualenv-for-development" title="Link to this heading"></a></h2>
+<p>To build a virtualenv for development purposes run the following command:</p>
+<div class="highlight-YAML+Jinja notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">make build-venv</span>
+</pre></div>
+</div>
+<p>The resulting virtualenv will be symlinked to <code class="docutils literal notranslate"><span class="pre">.venv</span></code>, which for example can
+be selected as virtualenv in VSCode (<code class="docutils literal notranslate"><span class="pre">Shift+Ctrl+P</span></code> and then
+<code class="docutils literal notranslate"><span class="pre">Python:</span> <span class="pre">Select</span> <span class="pre">Interpreter</span></code>).</p>
+</section>
 </section>
 
 

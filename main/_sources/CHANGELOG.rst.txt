@@ -9,11 +9,6 @@ This changelog describes changes after version 1.0.0.
 v1.3.0
 ======
 
-Release Summary
----------------
-
-Internal release, documentation or test changes only.
-
 Minor Changes
 -------------
 
