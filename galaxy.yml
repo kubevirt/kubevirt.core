@@ -37,9 +37,11 @@ build_ignore:
   - OWNERS
   - REVIEW_CHECKLIST.md
   - tox.ini
+  - tox-ansible.ini
   - '*.tar.gz'
   - '*.zip'
   - docs/_gh_include
   - docs/conf.py
   - docs/roles.rst.template
   - docs/requirements.txt
+  - tests/requirements.txt

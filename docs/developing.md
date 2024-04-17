@@ -11,3 +11,24 @@
 - `vars/` vs `defaults/` - internal or interpolated variables that don't need to change or be overridden by user go in `vars/`, those that a user would likely override, go under `defaults/` directory
 - All arguments have a specification in `meta/argument_specs.yml`
 - All playbooks/roles should be focused on compatibility with Ansible Automation Platform
+
+## Development environment
+
+To develop and to run tests you need to install `tox` and `tox-ansible` on
+your machine.
+
+```
+pip install --user tox tox-ansible
+```
+
+### Virtualenv for development
+
+To build a virtualenv for development purposes run the following command:
+
+```
+make build-venv
+```
+
+The resulting virtualenv will be symlinked to `.venv`, which for example can
+be selected as virtualenv in VSCode (`Shift+Ctrl+P` and then
+`Python: Select Interpreter`).
