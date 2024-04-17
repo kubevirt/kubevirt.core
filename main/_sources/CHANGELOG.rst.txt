@@ -6,13 +6,21 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v1.3.2
+======
+
+Release Summary
+---------------
+
+No functional changes, hotfix release to retrigger the downstream build and to keep in sync with Ansible Automation Hub.
+
 v1.3.1
 ======
 
 Release Summary
 ---------------
 
-Internal release, documentation or test changes only.
+No functional changes, only updates to the shipped documentation.
 
 v1.3.0
 ======
