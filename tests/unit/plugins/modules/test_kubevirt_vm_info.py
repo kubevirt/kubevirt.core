@@ -39,18 +39,24 @@ def find_args_default():
 
 
 @pytest.fixture(scope="module")
-def find_args_name_namespace():
-    return {
-        "kind": "VirtualMachine",
-        "api_version": "kubevirt.io/v1",
+def find_args_name_namespace(find_args_default):
+    return find_args_default | {
         "name": "testvm",
         "namespace": "default",
-        "label_selectors": [],
-        "field_selectors": [],
-        "wait": False,
-        "wait_sleep": 5,
-        "wait_timeout": 120,
-        "condition": {"type": "Ready", "status": True},
+    }
+
+
+@pytest.fixture(scope="module")
+def find_args_label_selector(find_args_default):
+    return find_args_default | {
+        "label_selectors": ["app=test"],
+    }
+
+
+@pytest.fixture(scope="module")
+def find_args_field_selector(find_args_default):
+    return find_args_default | {
+        "field_selectors": ["app=test"],
     }
 
 
@@ -59,6 +65,8 @@ def find_args_name_namespace():
     [
         ({}, "find_args_default"),
         ({"name": "testvm", "namespace": "default"}, "find_args_name_namespace"),
+        ({"label_selectors": "app=test"}, "find_args_label_selector"),
+        ({"field_selectors": "app=test"}, "find_args_field_selector"),
     ],
 )
 def test_module(request, monkeypatch, mocker, module_args, find_args):
