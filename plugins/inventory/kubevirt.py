@@ -39,6 +39,8 @@ options:
     - Optional list of cluster connection settings. If no connections are provided, the default
       I(~/.kube/config) and active context will be used, and objects will be returned for all namespaces
       the active user is authorized to access.
+    type: list
+    elements: dict
     suboptions:
       name:
         description:
