@@ -265,12 +265,12 @@ apiVersion: {{ api_version }}
 kind: VirtualMachine
 metadata:
   {% if name %}
-  name: "{{ name }}"
+  name: {{ name }}
   {% endif %}
   {% if generate_name %}
-  generateName: "{{ generate_name }}"
+  generateName: {{ generate_name }}
   {% endif %}
-  namespace: "{{ namespace }}"
+  namespace: {{ namespace }}
   {% if annotations %}
   annotations:
     {{ annotations | to_yaml | indent(4) }}
@@ -280,7 +280,7 @@ metadata:
     {{ labels | to_yaml | indent(4) }}
   {%- endif %}
 spec:
-  running: {{ running }}
+  running: {{ running | lower }}
   {% if instancetype %}
   instancetype:
     {{ instancetype | to_yaml | indent(4) }}
@@ -291,7 +291,7 @@ spec:
   {%- endif %}
   {% if data_volume_templates %}
   dataVolumeTemplates:
-    {{ data_volume_templates | to_yaml | indent(4) }}
+  {{ data_volume_templates | to_yaml | indent(2) }}
   {%- endif %}
   template:
     {% if annotations or labels %}
