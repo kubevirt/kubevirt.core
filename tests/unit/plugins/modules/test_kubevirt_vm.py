@@ -191,6 +191,16 @@ def module_params_stopped(module_params_default):
 
 
 @pytest.fixture(scope="module")
+def module_params_delete(module_params_default):
+    return module_params_default | {
+        "name": "testvm",
+        "namespace": "default",
+        "state": "absent",
+        "wait": True,
+    }
+
+
+@pytest.fixture(scope="module")
 def k8s_module_params_create(module_params_create, vm_definition_create):
     return module_params_create | {
         "generate_name": None,
@@ -214,6 +224,15 @@ def k8s_module_params_stopped(module_params_stopped, vm_definition_stopped):
         "generate_name": None,
         "resource_definition": dump(vm_definition_stopped, sort_keys=False),
         "wait_condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
+    }
+
+
+@pytest.fixture(scope="module")
+def k8s_module_params_delete(module_params_delete, vm_definition_running):
+    return module_params_delete | {
+        "generate_name": None,
+        "resource_definition": dump(vm_definition_running, sort_keys=False),
+        "wait_condition": {"type": "Ready", "status": True},
     }
 
 
@@ -244,6 +263,12 @@ def test_module_fails_when_required_args_missing(monkeypatch):
             "k8s_module_params_stopped",
             "vm_definition_stopped",
             "update",
+        ),
+        (
+            "module_params_delete",
+            "k8s_module_params_delete",
+            "vm_definition_running",
+            "delete"
         ),
     ],
 )
