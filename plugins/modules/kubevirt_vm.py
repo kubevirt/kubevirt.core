@@ -380,7 +380,14 @@ def main() -> None:
     module.params["resource_definition"] = render_template(module.params)
 
     # Set wait_condition to allow waiting for the ready state of the VirtualMachine
-    module.params["wait_condition"] = {"type": "Ready", "status": True}
+    if module.params["running"]:
+        module.params["wait_condition"] = {"type": "Ready", "status": True}
+    else:
+        module.params["wait_condition"] = {
+            "type": "Ready",
+            "status": False,
+            "reason": "VMINotExists",
+        }
 
     try:
         runner.run_module(module)

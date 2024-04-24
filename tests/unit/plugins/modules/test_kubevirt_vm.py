@@ -66,6 +66,46 @@ def vm_definition_create():
 
 
 @pytest.fixture(scope="module")
+def vm_definition_running():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "name": "testvm",
+            "namespace": "default",
+        },
+        "spec": {
+            "running": True,
+            "template": {
+                "spec": {
+                    "domain": {"devices": {}},
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_definition_stopped():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "name": "testvm",
+            "namespace": "default",
+        },
+        "spec": {
+            "running": False,
+            "template": {
+                "spec": {
+                    "domain": {"devices": {}},
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
 def module_params_default():
     return {
         "api_version": "kubevirt.io/v1",
@@ -133,11 +173,47 @@ def module_params_create(module_params_default):
 
 
 @pytest.fixture(scope="module")
+def module_params_running(module_params_default):
+    return module_params_default | {
+        "name": "testvm",
+        "namespace": "default",
+        "running": True,
+    }
+
+
+@pytest.fixture(scope="module")
+def module_params_stopped(module_params_default):
+    return module_params_default | {
+        "name": "testvm",
+        "namespace": "default",
+        "running": False,
+    }
+
+
+@pytest.fixture(scope="module")
 def k8s_module_params_create(module_params_create, vm_definition_create):
     return module_params_create | {
         "generate_name": None,
         "resource_definition": dump(vm_definition_create, sort_keys=False),
         "wait_condition": {"type": "Ready", "status": True},
+    }
+
+
+@pytest.fixture(scope="module")
+def k8s_module_params_running(module_params_running, vm_definition_running):
+    return module_params_running | {
+        "generate_name": None,
+        "resource_definition": dump(vm_definition_running, sort_keys=False),
+        "wait_condition": {"type": "Ready", "status": True},
+    }
+
+
+@pytest.fixture(scope="module")
+def k8s_module_params_stopped(module_params_stopped, vm_definition_stopped):
+    return module_params_stopped | {
+        "generate_name": None,
+        "resource_definition": dump(vm_definition_stopped, sort_keys=False),
+        "wait_condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
     }
 
 
@@ -156,6 +232,18 @@ def test_module_fails_when_required_args_missing(monkeypatch):
             "k8s_module_params_create",
             "vm_definition_create",
             "create",
+        ),
+        (
+            "module_params_running",
+            "k8s_module_params_running",
+            "vm_definition_running",
+            "update",
+        ),
+        (
+            "module_params_stopped",
+            "k8s_module_params_stopped",
+            "vm_definition_stopped",
+            "update",
         ),
     ],
 )
