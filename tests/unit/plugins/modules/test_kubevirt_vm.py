@@ -8,6 +8,8 @@ __metaclass__ = type
 
 import pytest
 
+from yaml import dump
+
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s import runner
 from ansible_collections.kubevirt.core.plugins.modules import kubevirt_vm
@@ -21,7 +23,7 @@ from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock impo
 
 
 @pytest.fixture(scope="module")
-def vm_definition():
+def vm_definition_create():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -64,52 +66,46 @@ def vm_definition():
 
 
 @pytest.fixture(scope="module")
-def vm_manifest():
-    return """apiVersion: kubevirt.io/v1
-kind: VirtualMachine
-metadata:
-  name: "testvm"
-  namespace: "default"
-  labels:
-    environment: staging
-    service: loadbalancer
-spec:
-  running: True
-  instancetype:
-    name: u1.medium
-  preference:
-    name: fedora
-  dataVolumeTemplates:
-    - metadata:
-        name: testdv
-      spec:
-        source:
-          registry:
-            url: docker://quay.io/containerdisks/fedora:latest
-        storage:
-          accessModes:
-          - ReadWriteOnce
-          resources:
-            requests:
-              storage: 5Gi
-  template:
-    metadata:
-      labels:
-        environment: staging
-        service: loadbalancer
-    spec:
-      domain:
-        devices: {}
-      terminationGracePeriodSeconds: 180
-"""
+def module_params_default():
+    return {
+        "api_version": "kubevirt.io/v1",
+        "annotations": None,
+        "labels": None,
+        "running": True,
+        "instancetype": None,
+        "preference": None,
+        "data_volume_templates": None,
+        "spec": None,
+        "wait": False,
+        "wait_sleep": 5,
+        "wait_timeout": 5,
+        "kubeconfig": None,
+        "context": None,
+        "host": None,
+        "api_key": None,
+        "username": None,
+        "password": None,
+        "validate_certs": None,
+        "ca_cert": None,
+        "client_cert": None,
+        "client_key": None,
+        "proxy": None,
+        "no_proxy": None,
+        "proxy_headers": None,
+        "persist_config": None,
+        "impersonate_user": None,
+        "impersonate_groups": None,
+        "state": "present",
+        "force": False,
+        "delete_options": None,
+    }
 
 
 @pytest.fixture(scope="module")
-def module_params_create():
-    return {
+def module_params_create(module_params_default):
+    return module_params_default | {
         "name": "testvm",
         "namespace": "default",
-        "state": "present",
         "labels": {"service": "loadbalancer", "environment": "staging"},
         "instancetype": {"name": "u1.medium"},
         "preference": {"name": "fedora"},
@@ -137,34 +133,10 @@ def module_params_create():
 
 
 @pytest.fixture(scope="module")
-def k8s_module_params_create(module_params_create, vm_manifest):
+def k8s_module_params_create(module_params_create, vm_definition_create):
     return module_params_create | {
-        "api_version": "kubevirt.io/v1",
-        "running": True,
-        "wait": False,
-        "wait_sleep": 5,
-        "wait_timeout": 120,
-        "force": False,
         "generate_name": None,
-        "annotations": None,
-        "kubeconfig": None,
-        "context": None,
-        "host": None,
-        "api_key": None,
-        "username": None,
-        "password": None,
-        "validate_certs": None,
-        "ca_cert": None,
-        "client_cert": None,
-        "client_key": None,
-        "proxy": None,
-        "no_proxy": None,
-        "proxy_headers": None,
-        "persist_config": None,
-        "impersonate_user": None,
-        "impersonate_groups": None,
-        "delete_options": None,
-        "resource_definition": vm_manifest,
+        "resource_definition": dump(vm_definition_create, sort_keys=False),
         "wait_condition": {"type": "Ready", "status": True},
     }
 
@@ -176,17 +148,34 @@ def test_module_fails_when_required_args_missing(monkeypatch):
         kubevirt_vm.main()
 
 
-def test_module_create(
-    monkeypatch, mocker, module_params_create, k8s_module_params_create, vm_definition
+@pytest.mark.parametrize(
+    "module_params,k8s_module_params,vm_definition,method",
+    [
+        (
+            "module_params_create",
+            "k8s_module_params_create",
+            "vm_definition_create",
+            "create",
+        ),
+    ],
+)
+def test_module(
+    request,
+    monkeypatch,
+    mocker,
+    module_params,
+    k8s_module_params,
+    vm_definition,
+    method,
 ):
     monkeypatch.setattr(AnsibleModule, "exit_json", exit_json)
     monkeypatch.setattr(runner, "get_api_client", lambda _: None)
 
-    set_module_args(module_params_create)
+    set_module_args(request.getfixturevalue(module_params))
 
     perform_action = mocker.patch.object(runner, "perform_action")
     perform_action.return_value = {
-        "method": "create",
+        "method": method,
         "changed": True,
         "result": "success",
     }
@@ -194,5 +183,7 @@ def test_module_create(
     with pytest.raises(AnsibleExitJson):
         kubevirt_vm.main()
     perform_action.assert_called_once_with(
-        mocker.ANY, vm_definition, k8s_module_params_create
+        mocker.ANY,
+        request.getfixturevalue(vm_definition),
+        request.getfixturevalue(k8s_module_params),
     )
