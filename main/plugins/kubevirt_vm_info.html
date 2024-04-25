@@ -484,6 +484,28 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
 <tr class="row-even">
   <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-running"></div>
+    <p class="ansible-option-title"><strong>running</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-running" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">boolean</span>
+    </p>
+    <p><em class="ansible-option-versionadded">added in kubevirt.core 1.4.0</em></p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Specify whether the VirtualMachine should be running.</p>
+    <p>This affects the ready condition to wait for.</p>
+    <p>This requires <code class='docutils literal notranslate'>wait</code> and is only used when <em>wait=yes</em>.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+    <ul class="simple">
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">true</code></p></li>
+    </ul>
+
+  </div></td>
+</tr>
+<tr class="row-odd">
+  <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-username"></div>
     <p class="ansible-option-title"><strong>username</strong></p>
     <a class="ansibleOptionLink" href="#parameter-username" title="Permalink to this option"></a>
@@ -496,7 +518,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Please note that this only works with clusters configured to use HTTP Basic Auth. If your cluster has a different form of authentication (e.g. OAuth2 in OpenShift), this option will not work as expected and you should look into the <a href='../../community/okd/k8s_auth_module.html' class='module'>community.okd.k8s_auth</a> module, as that might do what you need.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-validate_certs"></div>
     <div class="ansibleOptionAnchor" id="parameter-verify_ssl"></div>
@@ -517,7 +539,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-wait"></div>
     <p class="ansible-option-title"><strong>wait</strong></p>
@@ -528,15 +550,17 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
   </div></td>
   <td><div class="ansible-option-cell">
     <p>Whether to wait for the VirtualMachine to end up in the ready state.</p>
+    <p>By default this is waiting for the VirtualMachine to be up and running.</p>
+    <p>Modify this behavior by setting <code class='docutils literal notranslate'>running</code>.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
-      <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>false</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
       <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">true</code></p></li>
     </ul>
 
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-wait_sleep"></div>
     <p class="ansible-option-title"><strong>wait_sleep</strong></p>
@@ -551,7 +575,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">5</code></p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-wait_timeout"></div>
     <p class="ansible-option-title"><strong>wait_timeout</strong></p>
@@ -599,10 +623,17 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <span class="w">    </span><span class="nt">label_selectors</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app=test</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wait until the VirtualMachine is Ready</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wait until the VirtualMachine is running</span>
 <span class="w">  </span><span class="nt">kubevirt.core.kubevirt_vm_info</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testvm</span>
 <span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wait until the VirtualMachine is stopped</span>
+<span class="w">  </span><span class="nt">kubevirt.core.kubevirt_vm_info</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testvm</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">running</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
@@ -642,7 +673,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>The VirtualMachine(s) that exists</p>
+    <p>The VirtualMachine(s) that exist(s)</p>
     <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
   </div></td>
 </tr>
