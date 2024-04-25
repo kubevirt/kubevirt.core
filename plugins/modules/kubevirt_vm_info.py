@@ -46,11 +46,19 @@ options:
     type: list
     elements: str
     default: []
+  running:
+    description:
+    - Specify whether the VirtualMachine should be running.
+    - This affects the ready condition to wait for.
+    - This requires C(wait) and is only used when I(wait=yes).
+    type: bool
+    version_added: 1.4.0
   wait:
     description:
     - Whether to wait for the VirtualMachine to end up in the ready state.
+    - By default this is waiting for the VirtualMachine to be up and running.
+    - Modify this behavior by setting C(running).
     type: bool
-    default: no
   wait_sleep:
     description:
     - Number of seconds to sleep between checks.
@@ -94,10 +102,17 @@ EXAMPLES = """
     label_selectors:
       - app=test
 
-- name: Wait until the VirtualMachine is Ready
+- name: Wait until the VirtualMachine is running
   kubevirt.core.kubevirt_vm_info:
     name: testvm
     namespace: default
+    wait: true
+
+- name: Wait until the VirtualMachine is stopped
+  kubevirt.core.kubevirt_vm_info:
+    name: testvm
+    namespace: default
+    running: false
     wait: true
 """
 
@@ -109,7 +124,7 @@ api_found:
   type: bool
 resources:
   description:
-  - The VirtualMachine(s) that exists
+  - The VirtualMachine(s) that exist(s)
   returned: success
   type: complex
   contains:
@@ -165,8 +180,12 @@ def execute_module(module, svc):
     # Set kind to query for VirtualMachines
     KIND = "VirtualMachine"
 
-    # Set wait_condition to allow waiting for the ready state of the VirtualMachine
-    WAIT_CONDITION = {"type": "Ready", "status": True}
+    # Set wait_condition to allow waiting for the ready state of the
+    # VirtualMachine based on the running parameter.
+    if module.params["running"] is None or module.params["running"]:
+        wait_condition = {"type": "Ready", "status": True}
+    else:
+        wait_condition = {"type": "Ready", "status": False, "reason": "VMINotExists"}
 
     facts = svc.find(
         kind=KIND,
@@ -178,7 +197,7 @@ def execute_module(module, svc):
         wait=module.params["wait"],
         wait_sleep=module.params["wait_sleep"],
         wait_timeout=module.params["wait_timeout"],
-        condition=WAIT_CONDITION,
+        condition=wait_condition,
     )
 
     module.exit_json(changed=False, **facts)
@@ -194,7 +213,8 @@ def arg_spec():
         "namespace": {},
         "label_selectors": {"type": "list", "elements": "str", "default": []},
         "field_selectors": {"type": "list", "elements": "str", "default": []},
-        "wait": {"type": "bool", "default": False},
+        "running": {"type": "bool"},
+        "wait": {"type": "bool"},
         "wait_sleep": {"type": "int", "default": 5},
         "wait_timeout": {"type": "int", "default": 120},
     }
@@ -208,7 +228,10 @@ def main():
     main instantiates the AnsibleK8SModule and runs the module.
     """
     module = AnsibleK8SModule(
-        module_class=AnsibleModule, argument_spec=arg_spec(), supports_check_mode=True
+        module_class=AnsibleModule,
+        argument_spec=arg_spec(),
+        required_by={"running": "wait"},
+        supports_check_mode=True,
     )
 
     try:

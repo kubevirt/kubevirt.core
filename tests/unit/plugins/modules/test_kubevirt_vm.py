@@ -268,7 +268,7 @@ def test_module_fails_when_required_args_missing(monkeypatch):
             "module_params_delete",
             "k8s_module_params_delete",
             "vm_definition_running",
-            "delete"
+            "delete",
         ),
     ],
 )

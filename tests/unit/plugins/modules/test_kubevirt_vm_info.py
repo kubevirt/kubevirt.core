@@ -17,7 +17,9 @@ from ansible_collections.kubevirt.core.plugins.modules import (
 )
 from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock import (
     AnsibleExitJson,
+    AnsibleFailJson,
     exit_json,
+    fail_json,
     set_module_args,
 )
 
@@ -31,7 +33,7 @@ def find_args_default():
         "namespace": None,
         "label_selectors": [],
         "field_selectors": [],
-        "wait": False,
+        "wait": None,
         "wait_sleep": 5,
         "wait_timeout": 120,
         "condition": {"type": "Ready", "status": True},
@@ -60,6 +62,35 @@ def find_args_field_selector(find_args_default):
     }
 
 
+@pytest.fixture(scope="module")
+def find_args_running(find_args_default):
+    return find_args_default | {
+        "wait": True,
+        "condition": {"type": "Ready", "status": True},
+    }
+
+
+@pytest.fixture(scope="module")
+def find_args_stopped(find_args_default):
+    return find_args_default | {
+        "wait": True,
+        "condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
+    }
+
+
+@pytest.mark.parametrize(
+    "module_args",
+    [
+        {"running": False},
+    ],
+)
+def test_module_fails_when_required_args_missing(monkeypatch, module_args):
+    monkeypatch.setattr(AnsibleModule, "fail_json", fail_json)
+    with pytest.raises(AnsibleFailJson):
+        set_module_args(module_args)
+        kubevirt_vm_info.main()
+
+
 @pytest.mark.parametrize(
     "module_args,find_args",
     [
@@ -67,6 +98,8 @@ def find_args_field_selector(find_args_default):
         ({"name": "testvm", "namespace": "default"}, "find_args_name_namespace"),
         ({"label_selectors": "app=test"}, "find_args_label_selector"),
         ({"field_selectors": "app=test"}, "find_args_field_selector"),
+        ({"wait": True, "running": True}, "find_args_running"),
+        ({"wait": True, "running": False}, "find_args_stopped"),
     ],
 )
 def test_module(request, monkeypatch, mocker, module_args, find_args):
