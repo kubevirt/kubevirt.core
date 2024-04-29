@@ -300,3 +300,347 @@ def test_module(
         request.getfixturevalue(vm_definition),
         request.getfixturevalue(k8s_module_params),
     )
+
+
+@pytest.fixture(scope="module")
+def render_template_params():
+    return {
+        "api_version": "kubevirt.io/v1",
+        "running": True,
+        "namespace": "default",
+    }
+
+
+@pytest.fixture(scope="module")
+def render_template_params_annotations(render_template_params):
+    return render_template_params | {
+        "annotations": {"test": "test"},
+    }
+
+
+@pytest.fixture(scope="module")
+def render_template_params_labels(render_template_params):
+    return render_template_params | {
+        "labels": {"test": "test"},
+    }
+
+
+@pytest.fixture(scope="module")
+def render_template_params_instancetype(render_template_params):
+    return render_template_params | {
+        "instancetype": {"name": "u1.medium"},
+    }
+
+
+@pytest.fixture(scope="module")
+def render_template_params_preference(render_template_params):
+    return render_template_params | {
+        "preference": {"name": "fedora"},
+    }
+
+
+@pytest.fixture(scope="module")
+def render_template_params_datavolumetemplate(render_template_params):
+    return render_template_params | {
+        "data_volume_templates": [
+            {
+                "metadata": {"name": "testdv"},
+                "spec": {
+                    "source": {
+                        "registry": {
+                            "url": "docker://quay.io/containerdisks/fedora:latest"
+                        },
+                    },
+                    "storage": {
+                        "accessModes": ["ReadWriteOnce"],
+                        "resources": {"requests": {"storage": "5Gi"}},
+                    },
+                },
+            },
+        ],
+    }
+
+
+@pytest.fixture(scope="module")
+def render_template_params_name(render_template_params):
+    return render_template_params | {
+        "name": "testvm",
+    }
+
+
+@pytest.fixture(scope="module")
+def render_template_params_generate_name(render_template_params):
+    return render_template_params | {
+        "generate_name": "testvm-1234",
+    }
+
+
+@pytest.fixture(scope="module")
+def render_template_params_specs(render_template_params):
+    return render_template_params | {
+        "spec": {
+            "domain": {
+                "devices": {
+                    "cpu": {
+                        "cores": 2,
+                        "socket": 1,
+                        "threads": 2,
+                    }
+                }
+            }
+        }
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_template():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "namespace": "default",
+        },
+        "spec": {
+            "running": True,
+            "template": {
+                "spec": {
+                    "domain": {
+                        "devices": {},
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_template_labels():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "namespace": "default",
+            "labels": {
+                "test": "test",
+            }
+        },
+        "spec": {
+            "running": True,
+            "template": {
+                "metadata": {
+                    "labels": {
+                        "test": "test"
+                    },
+                },
+                "spec": {
+                    "domain": {
+                        "devices": {},
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_template_annotations():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "namespace": "default",
+            "annotations": {
+                "test": "test",
+            }
+        },
+        "spec": {
+            "running": True,
+            "template": {
+                "metadata": {
+                    "annotations": {
+                        "test": "test"
+                    },
+                },
+                "spec": {
+                    "domain": {
+                        "devices": {},
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_template_instancetype():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "namespace": "default",
+        },
+        "spec": {
+            "running": True,
+            "instancetype": {
+                "name": "u1.medium"
+            },
+            "template": {
+                "spec": {
+                    "domain": {
+                        "devices": {},
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_template_preference():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "namespace": "default",
+        },
+        "spec": {
+            "running": True,
+            "preference": {
+                "name": "fedora"
+            },
+            "template": {
+                "spec": {
+                    "domain": {
+                        "devices": {},
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_template_datavolumetemplate():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "namespace": "default",
+        },
+        "spec": {
+            "running": True,
+            "dataVolumeTemplates": [
+                {
+                    "metadata": {"name": "testdv"},
+                    "spec": {
+                        "source": {
+                            "registry": {
+                                "url": "docker://quay.io/containerdisks/fedora:latest"
+                            },
+                        },
+                        "storage": {
+                            "accessModes": ["ReadWriteOnce"],
+                            "resources": {"requests": {"storage": "5Gi"}},
+                        },
+                    },
+                },
+            ],
+            "template": {
+                "spec": {
+                    "domain": {
+                        "devices": {},
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_template_name():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "name": "testvm",
+            "namespace": "default",
+        },
+        "spec": {
+            "running": True,
+            "template": {
+                "spec": {
+                    "domain": {
+                        "devices": {},
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_template_generate_name():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "generateName": "testvm-1234",
+            "namespace": "default",
+        },
+        "spec": {
+            "running": True,
+            "template": {
+                "spec": {
+                    "domain": {
+                        "devices": {},
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="module")
+def vm_template_specs():
+    return {
+        "apiVersion": "kubevirt.io/v1",
+        "kind": "VirtualMachine",
+        "metadata": {
+            "namespace": "default",
+        },
+        "spec": {
+            "running": True,
+            "template": {
+                "spec": {
+                    "domain": {
+                        "devices": {
+                            "cpu": {
+                                "cores": 2,
+                                "socket": 1,
+                                "threads": 2,
+                            }
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+@pytest.mark.parametrize(
+    "params,rendered_template",
+    [
+        ("render_template_params", "vm_template"),
+        ("render_template_params_annotations", "vm_template_annotations"),
+        ("render_template_params_labels", "vm_template_labels"),
+        ("render_template_params_instancetype", "vm_template_instancetype"),
+        ("render_template_params_preference", "vm_template_preference"),
+        ("render_template_params_datavolumetemplate", "vm_template_datavolumetemplate"),
+        ("render_template_params_name", "vm_template_name"),
+        ("render_template_params_generate_name", "vm_template_generate_name"),
+        ("render_template_params_specs", "vm_template_specs")
+    ],
+)
+def test_render_template(request, params, rendered_template):
+    result = kubevirt_vm.render_template(request.getfixturevalue(params))
+    assert result == dump(request.getfixturevalue(rendered_template), sort_keys=False)
