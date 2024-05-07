@@ -35,72 +35,72 @@ options:
     default: kubevirt.io/v1
   name:
     description:
-    - Specify the name of the VirtualMachine.
-    - This option is ignored when I(state) is not set to C(present).
-    - mutually exclusive with C(generate_name).
+    - Specify the name of the C(VirtualMachine).
+    - This option is ignored when O(state=present) is not set.
+    - Mutually exclusive with O(generate_name).
     type: str
   generate_name:
     description:
-    - Specify the basis of the VirtualMachine name and random characters will be added automatically on server to
+    - Specify the basis of the C(VirtualMachine) name and random characters will be added automatically on the cluster to
       generate a unique name.
-    - Only used when I(state=present).
-    - mutually exclusive with C(name).
+    - Only used when O(state=present).
+    - Mutually exclusive with O(name).
     type: str
   namespace:
     description:
-    - Specify the namespace of the VirtualMachine.
+    - Specify the namespace of the C(VirtualMachine).
     type: str
     required: yes
   annotations:
     description:
-    - Specify annotations to set on the VirtualMachine.
-    - Only used when I(state=present).
+    - Specify annotations to set on the C(VirtualMachine).
+    - Only used when O(state=present).
     type: dict
   labels:
     description:
-    - Specify labels to set on the VirtualMachine.
+    - Specify labels to set on the C(VirtualMachine).
     type: dict
   running:
     description:
-    - Specify whether the VirtualMachine should be running.
+    - Specify whether the C(VirtualMachine) should be running or not.
     type: bool
     default: yes
   instancetype:
     description:
-    - Specify the instancetype matcher of the VirtualMachine.
-    - Only used when I(state=present).
+    - Specify the C(Instancetype) matcher of the C(VirtualMachine).
+    - Only used when O(state=present).
     type: dict
   preference:
     description:
-    - Specify the preference matcher of the VirtualMachine.
-    - Only used when I(state=present).
+    - Specify the C(Preference) matcher of the C(VirtualMachine).
+    - Only used when O(state=present).
     type: dict
   data_volume_templates:
     description:
-    - Specify the DataVolume templates of the VirtualMachine.
-    - 'See: https://kubevirt.io/api-reference/main/definitions.html#_v1_datavolumetemplatespec'
+    - Specify the C(DataVolume) templates of the C(VirtualMachine).
+    - See U(https://kubevirt.io/api-reference/main/definitions.html#_v1_datavolumetemplatespec)
     type: list
     elements: 'dict'
   spec:
     description:
-    - Specify the template spec of the VirtualMachine.
-    - 'See: https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec'
+    - Specify the template spec of the C(VirtualMachine).
+    - See U(https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec)
     type: dict
   wait:
     description:
-    - Whether to wait for the VirtualMachine to end up in the ready state.
+    - Whether to wait for the C(VirtualMachine) to end up in the ready state.
     type: bool
     default: no
   wait_sleep:
     description:
     - Number of seconds to sleep between checks.
-    - Ignored if C(wait) is not set.
+    - Ignored if O(wait) is not set.
     default: 5
     type: int
   wait_timeout:
     description:
-    - How long in seconds to wait for the resource to end up in the desired state.
-    - Ignored if C(wait) is not set.
+    - How long in seconds to wait for the resource to end up in the ready state.
+    - Ignored if O(wait) is not set.
     default: 120
     type: int
 
@@ -205,12 +205,12 @@ result:
   returned: success
   contains:
     changed:
-      description: Whether the VirtualMachine was changed
+      description: Whether the C(VirtualMachine) was changed or not.
       type: bool
       sample: True
     duration:
-      description: elapsed time of task in seconds
-      returned: when C(wait) is true
+      description: Elapsed time of the task in seconds.
+      returned: When O(wait=true).
       type: int
       sample: 48
     method:

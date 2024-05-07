@@ -17,8 +17,8 @@ author:
 - "KubeVirt.io Project (!UNKNOWN)"
 
 description:
-  - Use the Kubernetes Python client to perform read operations on KubeVirt VirtualMachines.
-  - Pass options to find VirtualMachines as module arguments.
+  - Use the Kubernetes Python client to perform read operations on KubeVirt C(VirtualMachines).
+  - Pass options to find C(VirtualMachines) as module arguments.
   - Authenticate using either a config file, certificates, password or token.
   - Supports check mode.
 
@@ -30,45 +30,45 @@ options:
     default: kubevirt.io/v1
   name:
     description:
-    - Specify the name of the VirtualMachine.
+    - Specify the name of the C(VirtualMachine).
     type: str
   namespace:
     description:
-    - Specify the namespace of VirtualMachines.
+    - Specify the namespace of C(VirtualMachines).
     type: str
   label_selectors:
-    description: List of label selectors to use to filter results
+    description: List of label selectors to use to filter results.
     type: list
     elements: str
     default: []
   field_selectors:
-    description: List of field selectors to use to filter results
+    description: List of field selectors to use to filter results.
     type: list
     elements: str
     default: []
   running:
     description:
-    - Specify whether the VirtualMachine should be running.
+    - Specify whether the C(VirtualMachine) should be running or not.
     - This affects the ready condition to wait for.
-    - This requires C(wait) and is only used when I(wait=yes).
+    - This requires O(wait=yes).
     type: bool
     version_added: 1.4.0
   wait:
     description:
-    - Whether to wait for the VirtualMachine to end up in the ready state.
-    - By default this is waiting for the VirtualMachine to be up and running.
-    - Modify this behavior by setting C(running).
+    - Whether to wait for the C(VirtualMachine) to end up in the ready state.
+    - By default this is waiting for the C(VirtualMachine) to be up and running.
+    - Modify this behavior by setting O(running).
     type: bool
   wait_sleep:
     description:
     - Number of seconds to sleep between checks.
-    - Ignored if C(wait) is not set.
+    - Ignored if O(wait) is not set.
     default: 5
     type: int
   wait_timeout:
     description:
-    - How long in seconds to wait for the resource to end up in the desired state.
-    - Ignored if C(wait) is not set.
+    - How long in seconds to wait for the resource to end up in the ready state.
+    - Ignored if O(wait) is not set.
     default: 120
     type: int
 
@@ -119,12 +119,12 @@ EXAMPLES = """
 RETURN = """
 api_found:
   description:
-  - Whether the specified api_version and VirtualMachine kind were successfully mapped to an existing API on the targeted cluster.
+  - Whether the specified O(api_version) and C(VirtualMachine) C(Kind) were successfully mapped to an existing API on the target cluster.
   returned: always
   type: bool
 resources:
   description:
-  - The VirtualMachine(s) that exist(s)
+  - The C(VirtualMachines) that exist.
   returned: success
   type: complex
   contains:
@@ -133,7 +133,7 @@ resources:
       returned: success
       type: str
     kind:
-      description: Represents the REST resource this object represents.
+      description: Represents the C(REST) resource this object represents.
       returned: success
       type: str
     metadata:
@@ -141,11 +141,11 @@ resources:
       returned: success
       type: dict
     spec:
-      description: Specific attributes of the VirtualMachine. Can vary based on the I(api_version).
+      description: Specific attributes of the C(VirtualMachine). Can vary based on the O(api_version).
       returned: success
       type: dict
     status:
-      description: Current status details for the VirtualMachine.
+      description: Current status details for the C(VirtualMachine).
       returned: success
       type: dict
 """

@@ -16,10 +16,10 @@ author:
 - "KubeVirt.io Project (!UNKNOWN)"
 
 description:
-- Fetch running VirtualMachineInstances for one or more namespaces with an optional label selector.
-- Groups by namespace, namespace_vmis and labels.
-- Uses the kubectl connection plugin to access the Kubernetes cluster.
-- Uses *.kubevirt.(yml|yaml) YAML configuration file to set parameter values.
+- Fetch running C(VirtualMachineInstances) for one or more namespaces with an optional label selector.
+- Groups by cluster name, namespace and labels.
+- Uses the M(kubernetes.core.kubectl) connection plugin to access the Kubernetes cluster.
+- Uses V(*.kubevirt.[yml|yaml]) YAML configuration file to set parameter values.
 
 extends_documentation_fragment:
 - inventory_cache
@@ -27,12 +27,12 @@ extends_documentation_fragment:
 
 options:
   plugin:
-    description: Token that ensures this is a source file for the "kubevirt" plugin.
+    description: Token that ensures this is a source file for the P(kubevirt.core.kubevirt#inventory) plugin.
     required: True
     choices: ["kubevirt", "kubevirt.core.kubevirt"]
   host_format:
     description:
-    - 'Specify the format of the host in the inventory group. Available specifiers: name, namespace, uid.'
+    - 'Specify the format of the host in the inventory group. Available specifiers: V(name), V(namespace) and V(uid).'
     default: "{namespace}-{name}"
   connections:
     description:
@@ -50,83 +50,83 @@ options:
         description:
         - Path to an existing Kubernetes config file. If not provided, and no other connection
           options are provided, the Kubernetes client will attempt to load the default
-          configuration file from I(~/.kube/config). Can also be specified via K8S_AUTH_KUBECONFIG
+          configuration file from I(~/.kube/config). Can also be specified via E(K8S_AUTH_KUBECONFIG)
           environment variable.
       context:
         description:
-        - The name of a context found in the config file. Can also be specified via K8S_AUTH_CONTEXT environment
+        - The name of a context found in the config file. Can also be specified via E(K8S_AUTH_CONTEXT) environment
           variable.
       host:
         description:
-        - Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.
+        - Provide a URL for accessing the API. Can also be specified via E(K8S_AUTH_HOST) environment variable.
       api_key:
         description:
-        - Token used to authenticate with the API. Can also be specified via K8S_AUTH_API_KEY environment
+        - Token used to authenticate with the API. Can also be specified via E(K8S_AUTH_API_KEY) environment
           variable.
       username:
         description:
-        - Provide a username for authenticating with the API. Can also be specified via K8S_AUTH_USERNAME
+        - Provide a username for authenticating with the API. Can also be specified via E(K8S_AUTH_USERNAME)
           environment variable.
       password:
         description:
-        - Provide a password for authenticating with the API. Can also be specified via K8S_AUTH_PASSWORD
+        - Provide a password for authenticating with the API. Can also be specified via E(K8S_AUTH_PASSWORD)
           environment variable.
       client_cert:
         description:
-        - Path to a certificate used to authenticate with the API. Can also be specified via K8S_AUTH_CERT_FILE
+        - Path to a certificate used to authenticate with the API. Can also be specified via E(K8S_AUTH_CERT_FILE)
           environment variable.
         aliases: [ cert_file ]
       client_key:
         description:
-        - Path to a key file used to authenticate with the API. Can also be specified via K8S_AUTH_KEY_FILE
+        - Path to a key file used to authenticate with the API. Can also be specified via E(K8S_AUTH_KEY_FILE)
           environment variable.
         aliases: [ key_file ]
       ca_cert:
         description:
         - Path to a CA certificate used to authenticate with the API. Can also be specified via
-          K8S_AUTH_SSL_CA_CERT environment variable.
+          E(K8S_AUTH_SSL_CA_CERT) environment variable.
         aliases: [ ssl_ca_cert ]
       validate_certs:
         description:
         - Whether or not to verify the API server's SSL certificates. Can also be specified via
-          K8S_AUTH_VERIFY_SSL environment variable.
+          E(K8S_AUTH_VERIFY_SSL) environment variable.
         type: bool
         aliases: [ verify_ssl ]
       namespaces:
         description:
-        - List of namespaces. If not specified, will fetch all VirtualMachineInstances for all namespaces
+        - List of namespaces. If not specified, will fetch all C(VirtualMachineInstances) for all namespaces
           the user is authorized to access.
       label_selector:
         description:
-        - Define a label selector to select a subset of the fetched VirtualMachineInstances.
+        - Define a label selector to select a subset of the fetched C(VirtualMachineInstances).
       network_name:
         description:
-        - In case multiple networks are attached to a VirtualMachineInstance, define which interface should
+        - In case multiple networks are attached to a C(VirtualMachineInstance), define which interface should
           be returned as primary IP address.
         aliases: [ interface_name ]
       kube_secondary_dns:
         description:
-        - Enable kubesecondarydns derived host names when using a secondary network interface.
+        - Enable C(kubesecondarydns) derived host names when using a secondary network interface.
         type: bool
         default: False
       use_service:
         description:
-        - Enable the use of services to establish an SSH connection to the VirtualMachine.
-        - Services are only used if no network_name was provided.
+        - Enable the use of C(Services) to establish an SSH connection to the C(VirtualMachine).
+        - Services are only used if no O(connections.network_name) was provided.
         type: bool
         default: True
       create_groups:
         description:
-        - Enable the creation of groups from labels on VirtualMachines.
+        - Enable the creation of groups from labels on C(VirtualMachines).
         type: bool
         default: False
       base_domain:
         description:
-        - Override the base domain used to construct host names of VirtualMachines. Used in case of
-          kubesecondarydns or services of type NodePort if append_base_domain is set.
+        - Override the base domain used to construct host names of C(VirtualMachines). Used in case of
+          C(kubesecondarydns) or C(Services) of type C(NodePort) if O(connections.append_base_domain) is set.
       append_base_domain:
         description:
-        - Append the base domain of the cluster to host names constructed from SSH services of type NodePort.
+        - Append the base domain of the cluster to host names constructed from SSH C(Services) of type C(NodePort).
         type: bool
         default: False
       api_version:
