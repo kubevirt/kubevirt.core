@@ -317,7 +317,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         if service["spec"]["type"] == TYPE_LOADBALANCER:
             return service["spec"]["ports"][0]["port"]
 
-        # LoadBalancer services use the nodePort attribute
+        # NodePort services use the nodePort attribute
         if service["spec"]["type"] == TYPE_NODEPORT:
             return service["spec"]["ports"][0]["nodePort"]
 
