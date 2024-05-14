@@ -539,7 +539,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             if vmi.metadata.labels and opts.create_groups:
                 # Create a group for each label_value
                 vmi_groups = []
-                for key, value in vmi.metadata.labels:
+                for key, value in vmi.metadata.labels.items():
                     group_name = self._sanitize_group_name(f"label_{key}_{value}")
                     if group_name not in vmi_groups:
                         vmi_groups.append(group_name)
