@@ -168,8 +168,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify annotations to set on the VirtualMachine.</p>
-    <p>Only used when <em>state=present</em>.</p>
+    <p>Specify annotations to set on the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+    <p>Only used when <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -268,8 +268,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify the DataVolume templates of the VirtualMachine.</p>
-    <p>See: https://kubevirt.io/api-reference/main/definitions.html#_v1_datavolumetemplatespec</p>
+    <p>Specify the <code class='docutils literal notranslate'>DataVolume</code> templates of the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+    <p>See <a href='https://kubevirt.io/api-reference/main/definitions.html#_v1_datavolumetemplatespec'>https://kubevirt.io/api-reference/main/definitions.html#_v1_datavolumetemplatespec</a></p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -393,9 +393,9 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify the basis of the VirtualMachine name and random characters will be added automatically on server to generate a unique name.</p>
-    <p>Only used when <em>state=present</em>.</p>
-    <p>mutually exclusive with <code class='docutils literal notranslate'>name</code>.</p>
+    <p>Specify the basis of the <code class='docutils literal notranslate'>VirtualMachine</code> name and random characters will be added automatically on the cluster to generate a unique name.</p>
+    <p>Only used when <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>.</p>
+    <p>Mutually exclusive with <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-name"><span class="std std-ref"><span class="pre">name</span></span></a></strong></code>.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -452,8 +452,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify the instancetype matcher of the VirtualMachine.</p>
-    <p>Only used when <em>state=present</em>.</p>
+    <p>Specify the <code class='docutils literal notranslate'>Instancetype</code> matcher of the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+    <p>Only used when <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -481,7 +481,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify labels to set on the VirtualMachine.</p>
+    <p>Specify labels to set on the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -494,9 +494,9 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify the name of the VirtualMachine.</p>
-    <p>This option is ignored when <em>state</em> is not set to <code class='docutils literal notranslate'>present</code>.</p>
-    <p>mutually exclusive with <code class='docutils literal notranslate'>generate_name</code>.</p>
+    <p>Specify the name of the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+    <p>This option is ignored when <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code> is not set.</p>
+    <p>Mutually exclusive with <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-generate_name"><span class="std std-ref"><span class="pre">generate_name</span></span></a></strong></code>.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -510,7 +510,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify the namespace of the VirtualMachine.</p>
+    <p>Specify the namespace of the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -577,8 +577,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify the preference matcher of the VirtualMachine.</p>
-    <p>Only used when <em>state=present</em>.</p>
+    <p>Specify the <code class='docutils literal notranslate'>Preference</code> matcher of the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+    <p>Only used when <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -663,7 +663,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify whether the VirtualMachine should be running.</p>
+    <p>Specify whether the <code class='docutils literal notranslate'>VirtualMachine</code> should be running or not.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
@@ -682,8 +682,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify the template spec of the VirtualMachine.</p>
-    <p>See: https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec</p>
+    <p>Specify the template spec of the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+    <p>See <a href='https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec'>https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec</a></p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -750,7 +750,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Whether to wait for the VirtualMachine to end up in the ready state.</p>
+    <p>Whether to wait for the <code class='docutils literal notranslate'>VirtualMachine</code> to end up in the ready state.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>false</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -770,7 +770,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
   </div></td>
   <td><div class="ansible-option-cell">
     <p>Number of seconds to sleep between checks.</p>
-    <p>Ignored if <code class='docutils literal notranslate'>wait</code> is not set.</p>
+    <p>Ignored if <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-wait"><span class="std std-ref"><span class="pre">wait</span></span></a></strong></code> is not set.</p>
     <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">5</code></p>
   </div></td>
 </tr>
@@ -784,8 +784,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>How long in seconds to wait for the resource to end up in the desired state.</p>
-    <p>Ignored if <code class='docutils literal notranslate'>wait</code> is not set.</p>
+    <p>How long in seconds to wait for the resource to end up in the ready state.</p>
+    <p>Ignored if <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-wait"><span class="std std-ref"><span class="pre">wait</span></span></a></strong></code> is not set.</p>
     <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">120</code></p>
   </div></td>
 </tr>
@@ -922,7 +922,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Whether the VirtualMachine was changed</p>
+    <p>Whether the <code class='docutils literal notranslate'>VirtualMachine</code> was changed or not.</p>
     <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
     <p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-value literal notranslate ansible-option-sample">true</code></p>
   </div></td>
@@ -937,8 +937,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>elapsed time of task in seconds</p>
-    <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> when <code class='docutils literal notranslate'>wait</code> is true</p>
+    <p>Elapsed time of the task in seconds.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> When <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-wait"><span class="std std-ref"><span class="pre">wait=true</span></span></a></code>.</p>
     <p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-value literal notranslate ansible-option-sample">48</code></p>
   </div></td>
 </tr>

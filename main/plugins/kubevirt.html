@@ -127,10 +127,10 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <section id="synopsis">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Fetch running VirtualMachineInstances for one or more namespaces with an optional label selector.</p></li>
-<li><p>Groups by namespace, namespace_vmis and labels.</p></li>
-<li><p>Uses the kubectl connection plugin to access the Kubernetes cluster.</p></li>
-<li><p>Uses *.kubevirt.(yml|yaml) YAML configuration file to set parameter values.</p></li>
+<li><p>Fetch running <code class="docutils literal notranslate"><span class="pre">VirtualMachineInstances</span></code> for one or more namespaces with an optional label selector.</p></li>
+<li><p>Groups by cluster name, namespace and labels.</p></li>
+<li><p>Uses the <span class="xref std std-ref">kubernetes.core.kubectl</span> connection plugin to access the Kubernetes cluster.</p></li>
+<li><p>Uses <code class="ansible-value docutils literal notranslate"><span class="pre">*.kubevirt.[yml|yaml]</span></code> YAML configuration file to set parameter values.</p></li>
 </ul>
 </section>
 <section id="requirements">
@@ -365,7 +365,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Token used to authenticate with the API. Can also be specified via K8S_AUTH_API_KEY environment variable.</p>
+    <p>Token used to authenticate with the API. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_API_KEY</code> environment variable.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -394,7 +394,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Append the base domain of the cluster to host names constructed from SSH services of type NodePort.</p>
+    <p>Append the base domain of the cluster to host names constructed from SSH <code class='docutils literal notranslate'>Services</code> of type <code class='docutils literal notranslate'>NodePort</code>.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>false</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -414,7 +414,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Override the base domain used to construct host names of VirtualMachines. Used in case of kubesecondarydns or services of type NodePort if append_base_domain is set.</p>
+    <p>Override the base domain used to construct host names of <code class='docutils literal notranslate'>VirtualMachines</code>. Used in case of <code class='docutils literal notranslate'>kubesecondarydns</code> or <code class='docutils literal notranslate'>Services</code> of type <code class='docutils literal notranslate'>NodePort</code> if <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-connections/append_base_domain"><span class="std std-ref"><span class="pre">connections.append_base_domain</span></span></a></strong></code> is set.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -430,7 +430,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Path to a CA certificate used to authenticate with the API. Can also be specified via K8S_AUTH_SSL_CA_CERT environment variable.</p>
+    <p>Path to a CA certificate used to authenticate with the API. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_SSL_CA_CERT</code> environment variable.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -446,7 +446,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Path to a certificate used to authenticate with the API. Can also be specified via K8S_AUTH_CERT_FILE environment variable.</p>
+    <p>Path to a certificate used to authenticate with the API. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_CERT_FILE</code> environment variable.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -462,7 +462,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Path to a key file used to authenticate with the API. Can also be specified via K8S_AUTH_KEY_FILE environment variable.</p>
+    <p>Path to a key file used to authenticate with the API. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_KEY_FILE</code> environment variable.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -476,7 +476,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>The name of a context found in the config file. Can also be specified via K8S_AUTH_CONTEXT environment variable.</p>
+    <p>The name of a context found in the config file. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_CONTEXT</code> environment variable.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -490,7 +490,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Enable the creation of groups from labels on VirtualMachines.</p>
+    <p>Enable the creation of groups from labels on <code class='docutils literal notranslate'>VirtualMachines</code>.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>false</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -510,7 +510,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.</p>
+    <p>Provide a URL for accessing the API. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_HOST</code> environment variable.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -524,7 +524,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Enable kubesecondarydns derived host names when using a secondary network interface.</p>
+    <p>Enable <code class='docutils literal notranslate'>kubesecondarydns</code> derived host names when using a secondary network interface.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>false</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -544,7 +544,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from <em>~/.kube/config</em>. Can also be specified via K8S_AUTH_KUBECONFIG environment variable.</p>
+    <p>Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from <em>~/.kube/config</em>. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_KUBECONFIG</code> environment variable.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -558,7 +558,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Define a label selector to select a subset of the fetched VirtualMachineInstances.</p>
+    <p>Define a label selector to select a subset of the fetched <code class='docutils literal notranslate'>VirtualMachineInstances</code>.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -586,7 +586,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>List of namespaces. If not specified, will fetch all VirtualMachineInstances for all namespaces the user is authorized to access.</p>
+    <p>List of namespaces. If not specified, will fetch all <code class='docutils literal notranslate'>VirtualMachineInstances</code> for all namespaces the user is authorized to access.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -602,7 +602,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>In case multiple networks are attached to a VirtualMachineInstance, define which interface should be returned as primary IP address.</p>
+    <p>In case multiple networks are attached to a <code class='docutils literal notranslate'>VirtualMachineInstance</code>, define which interface should be returned as primary IP address.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -616,7 +616,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Provide a password for authenticating with the API. Can also be specified via K8S_AUTH_PASSWORD environment variable.</p>
+    <p>Provide a password for authenticating with the API. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PASSWORD</code> environment variable.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -630,8 +630,8 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Enable the use of services to establish an SSH connection to the VirtualMachine.</p>
-    <p>Services are only used if no network_name was provided.</p>
+    <p>Enable the use of <code class='docutils literal notranslate'>Services</code> to establish an SSH connection to the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+    <p>Services are only used if no <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-connections/network_name"><span class="std std-ref"><span class="pre">connections.network_name</span></span></a></strong></code> was provided.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
@@ -651,7 +651,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Provide a username for authenticating with the API. Can also be specified via K8S_AUTH_USERNAME environment variable.</p>
+    <p>Provide a username for authenticating with the API. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_USERNAME</code> environment variable.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -667,7 +667,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Whether or not to verify the API server&#x27;s SSL certificates. Can also be specified via K8S_AUTH_VERIFY_SSL environment variable.</p>
+    <p>Whether or not to verify the API server&#x27;s SSL certificates. Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_VERIFY_SSL</code> environment variable.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
@@ -703,7 +703,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Specify the format of the host in the inventory group. Available specifiers: name, namespace, uid.</p>
+    <p>Specify the format of the host in the inventory group. Available specifiers: <code class="ansible-value literal notranslate">name</code>, <code class="ansible-value literal notranslate">namespace</code> and <code class="ansible-value literal notranslate">uid</code>.</p>
     <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">&#34;{namespace}-{name}&#34;</code></p>
   </div></td>
 </tr>
@@ -858,7 +858,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Token that ensures this is a source file for the "kubevirt" plugin.</p>
+    <p>Token that ensures this is a source file for the <a href='../../kubevirt/core/kubevirt_inventory.html' class='module'>kubevirt.core.kubevirt</a> plugin.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;kubevirt&#34;</code></p></li>
