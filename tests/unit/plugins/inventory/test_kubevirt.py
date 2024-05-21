@@ -6,7 +6,7 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import copy
+from json import dumps
 
 import pytest
 
@@ -14,6 +14,7 @@ from addict import Dict
 
 
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
+    DynamicApiError,
     GetVmiOptions,
     InventoryModule,
     KubeVirtInventoryException,
@@ -772,7 +773,7 @@ def children_group_with_vmi_create_groups_option(children_group_with_vmi):
 
 @pytest.fixture(scope="function")
 def inventory_groups_create_groups_option(inventory_groups):
-    inv = copy.deepcopy(inventory_groups)
+    inv = deepcopy(inventory_groups)
     inv.append("label_kubevirt_io_domain_test_domain")
     return inv
 
@@ -1016,7 +1017,7 @@ def loadbalancer():
 
 @pytest.fixture(scope="module")
 def nodeport(loadbalancer):
-    np = copy.deepcopy(loadbalancer)
+    np = deepcopy(loadbalancer)
     np["test-domain"]["spec"]["type"] = "NodePort"
     return np
 
@@ -1137,3 +1138,49 @@ def test_set_ansible_host_and_port(monkeypatch, request, inventory, host_vars, v
     inventory.set_ansible_host_and_port(Dict(vmi), vmi_name, "10.10.10.10", service, opts)
 
     assert request.getfixturevalue(result) == host_vars
+
+
+@pytest.fixture(scope="function")
+def body_error(mocker):
+    error = DynamicApiError(e=mocker.Mock())
+    error.headers = None
+
+    body = "This is a test error"
+    error.body = body
+
+    return error
+
+
+@pytest.fixture(scope="function")
+def message_error(mocker):
+    error = DynamicApiError(e=mocker.Mock())
+    error.headers = {
+        "Content-Type": "application/json"
+    }
+
+    error.body = dumps({"message": "This is a test error"}).encode('utf-8')
+
+    return error
+
+
+@pytest.fixture(scope="function")
+def status_reason_error(mocker):
+    error = DynamicApiError(e=mocker.Mock())
+    error.body = None
+    error.status = 404
+    error.reason = "This is a test error"
+    return error
+
+
+@pytest.mark.parametrize(
+    "error_object,expected_error_msg",
+    [
+        ("body_error", "This is a test error"),
+        ("message_error", "This is a test error"),
+        ("status_reason_error", "404 Reason: This is a test error"),
+    ],
+)
+def test_format_dynamic_api_exc(request, inventory, error_object, expected_error_msg):
+
+    result = inventory.format_dynamic_api_exc(request.getfixturevalue(error_object))
+    assert expected_error_msg == result
