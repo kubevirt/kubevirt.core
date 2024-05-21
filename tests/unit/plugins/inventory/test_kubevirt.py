@@ -27,7 +27,6 @@ from ansible_collections.kubevirt.core.plugins.inventory import (
     kubevirt
 )
 
-
 DEFAULT_NAMESPACE = "default"
 DEFAULT_BASE_DOMAIN = "example.com"
 
@@ -233,6 +232,7 @@ def add_group(monkeypatch, inventory):
     def add_group(name):
         if name not in groups:
             groups.append(name)
+        return name
 
     monkeypatch.setattr(inventory.inventory, "add_group", add_group)
     return groups
@@ -242,9 +242,11 @@ def add_group(monkeypatch, inventory):
 def add_host(monkeypatch, inventory):
     hosts = []
 
-    def add_host(name):
+    def add_host(name, group=None):
         if name not in hosts:
             hosts.append(name)
+        if group is not None and group not in hosts:
+            hosts.append(group)
 
     monkeypatch.setattr(inventory.inventory, "add_host", add_host)
     return hosts
