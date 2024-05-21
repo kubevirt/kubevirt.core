@@ -138,6 +138,19 @@ COMPLETE_VMI = merge_dicts(
         }
     },
 )
+COMPLETE_VMI_WITH_NETWORK_NAME = merge_dicts(
+    COMPLETE_VMI,
+    {
+        "status": {
+            "interfaces": [
+                {
+                    "ipAddress": "10.10.10.10",
+                    "name": "test-network"
+                }
+            ]
+        }
+    }
+)
 
 BASE_SERVICE = {
     "apiVersion": "v1",
@@ -732,6 +745,11 @@ def inventory_empty():
 
 
 @pytest.fixture(scope="module")
+def children_group_empty():
+    return {}
+
+
+@pytest.fixture(scope="module")
 def inventory_groups():
     return [
         "test",
@@ -860,8 +878,40 @@ def complete_vmi_host_vars(base_vmi_host_vars):
 
 
 @pytest.fixture(scope="module")
+def complete_vmi_host_vars_with_network(complete_vmi_host_vars):
+    vmi = complete_vmi_host_vars["default-testvmi"] | {
+        "vmi_interfaces": [
+            {
+                "ipAddress": "10.10.10.10",
+                "name": "test-network"
+            },
+        ],
+    }
+    vmi = {
+        "default-testvmi": vmi
+    }
+    return vmi
+
+
+@pytest.fixture(scope="module")
+def complete_vmi_host_vars_with_network(complete_vmi_host_vars):
+    vmi = complete_vmi_host_vars["default-testvmi"] | {
+        "vmi_interfaces": [
+            {
+                "ipAddress": "10.10.10.10",
+                "name": "test-network"
+            },
+        ],
+    }
+    vmi = {
+        "default-testvmi": vmi
+    }
+    return vmi
+
+
+@pytest.fixture(scope="module")
 def windows_vmi_host_vars(base_vmi_host_vars):
-    vmi = base_vmi_host_vars["default-testvmi"] | {
+    vmi = basic_vmi_host_vars["default-testvmi"] | {
         "ansible_connection": "winrm",
         "vmi_guest_os_info": {"id": "mswindows"},
     }
@@ -872,14 +922,65 @@ def windows_vmi_host_vars(base_vmi_host_vars):
 
 
 @pytest.mark.parametrize(
-    "client,vmi,groups,vmi_group,child_group,create_groups,expected_host_vars,call_functions,windows",
+    "client,vmi,groups,vmi_group,child_group,create_groups,network_name,expected_host_vars,call_functions,windows",
     [
+        (
+            {"namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]},
+            None,
+            "inventory_empty",
+            "inventory_empty",
+            "children_group_empty",
+            False,
+            None,
+            "base_vmi_host_vars",
+            False,
+            False,
+        ),
+        (
+            {"namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]},
+            None,
+            "inventory_empty",
+            "inventory_empty",
+            "children_group_empty",
+            False,
+            None,
+            "base_vmi_host_vars",
+            False,
+            False,
+        ),
+        (
+            {"namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]},
+            None,
+            "inventory_empty",
+            "inventory_empty",
+            "children_group_empty",
+            False,
+            None,
+            "base_vmi_host_vars",
+            False,
+            False,
+        ),
+        (
+            {"namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]},
+            None,
+            "inventory_empty",
+            "inventory_empty",
+            "children_group_empty",
+            False,
+            None,
+            "base_vmi_host_vars",
+            False,
+            False,
+        ),
         (
             {"vmis": [NO_STATUS_VMI]},
             NO_STATUS_VMI,
             "inventory_groups",
             "inventory_empty",
             "children_group_without_vmi",
+            False,
+            None,
+            "base_vmi_host_vars",
             False,
             "empty_host_vars",
             False,
@@ -892,6 +993,8 @@ def windows_vmi_host_vars(base_vmi_host_vars):
             "inventory_empty",
             "children_group_without_vmi",
             False,
+            None,
+            "base_vmi_host_vars",
             "empty_host_vars",
             False,
             False,
@@ -903,6 +1006,8 @@ def windows_vmi_host_vars(base_vmi_host_vars):
             "inventory_vmi_group",
             "children_group_with_vmi",
             False,
+            None,
+            "basic_vmi_host_vars",
             "base_vmi_host_vars",
             True,
             False,
@@ -914,6 +1019,7 @@ def windows_vmi_host_vars(base_vmi_host_vars):
             "inventory_vmi_group",
             "children_group_with_vmi",
             False,
+            None,
             "complete_vmi_host_vars",
             True,
             False,
@@ -925,6 +1031,7 @@ def windows_vmi_host_vars(base_vmi_host_vars):
             "inventory_vmi_group",
             "children_group_with_vmi_create_groups_option",
             True,
+            None,
             "complete_vmi_host_vars",
             True,
             False,
@@ -936,9 +1043,22 @@ def windows_vmi_host_vars(base_vmi_host_vars):
             "inventory_vmi_group",
             "children_group_with_vmi",
             False,
+            None,
             "windows_vmi_host_vars",
             True,
             True,
+        ),
+        (
+            {"vmis": [COMPLETE_VMI_WITH_NETWORK_NAME], "services": [LOADBALANCER_SERVICE]},
+            COMPLETE_VMI_WITH_NETWORK_NAME,
+            "inventory_groups_create_groups_option",
+            "inventory_vmi_group",
+            "children_group_with_vmi_create_groups_option",
+            True,
+            "test-network",
+            "complete_vmi_host_vars_with_network",
+            True,
+            False,
         ),
     ],
     indirect=["client"],
@@ -956,6 +1076,7 @@ def test_get_vmis_for_namespace(mocker,
                                 vmi_group,
                                 child_group,
                                 create_groups,
+                                network_name,
                                 expected_host_vars,
                                 call_functions,
                                 windows,
@@ -963,7 +1084,11 @@ def test_get_vmis_for_namespace(mocker,
     set_ansible_host_and_port = mocker.patch.object(inventory, "set_ansible_host_and_port")
     set_composable_vars = mocker.patch.object(inventory, "set_composable_vars")
 
-    inventory.get_vmis_for_namespace(client, "test", DEFAULT_NAMESPACE, GetVmiOptions(create_groups=create_groups))
+    inventory.get_vmis_for_namespace(client,
+                                     "test",
+                                     DEFAULT_NAMESPACE,
+                                     GetVmiOptions(create_groups=create_groups,
+                                                   network_name=network_name))
 
     assert request.getfixturevalue(groups) == add_group
     assert request.getfixturevalue(vmi_group) == add_host
@@ -981,7 +1106,8 @@ def test_get_vmis_for_namespace(mocker,
                                                           vmi_name,
                                                           vmi["status"]["interfaces"][0]["ipAddress"],
                                                           service,
-                                                          GetVmiOptions(create_groups=create_groups)
+                                                          GetVmiOptions(create_groups=create_groups,
+                                                                        network_name=network_name)
                                                           )
         set_composable_vars.assert_called_once_with(vmi_name)
     else:
