@@ -26,6 +26,7 @@ Bugfixes
 --------
 
 - fix(kubevirt_vm): Set wait_condition based on running `#89 <https://github.com/kubevirt/kubevirt.core/pull/89>`_
+- fix: Ensure compatibility with kubernetes.core >=3.10,<4.1.0 `#100 <https://github.com/kubevirt/kubevirt.core/pull/100>`_
 
 v1.3.1
 ======
