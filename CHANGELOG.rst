@@ -6,6 +6,28 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v1.4.0
+======
+
+Release Summary
+---------------
+
+Compatibility with kubernetes.core >=3.1.0,<4.1.0 and some minor enhancements.
+
+Minor Changes
+-------------
+
+- Provide links for docsite and improve docs by adding markup `#95 <https://github.com/kubevirt/kubevirt.core/pull/95>`_
+- cleanup: Cleanup YAML passed to k8s module `#88 <https://github.com/kubevirt/kubevirt.core/pull/88>`_
+- docs: Use proper type for connections parameter `#90 <https://github.com/kubevirt/kubevirt.core/pull/90>`_
+- feat(kubevirt_vm_info): Set wait_condition based on running `#91 <https://github.com/kubevirt/kubevirt.core/pull/91>`_
+
+Bugfixes
+--------
+
+- fix(kubevirt_vm): Set wait_condition based on running `#89 <https://github.com/kubevirt/kubevirt.core/pull/89>`_
+- fix: Ensure compatibility with kubernetes.core >=3.10,<4.1.0 `#100 <https://github.com/kubevirt/kubevirt.core/pull/100>`_
+
 v1.3.2
 ======
 
