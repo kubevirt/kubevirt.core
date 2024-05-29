@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lean Ansible bindings for KubeVirt &mdash; KubeVirt Ansible Collection  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5707b69d" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
+      <link rel="stylesheet" type="text/css" href="_static/ansible-basic-sphinx-ext.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Plugin Index" href="plugins/index.html" />
+    <link rel="prev" title="Welcome to kubevirt.core Collection documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            KubeVirt Ansible Collection
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Lean Ansible bindings for KubeVirt</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ansible-and-python-version-compatibility">Ansible and Python version compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#included-content">Included content</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#plugins">Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-this-collection">Using this collection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installing-the-collection-from-ansible-galaxy">Installing the Collection from Ansible Galaxy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-install-locally">Build and install locally</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ansible-collections">Ansible collections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python-libraries">Python libraries</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing-to-this-collection">Contributing to this collection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#collection-maintenance">Collection maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-policy">Release policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#governance">Governance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#licensing">Licensing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/index.html">Plugin Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roles/index.html">Role Index</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developing.html">Contributor’s Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developing.html#development-environment">Development environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releasing.html">Collection Versioning Strategy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">KubeVirt Ansible Collection</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Lean Ansible bindings for KubeVirt</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lean-ansible-bindings-for-kubevirt">
+<h1>Lean Ansible bindings for KubeVirt<a class="headerlink" href="#lean-ansible-bindings-for-kubevirt" title="Link to this heading"></a></h1>
+<!--start build_status -->
+<p><a class="reference external" href="https://github.com/kubevirt/kubevirt.core/actions"><img alt="Build Status" src="https://github.com/kubevirt/kubevirt.core/workflows/CI/badge.svg?event=push" /></a></p>
+<!--end build_status -->
+<p>This repository hosts the <code class="docutils literal notranslate"><span class="pre">kubevirt.core</span></code> Ansible Collection, which provides virtual machine operations and an inventory source for use with Ansible.</p>
+<!--start requires_ansible -->
+<section id="ansible-and-python-version-compatibility">
+<h2>Ansible and Python version compatibility<a class="headerlink" href="#ansible-and-python-version-compatibility" title="Link to this heading"></a></h2>
+<p>This collection has been tested against Ansible versions <strong>&gt;=2.14,&lt;=2.16</strong> and Python versions <strong>&gt;=3.9,&lt;=3.12</strong>.</p>
+<p>See the <a class="reference external" href="https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-core-support-matrix">Ansible core support matrix</a> for supported combinations.</p>
+<!--end requires_ansible -->
+</section>
+<section id="included-content">
+<h2>Included content<a class="headerlink" href="#included-content" title="Link to this heading"></a></h2>
+<section id="plugins">
+<h3>Plugins<a class="headerlink" href="#plugins" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">kubevirt</span></code>: Inventory source for KubeVirt VirtualMachines</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kubevirt_vm</span></code>: Create or delete KubeVirt VirtualMachines</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kubevirt_vm_info</span></code>: Describe KubeVirt VirtualMachines</p></li>
+</ul>
+</section>
+</section>
+<section id="using-this-collection">
+<h2>Using this collection<a class="headerlink" href="#using-this-collection" title="Link to this heading"></a></h2>
+<!--start galaxy_download -->
+<section id="installing-the-collection-from-ansible-galaxy">
+<h3>Installing the Collection from Ansible Galaxy<a class="headerlink" href="#installing-the-collection-from-ansible-galaxy" title="Link to this heading"></a></h3>
+<p>Before using this collection, you need to install it with the Ansible Galaxy command-line tool:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>kubevirt.core
+</pre></div>
+</div>
+<!--end galaxy_download -->
+</section>
+<section id="build-and-install-locally">
+<h3>Build and install locally<a class="headerlink" href="#build-and-install-locally" title="Link to this heading"></a></h3>
+<p>Clone the repository, checkout the tag you want to build, or pick the main branch for the development version; then:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>build<span class="w"> </span>.
+ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>kubevirt-kubevirt.core-*.tar.gz
+</pre></div>
+</div>
+</section>
+<section id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h3>
+<!--start collection_dependencies -->
+<section id="ansible-collections">
+<h4>Ansible collections<a class="headerlink" href="#ansible-collections" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/kubernetes/core">kubernetes.core</a>&gt;=3.1.0,&lt;4.1.0</p></li>
+</ul>
+<p>To install all the dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
+</pre></div>
+</div>
+<!--end collection_dependencies -->
+</section>
+<section id="python-libraries">
+<h4>Python libraries<a class="headerlink" href="#python-libraries" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>jinja2</p></li>
+<li><p>jsonpatch</p></li>
+<li><p>kubernetes&gt;=28.1.0</p></li>
+<li><p>PyYAML&gt;=3.11</p></li>
+</ul>
+<p>To install all the dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://docs.ansible.com/ansible/devel/user_guide/collections_using.html">Ansible Using collections</a> for more details.</p>
+<!--start community_readme -->
+</section>
+</section>
+</section>
+<section id="code-of-conduct">
+<h2>Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Link to this heading"></a></h2>
+<p>We follow the <a class="reference external" href="https://github.com/kubevirt/kubevirt/blob/main/CODE_OF_CONDUCT.md">KubeVirt Code of Conduct</a>.</p>
+</section>
+<section id="contributing-to-this-collection">
+<h2>Contributing to this collection<a class="headerlink" href="#contributing-to-this-collection" title="Link to this heading"></a></h2>
+<p>The content of this collection is made by people like you, a community of individuals collaborating on making the world better through developing automation software.</p>
+<p>We are actively accepting new contributors.</p>
+<p>Any kind of contribution is very welcome.</p>
+<p>You don’t know how to start? Refer to our <a class="reference internal" href="CONTRIBUTING.html"><span class="std std-doc">contribution guide</span></a>!</p>
+<p>We use the following guidelines:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="CONTRIBUTING.html"><span class="std std-doc">CONTRIBUTING.md</span></a></p></li>
+<li><p><a class="reference internal" href="#REVIEW_CHECKLIST.md"><span class="xref myst">REVIEW_CHECKLIST.md</span></a></p></li>
+<li><p><a class="reference external" href="https://docs.ansible.com/ansible/latest/community/index.html">Ansible Community Guide</a></p></li>
+<li><p><a class="reference external" href="https://docs.ansible.com/ansible/devel/dev_guide/index.html">Ansible Development Guide</a></p></li>
+<li><p><a class="reference external" href="https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html#contributing-to-collections">Ansible Collection Development Guide</a></p></li>
+</ul>
+</section>
+<section id="collection-maintenance">
+<h2>Collection maintenance<a class="headerlink" href="#collection-maintenance" title="Link to this heading"></a></h2>
+<p>The current maintainers are listed in the <a class="reference internal" href="#OWNERS"><span class="xref myst">OWNERS</span></a> file. If you have questions or need help, feel free to mention them in the proposals.</p>
+<p>To learn how to maintain / become a maintainer of this collection, refer to the <a class="reference external" href="https://docs.ansible.com/ansible/devel/community/maintainers.html">Maintainer guidelines</a>.</p>
+</section>
+<section id="release-policy">
+<h2>Release policy<a class="headerlink" href="#release-policy" title="Link to this heading"></a></h2>
+<p>The release policy of the collection can be found at <a class="reference internal" href="#docs/releasing.md"><span class="xref myst">docs/releasing.md</span></a>.</p>
+</section>
+<section id="governance">
+<h2>Governance<a class="headerlink" href="#governance" title="Link to this heading"></a></h2>
+<p>The process of decision making in this collection is based on discussing and finding consensus among participants.</p>
+<p>Every voice is important. If you have something on your mind, create an issue or dedicated discussion and let’s discuss it!</p>
+<!--end community_readme -->
+<!--start support -->
+<!--end support -->
+</section>
+<section id="licensing">
+<h2>Licensing<a class="headerlink" href="#licensing" title="Link to this heading"></a></h2>
+<p>GNU General Public License v3.0 or later.</p>
+<p>See <a class="reference internal" href="#./LICENSE"><span class="xref myst">LICENSE</span></a> to see the full text.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to kubevirt.core Collection documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plugins/index.html" class="btn btn-neutral float-right" title="Plugin Index" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 Red Hat, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
