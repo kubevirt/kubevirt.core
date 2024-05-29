@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2021, Ansible Project
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Copyright 2024 Red Hat, Inc.
+# Apache License 2.0 (see LICENSE or http://www.apache.org/licenses/LICENSE-2.0)
 
 # This file allows to run modules in unit tests.
 # It was taken from:

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2023 Red Hat, Inc.
 # Based on the kubernetes.core.k8s module
-# GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Apache License 2.0 (see LICENSE or http://www.apache.org/licenses/LICENSE-2.0)
 
 from __future__ import absolute_import, division, print_function
 

@@ -112,6 +112,6 @@ Every voice is important. If you have something on your mind, create an issue or
 
 ## Licensing
 
-GNU General Public License v3.0 or later.
+Apache License 2.0
 
 See [LICENSE](./LICENSE) to see the full text.
