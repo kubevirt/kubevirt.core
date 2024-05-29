@@ -6,13 +6,13 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
-v1.3.2
+v1.4.0
 ======
 
 Release Summary
 ---------------
 
-No functional changes, hotfix release to retrigger the downstream build and to keep in sync with Ansible Automation Hub.
+Compatibility with kubernetes.core >=3.1.0,<4.1.0 and some minor enhancements.
 
 Minor Changes
 -------------
@@ -27,6 +27,14 @@ Bugfixes
 
 - fix(kubevirt_vm): Set wait_condition based on running `#89 <https://github.com/kubevirt/kubevirt.core/pull/89>`_
 - fix: Ensure compatibility with kubernetes.core >=3.10,<4.1.0 `#100 <https://github.com/kubevirt/kubevirt.core/pull/100>`_
+
+v1.3.2
+======
+
+Release Summary
+---------------
+
+No functional changes, hotfix release to retrigger the downstream build and to keep in sync with Ansible Automation Hub.
 
 v1.3.1
 ======
