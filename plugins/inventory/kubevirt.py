@@ -182,21 +182,22 @@ from typing import (
 
 
 # Handle import errors of python kubernetes client.
-# HAS_K8S_MODULE_HELPER imported below will print a warning to the user if the client is missing.
+# Set HAS_K8S_MODULE_HELPER and k8s_import exception accordingly to
+# potentially print a warning to the user if the client is missing.
 try:
     from kubernetes.dynamic.exceptions import DynamicApiError
-except ImportError:
+
+    HAS_K8S_MODULE_HELPER = True
+    k8s_import_exception = None
+except ImportError as e:
 
     class DynamicApiError(Exception):
         pass
 
+    HAS_K8S_MODULE_HELPER = False
+    k8s_import_exception = e
 
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
-
-from ansible_collections.kubernetes.core.plugins.module_utils.common import (
-    HAS_K8S_MODULE_HELPER,
-    k8s_import_exception,
-)
 
 
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s.client import (

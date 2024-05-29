@@ -45,7 +45,7 @@ ansible-galaxy collection install kubevirt-kubevirt.core-*.tar.gz
 <!--start collection_dependencies -->
 #### Ansible collections
 
-* [kubernetes.core](https://galaxy.ansible.com/ui/repo/published/kubernetes/core)>=3.0.1
+* [kubernetes.core](https://galaxy.ansible.com/ui/repo/published/kubernetes/core)>=3.1.0,<4.1.0
 
 To install all the dependencies:
 ```bash
