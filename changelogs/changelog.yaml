@@ -69,3 +69,8 @@ releases:
       release_summary: No functional changes, hotfix release to retrigger the downstream
         build and to keep in sync with Ansible Automation Hub.
     release_date: '2024-04-17'
+  1.4.0:
+    changes:
+      release_summary: Compatibility with kubernetes.core >=3.1.0,<4.1.0 and some minor
+        enhancements.
+    release_date: '2024-05-29'
