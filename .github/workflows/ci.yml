@@ -64,15 +64,15 @@ jobs:
       matrix_exclude: >-
         [
           {
-            "ansible-version": "stable-2.14",
-            "python-version": "3.12"
-          },
-          {
             "ansible-version": "stable-2.15",
             "python-version": "3.12"
           },
           {
             "ansible-version": "stable-2.16",
+            "python-version": "3.9"
+          },
+          {
+            "ansible-version": "stable-2.17",
             "python-version": "3.9"
           },
           {
@@ -93,15 +93,15 @@ jobs:
       matrix_exclude: >-
         [
           {
-            "ansible-version": "stable-2.14",
-            "python-version": "3.12"
-          },
-          {
             "ansible-version": "stable-2.15",
             "python-version": "3.12"
           },
           {
             "ansible-version": "stable-2.16",
+            "python-version": "3.9"
+          },
+          {
+            "ansible-version": "stable-2.17",
             "python-version": "3.9"
           },
           {
