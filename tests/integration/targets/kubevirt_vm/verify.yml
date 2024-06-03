@@ -11,10 +11,15 @@
         labels:
           app: test
       register: recreate
-    - name: Assert module reported no changes
+    - name: Assert module reported no or expected changes
       ansible.builtin.assert:
         that:
-          - not recreate.changed
+          - >-
+            not recreate.changed or
+            recreated.changed and
+            recreated.method == "update" and
+            recreated.diff.before.metadata.annotations.get('kubemacpool.io/transaction-timestamp') and
+            not recreated.diff.after.metadata.annotations
 
 - name: Delete VM
   connection: local
