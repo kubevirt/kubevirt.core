@@ -8,15 +8,15 @@ on:
         default: >-
           [
             {
-              "ansible-version": "stable-2.14",
-              "python-version": "3.12"
-            },
-            {
               "ansible-version": "stable-2.15",
               "python-version": "3.12"
             },
             {
               "ansible-version": "stable-2.16",
+              "python-version": "3.9"
+            },
+            {
+              "ansible-version": "stable-2.17",
               "python-version": "3.9"
             },
             {
@@ -59,9 +59,9 @@ jobs:
       matrix:
         test-target: ${{ fromJSON(inputs.ansible_test_targets) }}
         ansible-version:
-          - stable-2.14
           - stable-2.15
           - stable-2.16
+          - stable-2.17
           - milestone
           - devel
         python-version:
