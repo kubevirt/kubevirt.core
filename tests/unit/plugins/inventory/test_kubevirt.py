@@ -24,9 +24,7 @@ from ansible_collections.kubevirt.core.tests.unit.utils.merge_dicts import (
     merge_dicts,
 )
 
-from ansible_collections.kubevirt.core.plugins.inventory import (
-    kubevirt
-)
+from ansible_collections.kubevirt.core.plugins.inventory import kubevirt
 
 DEFAULT_NAMESPACE = "default"
 DEFAULT_BASE_DOMAIN = "example.com"
@@ -45,21 +43,16 @@ BASE_VMI = {
     },
     "status": {
         "interfaces": [{"ipAddress": "10.10.10.10"}],
-    }
+    },
 }
 NO_STATUS_VMI = merge_dicts(
     BASE_VMI,
     {
-        "status": None
-    }
+        "status": None,
+    },
 )
 VMI_WITH_INTERFACE_NO_IPADDRESS = merge_dicts(
-    BASE_VMI,
-    {
-        "status": {
-            "interfaces": [{"ipAddress": None}]
-        }
-    }
+    BASE_VMI, {"status": {"interfaces": [{"ipAddress": None}]}}
 )
 WINDOWS_VMI_1 = merge_dicts(
     BASE_VMI,
@@ -125,48 +118,28 @@ COMPLETE_VMI = merge_dicts(
             "qosClass": "Burstable",
             "virtualMachineRevisionName": "revision-start-vm-12345",
             "volumeStatus": [
-                {
-                    "name": "cloudinit",
-                    "size": 1048576,
-                    "target": "vdb"
-                },
+                {"name": "cloudinit", "size": 1048576, "target": "vdb"},
                 {
                     "name": "containerdisk",
                     "target": "vda",
-                }
+                },
             ],
-        }
+        },
     },
 )
 COMPLETE_VMI_WITH_NETWORK_NAME = merge_dicts(
     COMPLETE_VMI,
-    {
-        "status": {
-            "interfaces": [
-                {
-                    "ipAddress": "10.10.10.10",
-                    "name": "test-network"
-                }
-            ]
-        }
-    }
+    {"status": {"interfaces": [{"ipAddress": "10.10.10.10", "name": "test-network"}]}},
 )
 
 BASE_SERVICE = {
     "apiVersion": "v1",
     "kind": "Service",
-    "metadata": {
-        "name": "test-service"
-    },
-    "spec": {}
+    "metadata": {"name": "test-service"},
+    "spec": {},
 }
 BASE_LOADBALANCER_SERVICE = merge_dicts(
-    BASE_SERVICE,
-    {
-        "spec": {
-            "type": "LoadBalancer"
-        }
-    }
+    BASE_SERVICE, {"spec": {"type": "LoadBalancer"}}
 )
 LOADBALANCER_SERVICE_WITHOUT_SELECTOR_AND_SSH_PORT = merge_dicts(
     BASE_LOADBALANCER_SERVICE,
@@ -181,7 +154,7 @@ LOADBALANCER_SERVICE_WITHOUT_SELECTOR_AND_SSH_PORT = merge_dicts(
             ],
             "type": "LoadBalancer",
         }
-    }
+    },
 )
 LOADBALANCER_SERVICE_WITHOUT_SELECTOR = merge_dicts(
     BASE_LOADBALANCER_SERVICE,
@@ -196,17 +169,11 @@ LOADBALANCER_SERVICE_WITHOUT_SELECTOR = merge_dicts(
             ],
             "type": "LoadBalancer",
         }
-    }
+    },
 )
 LOADBALANCER_SERVICE = merge_dicts(
     LOADBALANCER_SERVICE_WITHOUT_SELECTOR,
-    {
-        "spec": {
-            "selector": {
-                "kubevirt.io/domain": "test-domain"
-            }
-        }
-    }
+    {"spec": {"selector": {"kubevirt.io/domain": "test-domain"}}},
 )
 NODEPORT_SERVICE = merge_dicts(
     LOADBALANCER_SERVICE,
@@ -214,7 +181,7 @@ NODEPORT_SERVICE = merge_dicts(
         "spec": {
             "type": "NodePort",
         }
-    }
+    },
 )
 
 
@@ -525,7 +492,6 @@ def test_ansible_connection_winrm(inventory, host_vars, client, vmi, expected):
         ("https://example:8080", "example_8080"),
         ("https://example.com:8080", "example-com_8080"),
     ],
-
 )
 def test_get_default_host_name(inventory, url, host_name):
     result = inventory.get_default_host_name(url)
@@ -594,7 +560,9 @@ def test_port_from_service(inventory, service, port):
 
 
 def test_parse(monkeypatch, inventory):
-    monkeypatch.setattr(inventory, "_read_config_data", lambda path: {"host_format": "default-test"})
+    monkeypatch.setattr(
+        inventory, "_read_config_data", lambda path: {"host_format": "default-test"}
+    )
     monkeypatch.setattr(inventory, "_get_cache_prefix", lambda _: None)
     monkeypatch.setattr(inventory, "setup", lambda a, b, c: None)
 
@@ -744,12 +712,13 @@ def test_fetch_objects_exceptions(inventory, connections, result):
         inventory.fetch_objects(connections)
 
 
-
 @pytest.mark.parametrize(
     "client,result",
     [
-        ({"namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]}, DEFAULT_BASE_DOMAIN)
-
+        (
+            {"namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]},
+            DEFAULT_BASE_DOMAIN,
+        )
     ],
     indirect=["client"],
 )
@@ -760,8 +729,19 @@ def test_get_cluster_domain(inventory, client, result):
 @pytest.mark.parametrize(
     "client,result",
     [
-        ({"namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]}, [DEFAULT_NAMESPACE]),
-        ({"namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}, {"metadata": {"name": "test"}}]}, [DEFAULT_NAMESPACE,"test"])
+        (
+            {"namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]},
+            [DEFAULT_NAMESPACE],
+        ),
+        (
+            {
+                "namespaces": [
+                    {"metadata": {"name": DEFAULT_NAMESPACE}},
+                    {"metadata": {"name": "test"}},
+                ]
+            },
+            [DEFAULT_NAMESPACE, "test"],
+        ),
     ],
     indirect=["client"],
 )
@@ -1024,9 +1004,7 @@ def test_get_vmis_for_namespace(
     indirect=["client"],
 )
 def test_get_ssh_services_for_namespace(inventory, client, result):
-    assert result == inventory.get_ssh_services_for_namespace(
-        client, DEFAULT_NAMESPACE
-    )
+    assert result == inventory.get_ssh_services_for_namespace(client, DEFAULT_NAMESPACE)
 
 
 @pytest.fixture(scope="function")
@@ -1043,11 +1021,9 @@ def body_error(mocker):
 @pytest.fixture(scope="function")
 def message_error(mocker):
     error = DynamicApiError(e=mocker.Mock())
-    error.headers = {
-        "Content-Type": "application/json"
-    }
+    error.headers = {"Content-Type": "application/json"}
 
-    error.body = dumps({"message": "This is a test error"}).encode('utf-8')
+    error.body = dumps({"message": "This is a test error"}).encode("utf-8")
 
     return error
 
