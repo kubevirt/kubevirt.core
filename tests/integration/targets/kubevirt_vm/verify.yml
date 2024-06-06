@@ -16,10 +16,10 @@
         that:
           - >-
             not recreate.changed or
-            recreated.changed and
-            recreated.method == "update" and
-            recreated.diff.before.metadata.annotations.get('kubemacpool.io/transaction-timestamp') and
-            not recreated.diff.after.metadata.annotations
+            recreate.changed and
+            recreate.method == "update" and
+            recreate.diff.before.metadata.annotations.get('kubemacpool.io/transaction-timestamp') and
+            not recreate.diff.after.metadata.annotations
 
 - name: Delete VM
   connection: local
