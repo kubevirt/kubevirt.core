@@ -7,7 +7,7 @@ export ANSIBLE_INVENTORY_ENABLED=kubevirt.core.kubevirt
 export ANSIBLE_HOST_KEY_CHECKING=False
 
 [ -d files ] || mkdir files
-[ -f files/testkey ] || (ssh-keygen -t ed25519 -C test@test -f files/testkey -N "")
+[ -f files/testkey ] || (ssh-keygen -t rsa -C test@test -f files/testkey -N "")
 
 ansible-playbook playbook.yml "$@"
 
