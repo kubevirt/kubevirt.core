@@ -6,10 +6,12 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
+import copy
+
 import pytest
 
 from addict import Dict
-import copy
+
 
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     GetVmiOptions,
@@ -41,8 +43,16 @@ BASE_VMI = {
     "spec": {
         "domain": {"devices": {}},
     },
+    "status": {
+        "interfaces": [{"ipAddress": "10.10.10.10"}],
+    }
 }
-# Note, if "interfaces": [{}] or "interfaces": [{"ipAddress": {}}] the if on line 517, problem?
+NO_STATUS_VMI = merge_dicts(
+    BASE_VMI,
+    {
+        "status": None
+    }
+)
 VMI_WITH_INTERFACE_NO_IPADDRESS = merge_dicts(
     BASE_VMI,
     {
@@ -51,16 +61,8 @@ VMI_WITH_INTERFACE_NO_IPADDRESS = merge_dicts(
         }
     }
 )
-BASIC_VMI = merge_dicts(
-    BASE_VMI,
-    {
-        "status": {
-            "interfaces": [{"ipAddress": "10.10.10.10"}],
-        },
-    }
-)
 WINDOWS_VMI_1 = merge_dicts(
-    BASIC_VMI,
+    BASE_VMI,
     {
         "status": {
             "guestOSInfo": {"id": "mswindows"},
@@ -68,7 +70,7 @@ WINDOWS_VMI_1 = merge_dicts(
     },
 )
 WINDOWS_VMI_2 = merge_dicts(
-    BASIC_VMI,
+    BASE_VMI,
     {
         "metadata": {
             "annotations": {"kubevirt.io/cluster-preference-name": "windows.2k22"}
@@ -76,22 +78,21 @@ WINDOWS_VMI_2 = merge_dicts(
     },
 )
 WINDOWS_VMI_3 = merge_dicts(
-    BASIC_VMI,
+    BASE_VMI,
     {
         "metadata": {"annotations": {"kubevirt.io/preference-name": "windows.2k22"}},
     },
 )
 WINDOWS_VMI_4 = merge_dicts(
-    BASIC_VMI,
+    BASE_VMI,
     {
         "metadata": {"annotations": {"vm.kubevirt.io/os": "windows2k22"}},
     },
 )
 COMPLETE_VMI = merge_dicts(
-    BASIC_VMI,
+    BASE_VMI,
     {
         "metadata": {
-            # {"test-label": "test-label"} does not work
             "annotations": {"test-annotation": "test-annotation"},
             "clusterName": {"test-cluster"},
             "resourceVersion": {"42"},
@@ -146,7 +147,7 @@ BASE_SERVICE = {
     },
     "spec": {}
 }
-LOADBALANCER_SERVICE_WITHOUT_AND_SELECTOR_PORTS = merge_dicts(
+BASE_LOADBALANCER_SERVICE = merge_dicts(
     BASE_SERVICE,
     {
         "spec": {
@@ -155,7 +156,7 @@ LOADBALANCER_SERVICE_WITHOUT_AND_SELECTOR_PORTS = merge_dicts(
     }
 )
 LOADBALANCER_SERVICE_WITHOUT_SELECTOR_AND_SSH_PORT = merge_dicts(
-    LOADBALANCER_SERVICE_WITHOUT_AND_SELECTOR_PORTS,
+    BASE_LOADBALANCER_SERVICE,
     {
         "spec": {
             "ports": [
@@ -170,7 +171,7 @@ LOADBALANCER_SERVICE_WITHOUT_SELECTOR_AND_SSH_PORT = merge_dicts(
     }
 )
 LOADBALANCER_SERVICE_WITHOUT_SELECTOR = merge_dicts(
-    LOADBALANCER_SERVICE_WITHOUT_AND_SELECTOR_PORTS,
+    BASE_LOADBALANCER_SERVICE,
     {
         "spec": {
             "ports": [
@@ -184,26 +185,16 @@ LOADBALANCER_SERVICE_WITHOUT_SELECTOR = merge_dicts(
         }
     }
 )
-LOADBALANCER_SERVICE = {
-    "apiVersion": "v1",
-    "kind": "Service",
-    "metadata": {
-        "name": "test-service"
-    },
-    "spec": {
-        "selector": {
-            "kubevirt.io/domain": "test-domain"
-        },
-        "ports": [
-            {
-                "protocol": "TCP",
-                "port": 22,
-                "targetPort": 22
+LOADBALANCER_SERVICE = merge_dicts(
+    LOADBALANCER_SERVICE_WITHOUT_SELECTOR,
+    {
+        "spec": {
+            "selector": {
+                "kubevirt.io/domain": "test-domain"
             }
-        ],
-        "type": "LoadBalancer"
+        }
     }
-}
+)
 NODEPORT_SERVICE = merge_dicts(
     LOADBALANCER_SERVICE,
     {
@@ -404,7 +395,7 @@ def test_is_windows(inventory, guest_os_info, annotations, expected):
 @pytest.mark.parametrize(
     "client,vmi,expected",
     [
-        ({"vmis": [BASIC_VMI]}, BASIC_VMI, False),
+        ({"vmis": [BASE_VMI]}, BASE_VMI, False),
         ({"vmis": [WINDOWS_VMI_1]}, WINDOWS_VMI_1, True),
         ({"vmis": [WINDOWS_VMI_2]}, WINDOWS_VMI_2, True),
         ({"vmis": [WINDOWS_VMI_3]}, WINDOWS_VMI_3, True),
@@ -545,23 +536,10 @@ def connection_none():
 
 
 @pytest.fixture(scope="module")
-def connection_not_list():
-    return "test"
-
-
-@pytest.fixture(scope="module")
-def connection_list_not_dict():
-    return [
-        "test",
-        "test"
-    ]
-
-
-@pytest.fixture(scope="module")
 def connection_list():
     return [
         {
-            "name": "test",
+            "name": "connection-list",
         },
     ]
 
@@ -570,7 +548,7 @@ def connection_list():
 def connection_list_namespace():
     return [
         {
-            "name": "test",
+            "name": "connection-list-namespace",
             "namespaces": ["test"]
         },
     ]
@@ -580,7 +558,7 @@ def connection_list_namespace():
 def connection_with_base_values():
     return [
         {
-            "name": "test",
+            "name": "connection-with-base-values",
             "namespaces": ["test"],
             "use_service": True,
             "create_groups": True,
@@ -594,7 +572,7 @@ def connection_with_base_values():
 def connection_with_network():
     return [
         {
-            "name": "test",
+            "name": "connection-with-network",
             "namespaces": ["test"],
             "use_service": True,
             "create_groups": True,
@@ -609,7 +587,7 @@ def connection_with_network():
 def connection_with_interface():
     return [
         {
-            "name": "test",
+            "name": "connection-with-interface",
             "namespaces": ["test"],
             "use_service": True,
             "create_groups": True,
@@ -650,11 +628,11 @@ def vmi_options_with_interface():
     "connections,result,default_namespace",
     [
 
-        ("connection_list", {"name": "test", "namespace": DEFAULT_NAMESPACE, "opts": GetVmiOptions()}, True),
-        ("connection_list_namespace", {"name": "test", "namespace": "test", "opts": GetVmiOptions()}, False),
-        ("connection_with_base_values", {"name": "test", "namespace": "test", "opts": vmi_options_base_values()}, False),
-        ("connection_with_network", {"name": "test", "namespace": "test", "opts": vmi_options_with_network()}, False),
-        ("connection_with_interface", {"name": "test", "namespace": "test", "opts": vmi_options_with_interface()}, False),
+        ("connection_list", {"name": "connection-list", "namespace": DEFAULT_NAMESPACE, "opts": GetVmiOptions()}, True),
+        ("connection_list_namespace", {"name": "connection-list-namespace", "namespace": "test", "opts": GetVmiOptions()}, False),
+        ("connection_with_base_values", {"name": "connection-with-base-values", "namespace": "test", "opts": vmi_options_base_values()}, False),
+        ("connection_with_network", {"name": "connection-with-network", "namespace": "test", "opts": vmi_options_with_network()}, False),
+        ("connection_with_interface", {"name": "connection-with-interface", "namespace": "test", "opts": vmi_options_with_interface()}, False),
         ("connection_none", {"name": "default-hostname", "namespace": DEFAULT_NAMESPACE, "opts": GetVmiOptions()}, True),
     ],
 )
@@ -678,6 +656,19 @@ def test_fetch_objects(request, mocker, monkeypatch, inventory, connections, res
                                                    result["name"],
                                                    result["namespace"],
                                                    result["opts"])
+
+
+@pytest.fixture(scope="module")
+def connection_not_list():
+    return "test"
+
+
+@pytest.fixture(scope="module")
+def connection_list_not_dict():
+    return [
+        "test",
+        "test"
+    ]
 
 
 @pytest.mark.parametrize(
@@ -720,7 +711,6 @@ def get_multiple_namespace_list():
     ]
 
 
-# Exceptions?
 @pytest.mark.parametrize(
     "client,result",
     [
@@ -786,12 +776,12 @@ def inventory_groups_create_groups_option(inventory_groups):
 
 
 @pytest.fixture(scope="module")
-def base_vmi_host_vars():
+def empty_host_vars():
     return {}
 
 
 @pytest.fixture(scope="module")
-def basic_vmi_host_vars():
+def base_vmi_host_vars():
     return {
         "default-testvmi": {
             "object_type": "vmi",
@@ -818,8 +808,8 @@ def basic_vmi_host_vars():
 
 
 @pytest.fixture(scope="module")
-def complete_vmi_host_vars(basic_vmi_host_vars):
-    vmi = basic_vmi_host_vars["default-testvmi"] | {
+def complete_vmi_host_vars(base_vmi_host_vars):
+    vmi = base_vmi_host_vars["default-testvmi"] | {
 
         "labels": {"kubevirt.io/domain": "test-domain"},
         "annotations": {"test-annotation": "test-annotation"},
@@ -867,8 +857,8 @@ def complete_vmi_host_vars(basic_vmi_host_vars):
 
 
 @pytest.fixture(scope="module")
-def windows_vmi_host_vars(basic_vmi_host_vars):
-    vmi = basic_vmi_host_vars["default-testvmi"] | {
+def windows_vmi_host_vars(base_vmi_host_vars):
+    vmi = base_vmi_host_vars["default-testvmi"] | {
         "ansible_connection": "winrm",
         "vmi_guest_os_info": {"id": "mswindows"},
     }
@@ -882,12 +872,13 @@ def windows_vmi_host_vars(basic_vmi_host_vars):
     "client,vmi,groups,vmi_group,child_group,create_groups,expected_host_vars,call_functions,windows",
     [
         (
-            {"vmis": [BASE_VMI]},
-            BASE_VMI,
+            {"vmis": [NO_STATUS_VMI]},
+            NO_STATUS_VMI,
             "inventory_groups",
             "inventory_empty",
             "children_group_without_vmi",
-            False, "base_vmi_host_vars",
+            False,
+            "empty_host_vars",
             False,
             False,
         ),
@@ -898,18 +889,18 @@ def windows_vmi_host_vars(basic_vmi_host_vars):
             "inventory_empty",
             "children_group_without_vmi",
             False,
-            "base_vmi_host_vars",
+            "empty_host_vars",
             False,
             False,
         ),
         (
-            {"vmis": [BASIC_VMI], "services": [LOADBALANCER_SERVICE]},
-            BASIC_VMI,
+            {"vmis": [BASE_VMI], "services": [LOADBALANCER_SERVICE]},
+            BASE_VMI,
             "inventory_groups",
             "inventory_vmi_group",
             "children_group_with_vmi",
             False,
-            "basic_vmi_host_vars",
+            "base_vmi_host_vars",
             True,
             False,
         ),
@@ -990,6 +981,9 @@ def test_get_vmis_for_namespace(mocker,
                                                           GetVmiOptions(create_groups=create_groups)
                                                           )
         set_composable_vars.assert_called_once_with(vmi_name)
+    else:
+        set_composable_vars.assert_not_called()
+        set_ansible_host_and_port.asser_not_called()
 
 
 @pytest.fixture(scope="module")
@@ -1046,7 +1040,7 @@ def empty_service():
             "empty_service",
         ),
         (
-            {"services": [LOADBALANCER_SERVICE_WITHOUT_AND_SELECTOR_PORTS], "namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]},
+            {"services": [BASE_LOADBALANCER_SERVICE], "namespaces": [{"metadata": {"name": DEFAULT_NAMESPACE}}]},
             "empty_service",
         ),
         (
@@ -1108,24 +1102,24 @@ def ansible_host_and_port_service_ip():
     "vmi,use_service,opts,result",
     [
         (
-            BASIC_VMI,
+            BASE_VMI,
             None,
             GetVmiOptions(kube_secondary_dns=True, network_name="test-network"),
             "ansible_host_and_port_network",
         ),
         (
-            BASIC_VMI,
+            BASE_VMI,
             None,
             GetVmiOptions(kube_secondary_dns=True, network_name="test-network", base_domain=DEFAULT_BASE_DOMAIN),
             "ansible_host_and_port_network_with_base_domain",
         ),
         (
-            BASIC_VMI,
+            BASE_VMI,
             {"host": "test-host", "port": "8080"}, GetVmiOptions(use_service=True),
             "ansible_host_and_port_service",
         ),
         (
-            BASIC_VMI,
+            BASE_VMI,
             {"host": None, "port": None}, GetVmiOptions(use_service=True),
             "ansible_host_and_port_service_ip",
         ),
