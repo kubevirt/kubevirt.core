@@ -22,6 +22,9 @@ description:
   - Authenticate using either a config file, certificates, password or token.
   - Supports check mode.
 
+extends_documentation_fragment:
+  - kubevirt.core.kubevirt_auth_options
+
 options:
   api_version:
     description:
@@ -71,9 +74,6 @@ options:
     - Ignored if O(wait) is not set.
     default: 120
     type: int
-
-extends_documentation_fragment:
-  - kubevirt.core.k8s_auth_options
 
 requirements:
   - "python >= 3.9"
