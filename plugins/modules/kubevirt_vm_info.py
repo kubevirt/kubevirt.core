@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2023 Red Hat, Inc.
 # Based on the kubernetes.core.k8s_info module
-# GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Apache License 2.0 (see LICENSE or http://www.apache.org/licenses/LICENSE-2.0)
 
 from __future__ import absolute_import, division, print_function
 
@@ -21,6 +21,9 @@ description:
   - Pass options to find C(VirtualMachines) as module arguments.
   - Authenticate using either a config file, certificates, password or token.
   - Supports check mode.
+
+extends_documentation_fragment:
+  - kubevirt.core.kubevirt_auth_options
 
 options:
   api_version:
@@ -71,9 +74,6 @@ options:
     - Ignored if O(wait) is not set.
     default: 120
     type: int
-
-extends_documentation_fragment:
-  - kubevirt.core.k8s_auth_options
 
 requirements:
   - "python >= 3.9"

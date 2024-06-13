@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2023 Red Hat, Inc.
 # Based on the kubernetes.core.k8s module
-# GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Apache License 2.0 (see LICENSE or http://www.apache.org/licenses/LICENSE-2.0)
 
 from __future__ import absolute_import, division, print_function
 
@@ -23,9 +23,7 @@ description:
 - Supports check mode.
 
 extends_documentation_fragment:
-- kubevirt.core.k8s_auth_options
-- kubevirt.core.k8s_state_options
-- kubevirt.core.k8s_delete_options
+- kubevirt.core.kubevirt_auth_options
 
 options:
   api_version:
@@ -103,6 +101,50 @@ options:
     - Ignored if O(wait) is not set.
     default: 120
     type: int
+  delete_options:
+    description:
+    - Configure behavior when deleting an object.
+    - Only used when O(state=absent).
+    type: dict
+    suboptions:
+      propagationPolicy:
+        description:
+        - Use to control how dependent objects are deleted.
+        - If not specified, the default policy for the object type will be used. This may vary across object types.
+        type: str
+        choices:
+        - Foreground
+        - Background
+        - Orphan
+      preconditions:
+        description:
+        - Specify condition that must be met for delete to proceed.
+        type: dict
+        suboptions:
+          resourceVersion:
+            description:
+            - Specify the resource version of the target object.
+            type: str
+          uid:
+            description:
+            - Specify the C(UID) of the target object.
+            type: str
+  state:
+    description:
+    - Determines if an object should be created, patched, or deleted.
+    - When set to O(state=present), an object will be created, if it does not already exist.
+    - If set to O(state=absent), an existing object will be deleted.
+    - If set to O(state=present), an existing object will be patched, if its attributes differ from those specified.
+    type: str
+    default: present
+    choices:
+    - absent
+    - present
+  force:
+    description:
+    - If set to O(force=yes), and O(state=present) is set, an existing object will be replaced.
+    type: bool
+    default: no
 
 requirements:
 - "python >= 3.9"
@@ -229,7 +271,6 @@ from ansible_collections.kubernetes.core.plugins.module_utils.ansiblemodule impo
 from ansible_collections.kubernetes.core.plugins.module_utils.args_common import (
     AUTH_ARG_SPEC,
     COMMON_ARG_SPEC,
-    DELETE_OPTS_ARG_SPEC,
 )
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s import (
     runner,
@@ -347,14 +388,25 @@ def arg_spec() -> Dict:
         "wait": {"type": "bool", "default": False},
         "wait_sleep": {"type": "int", "default": 5},
         "wait_timeout": {"type": "int", "default": 120},
+        "delete_options": {
+            "type": "dict",
+            "default": None,
+            "options": {
+                "propagationPolicy": {
+                    "choices": ["Foreground", "Background", "Orphan"]
+                },
+                "preconditions": {
+                    "type": "dict",
+                    "options": {
+                        "resourceVersion": {"type": "str"},
+                        "uid": {"type": "str"},
+                    },
+                },
+            },
+        },
     }
     spec.update(deepcopy(AUTH_ARG_SPEC))
     spec.update(deepcopy(COMMON_ARG_SPEC))
-    spec["delete_options"] = {
-        "type": "dict",
-        "default": None,
-        "options": deepcopy(DELETE_OPTS_ARG_SPEC),
-    }
 
     return spec
 

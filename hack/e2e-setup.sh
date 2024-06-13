@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Apache License 2.0 (see LICENSE or http://www.apache.org/licenses/LICENSE-2.0)
 #
 # Copyright 2023 Red Hat, Inc.
 #
