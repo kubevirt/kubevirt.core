@@ -6,7 +6,7 @@ cluster-up:
 
 .PHONY: cluster-down
 cluster-down:
-	hack/e2e-setup.sh --cleanup
+	hack/e2e-setup.sh --install-kind --install-kubectl --cleanup
 
 .PHONY: build-venv
 build-venv:
