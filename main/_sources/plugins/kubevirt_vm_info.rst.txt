@@ -100,7 +100,8 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Token used to authenticate with the API. Can also be specified via K8S_AUTH_API_KEY environment variable.</p>
+      <p>Token used to authenticate with the API.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_API_KEY</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-odd">
@@ -129,7 +130,8 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Path to a CA certificate used to authenticate with the API. The full certificate chain must be provided to avoid certificate validation errors. Can also be specified via K8S_AUTH_SSL_CA_CERT environment variable.</p>
+      <p>Path to a CA certificate used to authenticate with the API. The full certificate chain must be provided to avoid certificate validation errors.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_SSL_CA_CERT</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-odd">
@@ -144,7 +146,8 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Path to a certificate used to authenticate with the API. Can also be specified via K8S_AUTH_CERT_FILE environment variable.</p>
+      <p>Path to a certificate used to authenticate with the API.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_CERT_FILE</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -159,7 +162,8 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Path to a key file used to authenticate with the API. Can also be specified via K8S_AUTH_KEY_FILE environment variable.</p>
+      <p>Path to a key file used to authenticate with the API.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_KEY_FILE</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-odd">
@@ -172,7 +176,8 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>The name of a context found in the config file. Can also be specified via K8S_AUTH_CONTEXT environment variable.</p>
+      <p>The name of a context found in the config file.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_CONTEXT</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -200,7 +205,8 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.</p>
+      <p>Provide a URL for accessing the API.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_HOST</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -212,11 +218,10 @@ Parameters
         <span class="ansible-option-type">list</span>
         / <span class="ansible-option-elements">elements=string</span>
       </p>
-      <p><em class="ansible-option-versionadded">added in kubevirt.core 2.3.0</em></p>
     </div></td>
     <td><div class="ansible-option-cell">
       <p>Group(s) to impersonate for the operation.</p>
-      <p>Can also be specified via K8S_AUTH_IMPERSONATE_GROUPS environment. Example: Group1,Group2</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_IMPERSONATE_GROUPS</code> environment variable, e.g. <code class='docutils literal notranslate'>Group1,Group2</code>.</p>
     </div></td>
   </tr>
   <tr class="row-odd">
@@ -227,11 +232,10 @@ Parameters
       <p class="ansible-option-type-line">
         <span class="ansible-option-type">string</span>
       </p>
-      <p><em class="ansible-option-versionadded">added in kubevirt.core 2.3.0</em></p>
     </div></td>
     <td><div class="ansible-option-cell">
       <p>Username to impersonate for the operation.</p>
-      <p>Can also be specified via K8S_AUTH_IMPERSONATE_USER environment.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_IMPERSONATE_USER</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -244,8 +248,9 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from <em>~/.kube/config</em>. Can also be specified via K8S_AUTH_KUBECONFIG environment variable.</p>
-      <p>Multiple Kubernetes config file can be provided using separator &#x27;;&#x27; for Windows platform or &#x27;:&#x27; for others platforms.</p>
+      <p>Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from <em>~/.kube/config</em>.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_KUBECONFIG</code> environment variable.</p>
+      <p>Multiple Kubernetes config file can be provided using separator <code class='docutils literal notranslate'>;</code> for Windows platform or <code class='docutils literal notranslate'>:</code> for others platforms.</p>
       <p>The kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version &gt;= 17.17.0. Added in version 2.2.0.</p>
     </div></td>
   </tr>
@@ -298,13 +303,13 @@ Parameters
       <p class="ansible-option-type-line">
         <span class="ansible-option-type">string</span>
       </p>
-      <p><em class="ansible-option-versionadded">added in kubevirt.core 2.3.0</em></p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>The comma separated list of hosts/domains/IP/CIDR that shouldn&#x27;t go through proxy. Can also be specified via K8S_AUTH_NO_PROXY environment variable.</p>
-      <p>Please note that this module does not pick up typical proxy settings from the environment (e.g. NO_PROXY).</p>
-      <p>This feature requires kubernetes&gt;=19.15.0. When kubernetes library is less than 19.15.0, it fails even no_proxy set in correct.</p>
-      <p>example value is "localhost,.local,.example.com,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"</p>
+      <p>The comma separated list of hosts/domains/IP/CIDR that shouldn&#x27;t go through proxy.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_NO_PROXY</code> environment variable.</p>
+      <p>Please note that this module does not pick up typical proxy settings from the environment (e.g. <code class="xref std std-envvar literal notranslate">NO_PROXY</code>).</p>
+      <p>This feature requires <code class='docutils literal notranslate'>kubernetes&gt;=19.15.0</code>. When kubernetes library is less than 19.15.0, it fails even no_proxy set in correct.</p>
+      <p>Example value is <code class='docutils literal notranslate'>localhost,.local,.example.com,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16</code>.</p>
     </div></td>
   </tr>
   <tr class="row-odd">
@@ -317,8 +322,9 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Provide a password for authenticating with the API. Can also be specified via K8S_AUTH_PASSWORD environment variable.</p>
-      <p>Please read the description of the <code class='docutils literal notranslate'>username</code> option for a discussion of when this option is applicable.</p>
+      <p>Provide a password for authenticating with the API.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PASSWORD</code> environment variable.</p>
+      <p>Please read the description of the <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-username"><span class="std std-ref"><span class="pre">username</span></span></a></strong></code> option for a discussion of when this option is applicable.</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -331,11 +337,10 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Whether or not to save the kube config refresh tokens. Can also be specified via K8S_AUTH_PERSIST_CONFIG environment variable.</p>
+      <p>Whether or not to save the kube config refresh tokens.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PERSIST_CONFIG</code> environment variable.</p>
       <p>When the k8s context is using a user credentials with refresh tokens (like oidc or gke/gcloud auth), the token is refreshed by the k8s python client library but not saved by default. So the old refresh token can expire and the next auth might fail. Setting this flag to true will tell the k8s python client to save the new refresh token to the kube config file.</p>
-      <p>Default to false.</p>
-      <p>Please note that the current version of the k8s python client library does not support setting this flag to True yet.</p>
-      <p>The fix for this k8s python library is here: https://github.com/kubernetes-client/python-base/pull/169</p>
+      <p>Disabled by default.</p>
       <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
       <ul class="simple">
         <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
@@ -354,8 +359,9 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>The URL of an HTTP proxy to use for the connection. Can also be specified via K8S_AUTH_PROXY environment variable.</p>
-      <p>Please note that this module does not pick up typical proxy settings from the environment (e.g. HTTP_PROXY).</p>
+      <p>The URL of an HTTP proxy to use for the connection.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PROXY</code> environment variable.</p>
+      <p>Please note that this module does not pick up typical proxy settings from the environment (e.g. <code class="xref std std-envvar literal notranslate">HTTP_PROXY</code>).</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -366,7 +372,6 @@ Parameters
       <p class="ansible-option-type-line">
         <span class="ansible-option-type">dictionary</span>
       </p>
-      <p><em class="ansible-option-versionadded">added in kubevirt.core 2.0.0</em></p>
     </div></td>
     <td><div class="ansible-option-cell">
       <p>The Header used for the HTTP proxy.</p>
@@ -384,7 +389,7 @@ Parameters
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
       <p>Colon-separated username:password for basic authentication header.</p>
-      <p>Can also be specified via K8S_AUTH_PROXY_HEADERS_BASIC_AUTH environment.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PROXY_HEADERS_BASIC_AUTH</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -398,7 +403,7 @@ Parameters
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
       <p>Colon-separated username:password for proxy basic authentication header.</p>
-      <p>Can also be specified via K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH environment.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-odd">
@@ -412,7 +417,7 @@ Parameters
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
       <p>String representing the user-agent you want, such as foo/1.0.</p>
-      <p>Can also be specified via K8S_AUTH_PROXY_HEADERS_USER_AGENT environment.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PROXY_HEADERS_USER_AGENT</code> environment variable.</p>
     </div></td>
   </tr>
 
@@ -448,8 +453,8 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Provide a username for authenticating with the API. Can also be specified via K8S_AUTH_USERNAME environment variable.</p>
-      <p>Please note that this only works with clusters configured to use HTTP Basic Auth. If your cluster has a different form of authentication (e.g. OAuth2 in OpenShift), this option will not work as expected and you should look into the <a href='../../community/okd/k8s_auth_module.html' class='module'>community.okd.k8s_auth</a> module, as that might do what you need.</p>
+      <p>Provide a username for authenticating with the API.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_USERNAME</code> environment variable.</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -464,7 +469,8 @@ Parameters
       </p>
     </div></td>
     <td><div class="ansible-option-cell">
-      <p>Whether or not to verify the API server&#x27;s SSL certificates. Can also be specified via K8S_AUTH_VERIFY_SSL environment variable.</p>
+      <p>Whether or not to verify the API server&#x27;s SSL certificates.</p>
+      <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_VERIFY_SSL</code> environment variable.</p>
       <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
       <ul class="simple">
         <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
@@ -538,7 +544,7 @@ Notes
 -----
 
 .. note::
-   - To avoid SSL certificate validation errors when \ :literal:`validate\_certs`\  is \ :emphasis:`True`\ , the full certificate chain for the API server must be provided via \ :literal:`ca\_cert`\  or in the kubeconfig file.
+   - To avoid SSL certificate validation errors when \ :ansopt:`kubevirt.core.kubevirt\_vm\_info#module:validate\_certs=yes`\ , the full certificate chain for the API server must be provided via \ :ansopt:`kubevirt.core.kubevirt\_vm\_info#module:ca\_cert`\  or in the \ :ansopt:`kubevirt.core.kubevirt\_vm\_info#module:kubeconfig`\  file.
 
 .. Seealso
 
