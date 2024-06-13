@@ -389,17 +389,17 @@ if [ "${ARGCOUNT}" -eq "0" ]; then
   OPT_CREATE_NAD=true
 fi
 
-if [ "${OPT_CLEANUP}" == true ]; then
-  cleanup
-  exit 0
-fi
-
 if [ "${OPT_INSTALL_KIND}" == true ]; then
   install_kind
 fi
 
 if [ "${OPT_INSTALL_KUBECTL}" == true ]; then
   install_kubectl
+fi
+
+if [ "${OPT_CLEANUP}" == true ]; then
+  cleanup
+  exit 0
 fi
 
 if [ "${OPT_CONFIGURE_INOTIFY_LIMITS}" == true ]; then
