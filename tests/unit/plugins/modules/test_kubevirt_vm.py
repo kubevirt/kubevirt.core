@@ -422,15 +422,13 @@ def vm_template_labels():
             "namespace": "default",
             "labels": {
                 "test": "test",
-            }
+            },
         },
         "spec": {
             "running": True,
             "template": {
                 "metadata": {
-                    "labels": {
-                        "test": "test"
-                    },
+                    "labels": {"test": "test"},
                 },
                 "spec": {
                     "domain": {
@@ -451,15 +449,13 @@ def vm_template_annotations():
             "namespace": "default",
             "annotations": {
                 "test": "test",
-            }
+            },
         },
         "spec": {
             "running": True,
             "template": {
                 "metadata": {
-                    "annotations": {
-                        "test": "test"
-                    },
+                    "annotations": {"test": "test"},
                 },
                 "spec": {
                     "domain": {
@@ -481,9 +477,7 @@ def vm_template_instancetype():
         },
         "spec": {
             "running": True,
-            "instancetype": {
-                "name": "u1.medium"
-            },
+            "instancetype": {"name": "u1.medium"},
             "template": {
                 "spec": {
                     "domain": {
@@ -505,9 +499,7 @@ def vm_template_preference():
         },
         "spec": {
             "running": True,
-            "preference": {
-                "name": "fedora"
-            },
+            "preference": {"name": "fedora"},
             "template": {
                 "spec": {
                     "domain": {
@@ -638,7 +630,7 @@ def vm_template_specs():
         ("render_template_params_datavolumetemplate", "vm_template_datavolumetemplate"),
         ("render_template_params_name", "vm_template_name"),
         ("render_template_params_generate_name", "vm_template_generate_name"),
-        ("render_template_params_specs", "vm_template_specs")
+        ("render_template_params_specs", "vm_template_specs"),
     ],
 )
 def test_render_template(request, params, rendered_template):
