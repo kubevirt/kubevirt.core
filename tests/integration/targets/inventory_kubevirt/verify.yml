@@ -16,11 +16,12 @@
       ansible.builtin.include_vars:
         file: all.yml
         name: inv_all
-    - name: Assert two instances with different labels
+    - name: Assert all expected hosts were discovered
       ansible.builtin.assert:
         that:
           - inv_all['all']['children']['label_app_test']['hosts'] | length == 1
           - inv_all['all']['children']['label_foo_bar']['hosts'] | length == 1
+          - "'default-testvm-stopped' in inv_all['all']['children']['test']['children']['namespace_default']['hosts']"
     - name: Read filtered inventory
       ansible.builtin.include_vars:
         file: label.yml
