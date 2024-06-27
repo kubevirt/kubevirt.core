@@ -1,0 +1,29 @@
+---
+- name: Playbook creating a stopped virtual machine
+  hosts: localhost
+  tasks:
+    - name: Create VM
+      kubevirt.core.kubevirt_vm:
+        state: present
+        name: testvm-stopped
+        namespace: default
+        running: false
+        instancetype:
+          name: u1.medium
+        preference:
+          name: fedora
+        spec:
+          domain:
+            devices: {}
+          volumes:
+            - containerDisk:
+                image: quay.io/containerdisks/fedora:latest
+              name: containerdisk
+            - cloudInitNoCloud:
+                userData: |-
+                  #cloud-config
+                  # The default username is: fedora
+                  ssh_authorized_keys:
+                    - ssh-ed25519 AAAA...
+              name: cloudinit
+        wait: true
