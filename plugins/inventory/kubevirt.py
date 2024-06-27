@@ -180,7 +180,6 @@ from typing import (
     Optional,
 )
 
-
 # Handle import errors of python kubernetes client.
 # Set HAS_K8S_MODULE_HELPER and k8s_import exception accordingly to
 # potentially print a warning to the user if the client is missing.
@@ -188,14 +187,16 @@ try:
     from kubernetes.dynamic.exceptions import DynamicApiError
 
     HAS_K8S_MODULE_HELPER = True
-    k8s_import_exception = None
+    K8S_IMPORT_EXCEPTION = None
 except ImportError as e:
 
     class DynamicApiError(Exception):
-        pass
+        """
+        Dummy class, mainly used for ansible-test sanity.
+        """
 
     HAS_K8S_MODULE_HELPER = False
-    k8s_import_exception = e
+    K8S_IMPORT_EXCEPTION = e
 
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
 
@@ -215,7 +216,9 @@ ID_MSWINDOWS = "mswindows"
 
 
 class KubeVirtInventoryException(Exception):
-    pass
+    """
+    This class is used for exceptions raised by this inventory.
+    """
 
 
 @dataclass
@@ -326,6 +329,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     @staticmethod
     def is_windows(guest_os_info: Dict, annotations: Dict) -> bool:
+        """
+        is_windows checkes whether a given VM is running a Windows guest
+        by checking its GuestOSInfo and annotations.
+        """
         if "id" in guest_os_info:
             return guest_os_info["id"] == ID_MSWINDOWS
 
@@ -377,7 +384,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         if not HAS_K8S_MODULE_HELPER:
             raise KubeVirtInventoryException(
                 "This module requires the Kubernetes Python client. "
-                + f"Try `pip install kubernetes`. Detail: {k8s_import_exception}"
+                + f"Try `pip install kubernetes`. Detail: {K8S_IMPORT_EXCEPTION}"
             )
 
         source_data = None
