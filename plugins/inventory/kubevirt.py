@@ -658,23 +658,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
             self.set_composable_vars(vmi_name)
 
-    def set_composable_vars(self, vmi_name: str) -> None:
-        """
-        set_composable_vars sets vars per
-        https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html
-        """
-        host_vars = self.inventory.get_host(vmi_name).get_vars()
-        strict = self.get_option("strict")
-        self._set_composite_vars(
-            self.get_option("compose"), host_vars, vmi_name, strict=True
-        )
-        self._add_host_to_composed_groups(
-            self.get_option("groups"), host_vars, vmi_name, strict=strict
-        )
-        self._add_host_to_keyed_groups(
-            self.get_option("keyed_groups"), host_vars, vmi_name, strict=strict
-        )
-
     def get_ssh_services_for_namespace(self, client: K8SClient, namespace: str) -> Dict:
         """
         get_ssh_services_for_namespace retrieves all services of a namespace exposing port 22/ssh.
@@ -756,3 +739,20 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
         self.inventory.set_variable(vmi_name, "ansible_host", ansible_host)
         self.inventory.set_variable(vmi_name, "ansible_port", ansible_port)
+
+    def set_composable_vars(self, vmi_name: str) -> None:
+        """
+        set_composable_vars sets vars per
+        https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html
+        """
+        host_vars = self.inventory.get_host(vmi_name).get_vars()
+        strict = self.get_option("strict")
+        self._set_composite_vars(
+            self.get_option("compose"), host_vars, vmi_name, strict=True
+        )
+        self._add_host_to_composed_groups(
+            self.get_option("groups"), host_vars, vmi_name, strict=strict
+        )
+        self._add_host_to_keyed_groups(
+            self.get_option("keyed_groups"), host_vars, vmi_name, strict=strict
+        )
