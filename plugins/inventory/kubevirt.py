@@ -228,7 +228,7 @@ class KubeVirtInventoryException(Exception):
 
 
 @dataclass
-class GetVmiOptions:
+class InventoryOptions:
     """
     This class holds the options defined by the user.
     """
@@ -427,7 +427,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 else:
                     namespaces = self.get_available_namespaces(client)
 
-                opts = GetVmiOptions(
+                opts = InventoryOptions(
                     connection.get("api_version"),
                     connection.get("label_selector"),
                     connection.get("network_name", connection.get("interface_name")),
@@ -444,7 +444,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             client = get_api_client()
             name = self.get_default_host_name(client.configuration.host)
             namespaces = self.get_available_namespaces(client)
-            opts = GetVmiOptions(host_format=self.host_format)
+            opts = InventoryOptions(
+                host_format=self.host_format,
+                base_domain=self.get_cluster_domain(client),
+            )
             for namespace in namespaces:
                 self.get_vmis_for_namespace(client, name, namespace, opts)
 
@@ -484,7 +487,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         return [namespace.metadata.name for namespace in obj.items]
 
     def get_vmis_for_namespace(
-        self, client: K8SClient, name: str, namespace: str, opts: GetVmiOptions
+        self, client: K8SClient, name: str, namespace: str, opts: InventoryOptions
     ) -> None:
         """
         get_vmis_for_namespace lists all VirtualMachineInstances in a namespace
@@ -719,7 +722,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         vmi_name: str,
         ip_address: str,
         service: Optional[Dict],
-        opts: GetVmiOptions,
+        opts: InventoryOptions,
     ) -> None:
         """
         set_ansible_host_and_port sets the ansible_host and possibly the ansible_port var.
