@@ -52,3 +52,13 @@
               name: containerdisk
         wait: true
         wait_timeout: 600
+
+    - name: Create a stopped VM
+      kubevirt.core.kubevirt_vm:
+        state: present
+        name: testvm-stopped
+        namespace: default
+        running: false
+        spec:
+          domain:
+            devices: {}
