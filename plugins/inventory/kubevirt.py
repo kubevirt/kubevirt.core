@@ -260,9 +260,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     NAME = "kubevirt.core.kubevirt"
 
-    connection_plugin = "kubernetes.core.kubectl"
-    transport = "kubectl"
-
     @staticmethod
     def get_default_host_name(host: str) -> str:
         """
