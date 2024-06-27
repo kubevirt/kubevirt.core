@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug: Ansible Module",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "module": "plugins.modules.${fileBasenameNoExtension}",
+            "console": "internalConsole",
+            "args": [
+                "${workspaceFolder}/.vscode/module_args/${fileBasenameNoExtension}.json"
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "Debug: Ansible Inventory",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "module": "ansible.cli.inventory",
+            "console": "internalConsole",
+            "args": [
+                "--inventory",
+                "${workspaceFolder}/examples/default.kubevirt.yml",
+                "--list"
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "Debug: Unit Tests",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "purpose": [
+                "debug-test"
+            ],
+            "console": "internalConsole",
+            "justMyCode": false
+        }
+    ]
+}
