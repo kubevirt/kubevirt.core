@@ -17,3 +17,10 @@
         name: testvm2
         namespace: default
         wait: true
+
+    - name: Delete the stopped VM
+      kubevirt.core.kubevirt_vm:
+        state: absent
+        name: testvm-stopped
+        namespace: default
+        wait: true
