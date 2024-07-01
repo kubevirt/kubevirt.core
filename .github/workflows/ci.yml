@@ -16,6 +16,37 @@ on:
   schedule:
     - cron: "0 6 * * *"
 jobs:
+  check-tree-clean:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+          cache: pip
+
+      - name: Install tox
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+
+      - name: Run make format
+        run: |
+          make format
+
+      - name: Check if tree is clean
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "There are uncommitted changes!"
+            exit 1
+          fi
+
   linter:
     runs-on: ubuntu-latest
     env:
@@ -55,6 +86,8 @@ jobs:
         run: |
           find . -type f -iname '*.sh' -exec shellcheck {} \;
         working-directory: ${{ env.collection_dir }}
+    needs:
+      - check-tree-clean
 
   sanity:
     uses: ansible-network/github_actions/.github/workflows/sanity.yml@main

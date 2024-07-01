@@ -27,4 +27,4 @@ test-unit:
 
 .PHONY: test-integration
 test-integration:
-	tox -f integration --ansible --conf tox-ansible.ini
+	ansible-test integration

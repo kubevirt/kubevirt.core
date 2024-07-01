@@ -236,8 +236,8 @@ def k8s_module_params_delete(module_params_delete, vm_definition_running):
     }
 
 
-def test_module_fails_when_required_args_missing(monkeypatch):
-    monkeypatch.setattr(AnsibleModule, "fail_json", fail_json)
+def test_module_fails_when_required_args_missing(mocker):
+    mocker.patch.object(AnsibleModule, "fail_json", fail_json)
     with pytest.raises(AnsibleFailJson):
         set_module_args({})
         kubevirt_vm.main()
@@ -274,27 +274,29 @@ def test_module_fails_when_required_args_missing(monkeypatch):
 )
 def test_module(
     request,
-    monkeypatch,
     mocker,
     module_params,
     k8s_module_params,
     vm_definition,
     method,
 ):
-    monkeypatch.setattr(AnsibleModule, "exit_json", exit_json)
-    monkeypatch.setattr(runner, "get_api_client", lambda _: None)
+    mocker.patch.object(AnsibleModule, "exit_json", exit_json)
+    mocker.patch.object(runner, "get_api_client")
 
-    set_module_args(request.getfixturevalue(module_params))
-
-    perform_action = mocker.patch.object(runner, "perform_action")
-    perform_action.return_value = {
-        "method": method,
-        "changed": True,
-        "result": "success",
-    }
+    perform_action = mocker.patch.object(
+        runner,
+        "perform_action",
+        return_value={
+            "method": method,
+            "changed": True,
+            "result": "success",
+        },
+    )
 
     with pytest.raises(AnsibleExitJson):
+        set_module_args(request.getfixturevalue(module_params))
         kubevirt_vm.main()
+
     perform_action.assert_called_once_with(
         mocker.ANY,
         request.getfixturevalue(vm_definition),
@@ -422,15 +424,13 @@ def vm_template_labels():
             "namespace": "default",
             "labels": {
                 "test": "test",
-            }
+            },
         },
         "spec": {
             "running": True,
             "template": {
                 "metadata": {
-                    "labels": {
-                        "test": "test"
-                    },
+                    "labels": {"test": "test"},
                 },
                 "spec": {
                     "domain": {
@@ -451,15 +451,13 @@ def vm_template_annotations():
             "namespace": "default",
             "annotations": {
                 "test": "test",
-            }
+            },
         },
         "spec": {
             "running": True,
             "template": {
                 "metadata": {
-                    "annotations": {
-                        "test": "test"
-                    },
+                    "annotations": {"test": "test"},
                 },
                 "spec": {
                     "domain": {
@@ -481,9 +479,7 @@ def vm_template_instancetype():
         },
         "spec": {
             "running": True,
-            "instancetype": {
-                "name": "u1.medium"
-            },
+            "instancetype": {"name": "u1.medium"},
             "template": {
                 "spec": {
                     "domain": {
@@ -505,9 +501,7 @@ def vm_template_preference():
         },
         "spec": {
             "running": True,
-            "preference": {
-                "name": "fedora"
-            },
+            "preference": {"name": "fedora"},
             "template": {
                 "spec": {
                     "domain": {
@@ -638,9 +632,10 @@ def vm_template_specs():
         ("render_template_params_datavolumetemplate", "vm_template_datavolumetemplate"),
         ("render_template_params_name", "vm_template_name"),
         ("render_template_params_generate_name", "vm_template_generate_name"),
-        ("render_template_params_specs", "vm_template_specs")
+        ("render_template_params_specs", "vm_template_specs"),
     ],
 )
 def test_render_template(request, params, rendered_template):
-    result = kubevirt_vm.render_template(request.getfixturevalue(params))
-    assert result == dump(request.getfixturevalue(rendered_template), sort_keys=False)
+    assert kubevirt_vm.render_template(request.getfixturevalue(params)) == dump(
+        request.getfixturevalue(rendered_template), sort_keys=False
+    )

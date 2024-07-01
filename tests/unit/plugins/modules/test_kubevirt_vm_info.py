@@ -84,8 +84,8 @@ def find_args_stopped(find_args_default):
         {"running": False},
     ],
 )
-def test_module_fails_when_required_args_missing(monkeypatch, module_args):
-    monkeypatch.setattr(AnsibleModule, "fail_json", fail_json)
+def test_module_fails_when_required_args_missing(mocker, module_args):
+    mocker.patch.object(AnsibleModule, "fail_json", fail_json)
     with pytest.raises(AnsibleFailJson):
         set_module_args(module_args)
         kubevirt_vm_info.main()
@@ -102,19 +102,22 @@ def test_module_fails_when_required_args_missing(monkeypatch, module_args):
         ({"wait": True, "running": False}, "find_args_stopped"),
     ],
 )
-def test_module(request, monkeypatch, mocker, module_args, find_args):
-    monkeypatch.setattr(AnsibleModule, "exit_json", exit_json)
-    monkeypatch.setattr(kubevirt_vm_info, "get_api_client", lambda _: None)
+def test_module(request, mocker, module_args, find_args):
+    mocker.patch.object(AnsibleModule, "exit_json", exit_json)
+    mocker.patch.object(kubevirt_vm_info, "get_api_client")
 
-    set_module_args(module_args)
-
-    find = mocker.patch.object(K8sService, "find")
-    find.return_value = {
-        "api_found": True,
-        "failed": False,
-        "resources": [],
-    }
+    find = mocker.patch.object(
+        K8sService,
+        "find",
+        return_value={
+            "api_found": True,
+            "failed": False,
+            "resources": [],
+        },
+    )
 
     with pytest.raises(AnsibleExitJson):
+        set_module_args(module_args)
         kubevirt_vm_info.main()
+
     find.assert_called_once_with(**request.getfixturevalue(find_args))
