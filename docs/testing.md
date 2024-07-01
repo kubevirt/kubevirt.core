@@ -53,6 +53,32 @@ Run unit tests with `ansible-test` like so:
 ANSIBLE_TEST_PREFER_PODMAN=1 ansible-test units --docker
 ```
 
+### Running tests with coverage analysis
+
+Coverage analysis produces a report about the code paths covered by the unit tests.
+
+It is required to bind mount the project as shown in section [Running tests with ansible-test](#running-tests-with-ansible-test).
+
+Run `ansible-test` with:
+
+```
+ANSIBLE_TEST_PREFER_PODMAN=1 ansible-test units --docker --coverage
+```
+
+Create the coverage report in HTML format using:
+
+```
+ansible-test coverage html
+```
+
+Or in XML format using:
+
+```
+ansible-test coverage xml
+```
+
+Multiple coverage report formats are supported such as: plain text, XML or HTML. If HTML format is used as shown above, the report can be accessed in the following location: `~/.ansible/collections/ansible_collections/kubevirt/tests/output/reports/coverage/index.html` or in `~/.ansible/collections/ansible_collections/kubevirt/tests/output/reports/coverage/coverage.xml` if XML format is choosen.
+
 ## Integration tests
 
 Integration tests require a working cluster and can be run with
