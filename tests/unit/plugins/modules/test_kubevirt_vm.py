@@ -8,8 +8,6 @@ __metaclass__ = type
 
 import pytest
 
-from yaml import dump
-
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s import runner
 from ansible_collections.kubevirt.core.plugins.modules import kubevirt_vm
@@ -204,7 +202,7 @@ def module_params_delete(module_params_default):
 def k8s_module_params_create(module_params_create, vm_definition_create):
     return module_params_create | {
         "generate_name": None,
-        "resource_definition": dump(vm_definition_create, sort_keys=False),
+        "resource_definition": vm_definition_create,
         "wait_condition": {"type": "Ready", "status": True},
     }
 
@@ -213,7 +211,7 @@ def k8s_module_params_create(module_params_create, vm_definition_create):
 def k8s_module_params_running(module_params_running, vm_definition_running):
     return module_params_running | {
         "generate_name": None,
-        "resource_definition": dump(vm_definition_running, sort_keys=False),
+        "resource_definition": vm_definition_running,
         "wait_condition": {"type": "Ready", "status": True},
     }
 
@@ -222,7 +220,7 @@ def k8s_module_params_running(module_params_running, vm_definition_running):
 def k8s_module_params_stopped(module_params_stopped, vm_definition_stopped):
     return module_params_stopped | {
         "generate_name": None,
-        "resource_definition": dump(vm_definition_stopped, sort_keys=False),
+        "resource_definition": vm_definition_stopped,
         "wait_condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
     }
 
@@ -231,7 +229,7 @@ def k8s_module_params_stopped(module_params_stopped, vm_definition_stopped):
 def k8s_module_params_delete(module_params_delete, vm_definition_running):
     return module_params_delete | {
         "generate_name": None,
-        "resource_definition": dump(vm_definition_running, sort_keys=False),
+        "resource_definition": vm_definition_running,
         "wait_condition": {"type": "Ready", "status": True},
     }
 
@@ -305,7 +303,7 @@ def test_module(
 
 
 @pytest.fixture(scope="module")
-def render_template_params():
+def create_vm_params():
     return {
         "api_version": "kubevirt.io/v1",
         "running": True,
@@ -314,36 +312,36 @@ def render_template_params():
 
 
 @pytest.fixture(scope="module")
-def render_template_params_annotations(render_template_params):
-    return render_template_params | {
+def create_vm_params_annotations(create_vm_params):
+    return create_vm_params | {
         "annotations": {"test": "test"},
     }
 
 
 @pytest.fixture(scope="module")
-def render_template_params_labels(render_template_params):
-    return render_template_params | {
+def create_vm_params_labels(create_vm_params):
+    return create_vm_params | {
         "labels": {"test": "test"},
     }
 
 
 @pytest.fixture(scope="module")
-def render_template_params_instancetype(render_template_params):
-    return render_template_params | {
+def create_vm_params_instancetype(create_vm_params):
+    return create_vm_params | {
         "instancetype": {"name": "u1.medium"},
     }
 
 
 @pytest.fixture(scope="module")
-def render_template_params_preference(render_template_params):
-    return render_template_params | {
+def create_vm_params_preference(create_vm_params):
+    return create_vm_params | {
         "preference": {"name": "fedora"},
     }
 
 
 @pytest.fixture(scope="module")
-def render_template_params_datavolumetemplate(render_template_params):
-    return render_template_params | {
+def create_vm_params_datavolumetemplate(create_vm_params):
+    return create_vm_params | {
         "data_volume_templates": [
             {
                 "metadata": {"name": "testdv"},
@@ -364,22 +362,22 @@ def render_template_params_datavolumetemplate(render_template_params):
 
 
 @pytest.fixture(scope="module")
-def render_template_params_name(render_template_params):
-    return render_template_params | {
+def create_vm_params_name(create_vm_params):
+    return create_vm_params | {
         "name": "testvm",
     }
 
 
 @pytest.fixture(scope="module")
-def render_template_params_generate_name(render_template_params):
-    return render_template_params | {
+def create_vm_params_generate_name(create_vm_params):
+    return create_vm_params | {
         "generate_name": "testvm-1234",
     }
 
 
 @pytest.fixture(scope="module")
-def render_template_params_specs(render_template_params):
-    return render_template_params | {
+def create_vm_params_specs(create_vm_params):
+    return create_vm_params | {
         "spec": {
             "domain": {
                 "devices": {
@@ -395,7 +393,7 @@ def render_template_params_specs(render_template_params):
 
 
 @pytest.fixture(scope="module")
-def vm_template():
+def created_vm():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -416,7 +414,7 @@ def vm_template():
 
 
 @pytest.fixture(scope="module")
-def vm_template_labels():
+def created_vm_labels():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -443,7 +441,7 @@ def vm_template_labels():
 
 
 @pytest.fixture(scope="module")
-def vm_template_annotations():
+def created_vm_annotations():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -470,7 +468,7 @@ def vm_template_annotations():
 
 
 @pytest.fixture(scope="module")
-def vm_template_instancetype():
+def created_vm_instancetype():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -492,7 +490,7 @@ def vm_template_instancetype():
 
 
 @pytest.fixture(scope="module")
-def vm_template_preference():
+def created_vm_preference():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -514,7 +512,7 @@ def vm_template_preference():
 
 
 @pytest.fixture(scope="module")
-def vm_template_datavolumetemplate():
+def created_vm_datavolumetemplate():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -551,7 +549,7 @@ def vm_template_datavolumetemplate():
 
 
 @pytest.fixture(scope="module")
-def vm_template_name():
+def created_vm_name():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -573,7 +571,7 @@ def vm_template_name():
 
 
 @pytest.fixture(scope="module")
-def vm_template_generate_name():
+def created_vm_generate_name():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -595,7 +593,7 @@ def vm_template_generate_name():
 
 
 @pytest.fixture(scope="module")
-def vm_template_specs():
+def created_vm_specs():
     return {
         "apiVersion": "kubevirt.io/v1",
         "kind": "VirtualMachine",
@@ -622,20 +620,20 @@ def vm_template_specs():
 
 
 @pytest.mark.parametrize(
-    "params,rendered_template",
+    "params,expected",
     [
-        ("render_template_params", "vm_template"),
-        ("render_template_params_annotations", "vm_template_annotations"),
-        ("render_template_params_labels", "vm_template_labels"),
-        ("render_template_params_instancetype", "vm_template_instancetype"),
-        ("render_template_params_preference", "vm_template_preference"),
-        ("render_template_params_datavolumetemplate", "vm_template_datavolumetemplate"),
-        ("render_template_params_name", "vm_template_name"),
-        ("render_template_params_generate_name", "vm_template_generate_name"),
-        ("render_template_params_specs", "vm_template_specs"),
+        ("create_vm_params", "created_vm"),
+        ("create_vm_params_annotations", "created_vm_annotations"),
+        ("create_vm_params_labels", "created_vm_labels"),
+        ("create_vm_params_instancetype", "created_vm_instancetype"),
+        ("create_vm_params_preference", "created_vm_preference"),
+        ("create_vm_params_datavolumetemplate", "created_vm_datavolumetemplate"),
+        ("create_vm_params_name", "created_vm_name"),
+        ("create_vm_params_generate_name", "created_vm_generate_name"),
+        ("create_vm_params_specs", "created_vm_specs"),
     ],
 )
-def test_render_template(request, params, rendered_template):
-    assert kubevirt_vm.render_template(request.getfixturevalue(params)) == dump(
-        request.getfixturevalue(rendered_template), sort_keys=False
-    )
+def test_create_vm(request, params, expected):
+    assert kubevirt_vm.create_vm(
+        request.getfixturevalue(params)
+    ) == request.getfixturevalue(expected)

@@ -55,7 +55,6 @@ ansible-galaxy collection install -r requirements.yml
 
 #### Python libraries
 
-- jinja2
 - jsonpatch
 - kubernetes>=28.1.0
 - PyYAML>=3.11
