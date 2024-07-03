@@ -12,6 +12,8 @@ rules:
       - /changelogs/changelog.yaml
 
 ignore:
+  - .tox/
+  - .venv/
   - /tests/integration/targets/inventory_kubevirt/all.yml
   - /tests/integration/targets/inventory_kubevirt/label.yml
   - /tests/integration/targets/inventory_kubevirt/net.yml
