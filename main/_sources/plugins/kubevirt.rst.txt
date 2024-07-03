@@ -17,8 +17,8 @@
 
 .. Title
 
-kubevirt -- Inventory source for KubeVirt VirtualMachines
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+kubevirt -- Inventory source for KubeVirt VirtualMachines and VirtualMachineInstances
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -49,7 +49,7 @@ Synopsis
 
 .. Description
 
-- Fetch running \ :literal:`VirtualMachineInstances`\  for one or more namespaces with an optional label selector.
+- Fetch virtual machines from one or more namespaces with an optional label selector.
 - Groups by cluster name, namespace and labels.
 - Uses the \ :ref:`kubernetes.core.kubectl <ansible_collections.kubernetes.core.kubectl_module>`\  connection plugin to access the Kubernetes cluster.
 - Uses \ :ansval:`\*.kubevirt.[yml|yaml]`\  YAML configuration file to set parameter values.
@@ -352,7 +352,7 @@ Parameters
 
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-      <p>Override the base domain used to construct host names of <code class='docutils literal notranslate'>VirtualMachines</code>. Used in case of <code class='docutils literal notranslate'>kubesecondarydns</code> or <code class='docutils literal notranslate'>Services</code> of type <code class='docutils literal notranslate'>NodePort</code> if <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-connections/append_base_domain"><span class="std std-ref"><span class="pre">connections.append_base_domain</span></span></a></strong></code> is set.</p>
+      <p>Override the base domain used to construct host names. Used in case of <code class='docutils literal notranslate'>kubesecondarydns</code> or <code class='docutils literal notranslate'>Services</code> of type <code class='docutils literal notranslate'>NodePort</code> if <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-connections/append_base_domain"><span class="std std-ref"><span class="pre">connections.append_base_domain</span></span></a></strong></code> is set.</p>
     </div></td>
   </tr>
   <tr class="row-odd">
@@ -428,7 +428,7 @@ Parameters
 
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-      <p>Enable the creation of groups from labels on <code class='docutils literal notranslate'>VirtualMachines</code>.</p>
+      <p>Enable the creation of groups from labels on <code class='docutils literal notranslate'>VirtualMachines</code> and <code class='docutils literal notranslate'>VirtualMachineInstances</code>.</p>
       <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
       <ul class="simple">
         <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>false</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -496,7 +496,7 @@ Parameters
 
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-      <p>Define a label selector to select a subset of the fetched <code class='docutils literal notranslate'>VirtualMachineInstances</code>.</p>
+      <p>Define a label selector to select a subset of the fetched virtual machines.</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -524,7 +524,7 @@ Parameters
 
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-      <p>List of namespaces. If not specified, will fetch all <code class='docutils literal notranslate'>VirtualMachineInstances</code> for all namespaces the user is authorized to access.</p>
+      <p>List of namespaces. If not specified, will fetch virtual machines from all namespaces the user is authorized to access.</p>
     </div></td>
   </tr>
   <tr class="row-even">
@@ -540,7 +540,7 @@ Parameters
 
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-      <p>In case multiple networks are attached to a <code class='docutils literal notranslate'>VirtualMachineInstance</code>, define which interface should be returned as primary IP address.</p>
+      <p>In case multiple networks are attached to a virtual machine, define which interface should be returned as primary IP address.</p>
     </div></td>
   </tr>
   <tr class="row-odd">
@@ -568,7 +568,7 @@ Parameters
 
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-      <p>Enable the use of <code class='docutils literal notranslate'>Services</code> to establish an SSH connection to the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+      <p>Enable the use of <code class='docutils literal notranslate'>Services</code> to establish an SSH connection to a virtual machine.</p>
       <p>Services are only used if no <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-connections/network_name"><span class="std std-ref"><span class="pre">connections.network_name</span></span></a></strong></code> was provided.</p>
       <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
       <ul class="simple">
@@ -884,21 +884,21 @@ Examples
     
     # Filename must end with kubevirt.[yml|yaml]
 
-    - name: Authenticate with token and return all VirtualMachineInstances for all accessible namespaces
+    - name: Authenticate with token and return all virtual machines from all accessible namespaces
       plugin: kubevirt.core.kubevirt
       connections:
         - host: https://192.168.64.4:8443
           api_key: xxxxxxxxxxxxxxxx
           validate_certs: false
 
-    - name: Use default ~/.kube/config and return VirtualMachineInstances from namespace testing connected to network bridge-network
+    - name: Use default ~/.kube/config and return virtual machines from namespace testing connected to network bridge-network
       plugin: kubevirt.core.kubevirt
       connections:
         - namespaces:
             - testing
           network_name: bridge-network
 
-    - name: Use default ~/.kube/config and return VirtualMachineInstances from namespace testing with label app=test
+    - name: Use default ~/.kube/config and return virtual machines from namespace testing with label app=test
       plugin: kubevirt.core.kubevirt
       connections:
         - namespaces:

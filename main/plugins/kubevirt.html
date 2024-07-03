@@ -5,7 +5,7 @@
 <meta content="2.11.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kubevirt – Inventory source for KubeVirt VirtualMachines &mdash; KubeVirt Ansible Collection  documentation</title>
+  <title>kubevirt – Inventory source for KubeVirt VirtualMachines and VirtualMachineInstances &mdash; KubeVirt Ansible Collection  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5707b69d" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/antsibull-minimal.css" />
@@ -51,7 +51,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../README.html">Lean Ansible bindings for KubeVirt</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Plugin Index</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">kubevirt – Inventory source for KubeVirt VirtualMachines</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kubevirt – Inventory source for KubeVirt VirtualMachines and VirtualMachineInstances</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
@@ -94,7 +94,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Plugin Index</a></li>
-      <li class="breadcrumb-item active">kubevirt – Inventory source for KubeVirt VirtualMachines</li>
+      <li class="breadcrumb-item active">kubevirt – Inventory source for KubeVirt VirtualMachines and VirtualMachineInstances</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/plugins/kubevirt.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -104,8 +104,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-kubevirt-core-kubevirt-inventory"></span><section id="kubevirt-inventory-source-for-kubevirt-virtualmachines">
-<h1>kubevirt – Inventory source for KubeVirt VirtualMachines<a class="headerlink" href="#kubevirt-inventory-source-for-kubevirt-virtualmachines" title="Link to this heading"></a></h1>
+  <span class="target" id="ansible-collections-kubevirt-core-kubevirt-inventory"></span><section id="kubevirt-inventory-source-for-kubevirt-virtualmachines-and-virtualmachineinstances">
+<h1>kubevirt – Inventory source for KubeVirt VirtualMachines and VirtualMachineInstances<a class="headerlink" href="#kubevirt-inventory-source-for-kubevirt-virtualmachines-and-virtualmachineinstances" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This inventory plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/kubevirt/core/">kubevirt.core collection</a>.</p>
@@ -127,7 +127,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <section id="synopsis">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Fetch running <code class="docutils literal notranslate"><span class="pre">VirtualMachineInstances</span></code> for one or more namespaces with an optional label selector.</p></li>
+<li><p>Fetch virtual machines from one or more namespaces with an optional label selector.</p></li>
 <li><p>Groups by cluster name, namespace and labels.</p></li>
 <li><p>Uses the <span class="xref std std-ref">kubernetes.core.kubectl</span> connection plugin to access the Kubernetes cluster.</p></li>
 <li><p>Uses <code class="ansible-value docutils literal notranslate"><span class="pre">*.kubevirt.[yml|yaml]</span></code> YAML configuration file to set parameter values.</p></li>
@@ -414,7 +414,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Override the base domain used to construct host names of <code class='docutils literal notranslate'>VirtualMachines</code>. Used in case of <code class='docutils literal notranslate'>kubesecondarydns</code> or <code class='docutils literal notranslate'>Services</code> of type <code class='docutils literal notranslate'>NodePort</code> if <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-connections/append_base_domain"><span class="std std-ref"><span class="pre">connections.append_base_domain</span></span></a></strong></code> is set.</p>
+    <p>Override the base domain used to construct host names. Used in case of <code class='docutils literal notranslate'>kubesecondarydns</code> or <code class='docutils literal notranslate'>Services</code> of type <code class='docutils literal notranslate'>NodePort</code> if <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-connections/append_base_domain"><span class="std std-ref"><span class="pre">connections.append_base_domain</span></span></a></strong></code> is set.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -490,7 +490,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Enable the creation of groups from labels on <code class='docutils literal notranslate'>VirtualMachines</code>.</p>
+    <p>Enable the creation of groups from labels on <code class='docutils literal notranslate'>VirtualMachines</code> and <code class='docutils literal notranslate'>VirtualMachineInstances</code>.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>false</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -558,7 +558,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Define a label selector to select a subset of the fetched <code class='docutils literal notranslate'>VirtualMachineInstances</code>.</p>
+    <p>Define a label selector to select a subset of the fetched virtual machines.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -586,7 +586,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>List of namespaces. If not specified, will fetch all <code class='docutils literal notranslate'>VirtualMachineInstances</code> for all namespaces the user is authorized to access.</p>
+    <p>List of namespaces. If not specified, will fetch virtual machines from all namespaces the user is authorized to access.</p>
   </div></td>
 </tr>
 <tr class="row-even">
@@ -602,7 +602,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>In case multiple networks are attached to a <code class='docutils literal notranslate'>VirtualMachineInstance</code>, define which interface should be returned as primary IP address.</p>
+    <p>In case multiple networks are attached to a virtual machine, define which interface should be returned as primary IP address.</p>
   </div></td>
 </tr>
 <tr class="row-odd">
@@ -630,7 +630,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Enable the use of <code class='docutils literal notranslate'>Services</code> to establish an SSH connection to the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+    <p>Enable the use of <code class='docutils literal notranslate'>Services</code> to establish an SSH connection to a virtual machine.</p>
     <p>Services are only used if no <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-connections/network_name"><span class="std std-ref"><span class="pre">connections.network_name</span></span></a></strong></code> was provided.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
@@ -928,21 +928,21 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filename must end with kubevirt.[yml|yaml]</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Authenticate with token and return all VirtualMachineInstances for all accessible namespaces</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Authenticate with token and return all virtual machines from all accessible namespaces</span>
 <span class="w">  </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubevirt.core.kubevirt</span>
 <span class="w">  </span><span class="nt">connections</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://192.168.64.4:8443</span>
 <span class="w">      </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxxxxxxxx</span>
 <span class="w">      </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use default ~/.kube/config and return VirtualMachineInstances from namespace testing connected to network bridge-network</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use default ~/.kube/config and return virtual machines from namespace testing connected to network bridge-network</span>
 <span class="w">  </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubevirt.core.kubevirt</span>
 <span class="w">  </span><span class="nt">connections</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaces</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testing</span>
 <span class="w">      </span><span class="nt">network_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge-network</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use default ~/.kube/config and return VirtualMachineInstances from namespace testing with label app=test</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use default ~/.kube/config and return virtual machines from namespace testing with label app=test</span>
 <span class="w">  </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubevirt.core.kubevirt</span>
 <span class="w">  </span><span class="nt">connections</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaces</span><span class="p">:</span>
