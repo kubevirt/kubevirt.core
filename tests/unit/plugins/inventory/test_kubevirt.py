@@ -206,29 +206,6 @@ def test_is_windows(guest_os_info, annotations, expected):
     assert InventoryModule.is_windows(guest_os_info, annotations) == expected
 
 
-def test_parse(mocker, inventory):
-    path = "/testpath"
-    cache_prefix = "test-prefix"
-    host_format = "test-format"
-    config_data = {"host_format": host_format}
-    cache = True
-
-    get_cache_prefix = mocker.patch.object(
-        inventory, "_get_cache_prefix", return_value=cache_prefix
-    )
-    read_config_data = mocker.patch.object(
-        inventory, "_read_config_data", return_value=config_data
-    )
-    setup = mocker.patch.object(inventory, "setup")
-
-    inventory.parse(None, None, path, cache)
-
-    get_cache_prefix.assert_called_once_with(path)
-    read_config_data.assert_called_once_with(path)
-    setup.assert_called_once_with(config_data, cache, cache_prefix)
-    assert inventory.host_format == host_format
-
-
 def test_get_cluster_domain(inventory, client):
     assert inventory.get_cluster_domain(client) == DEFAULT_BASE_DOMAIN
 

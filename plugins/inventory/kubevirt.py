@@ -17,11 +17,13 @@ author:
 
 description:
 - Fetch virtual machines from one or more namespaces with an optional label selector.
-- Groups by cluster name, namespace and labels.
-- Uses the M(kubernetes.core.kubectl) connection plugin to access the Kubernetes cluster.
+- Groups by cluster name, namespaces and labels.
 - Uses V(*.kubevirt.[yml|yaml]) YAML configuration file to set parameter values.
+- By default it uses the active context in I(~/.kube/config) and will return all virtual machines
+  for all namespaces the active user is authorized to access.
 
 extends_documentation_fragment:
+- kubevirt.core.kubevirt_auth_options
 - inventory_cache
 - constructed
 
@@ -34,108 +36,57 @@ options:
     description:
     - 'Specify the format of the host in the inventory group. Available specifiers: V(name), V(namespace) and V(uid).'
     default: "{namespace}-{name}"
+  name:
+    description:
+    - Optional name to assign to the cluster. If not provided, a name is constructed from the server
+      and port.
+  namespaces:
+    description:
+    - List of namespaces. If not specified, will fetch virtual machines from all namespaces
+      the user is authorized to access.
+  label_selector:
+    description:
+    - Define a label selector to select a subset of the fetched virtual machines.
+  network_name:
+    description:
+    - In case multiple networks are attached to a virtual machine, define which interface should
+      be returned as primary IP address.
+    aliases: [ interface_name ]
+  kube_secondary_dns:
+    description:
+    - Enable C(kubesecondarydns) derived host names when using a secondary network interface.
+    type: bool
+    default: False
+  use_service:
+    description:
+    - Enable the use of C(Services) to establish an SSH connection to a virtual machine.
+    - Services are only used if no O(network_name) was provided.
+    type: bool
+    default: True
+  create_groups:
+    description:
+    - Enable the creation of groups from labels on C(VirtualMachines) and C(VirtualMachineInstances).
+    type: bool
+    default: False
+  base_domain:
+    description:
+    - Override the base domain used to construct host names. Used in case of
+      C(kubesecondarydns) or C(Services) of type C(NodePort) if O(append_base_domain) is set.
+  append_base_domain:
+    description:
+    - Append the base domain of the cluster to host names constructed from SSH C(Services) of type C(NodePort).
+    type: bool
+    default: False
+  api_version:
+    description:
+    - Specify the used KubeVirt API version.
+    default: "kubevirt.io/v1"
   connections:
     description:
-    - Optional list of cluster connection settings. If no connections are provided, the default
-      I(~/.kube/config) and active context will be used, and objects will be returned for all namespaces
-      the active user is authorized to access.
+    - Optional list of cluster connection settings.
     - This parameter is deprecated. Split your connections into multiple configuration files and move
       parameters of each connection to the configuration top level.
     - Deprecated in version C(1.5.0), will be removed in version C(3.0.0).
-    type: list
-    elements: dict
-    suboptions:
-      name:
-        description:
-        - Optional name to assign to the cluster. If not provided, a name is constructed from the server
-          and port.
-      kubeconfig:
-        description:
-        - Path to an existing Kubernetes config file. If not provided, and no other connection
-          options are provided, the Kubernetes client will attempt to load the default
-          configuration file from I(~/.kube/config). Can also be specified via E(K8S_AUTH_KUBECONFIG)
-          environment variable.
-      context:
-        description:
-        - The name of a context found in the config file. Can also be specified via E(K8S_AUTH_CONTEXT) environment
-          variable.
-      host:
-        description:
-        - Provide a URL for accessing the API. Can also be specified via E(K8S_AUTH_HOST) environment variable.
-      api_key:
-        description:
-        - Token used to authenticate with the API. Can also be specified via E(K8S_AUTH_API_KEY) environment
-          variable.
-      username:
-        description:
-        - Provide a username for authenticating with the API. Can also be specified via E(K8S_AUTH_USERNAME)
-          environment variable.
-      password:
-        description:
-        - Provide a password for authenticating with the API. Can also be specified via E(K8S_AUTH_PASSWORD)
-          environment variable.
-      client_cert:
-        description:
-        - Path to a certificate used to authenticate with the API. Can also be specified via E(K8S_AUTH_CERT_FILE)
-          environment variable.
-        aliases: [ cert_file ]
-      client_key:
-        description:
-        - Path to a key file used to authenticate with the API. Can also be specified via E(K8S_AUTH_KEY_FILE)
-          environment variable.
-        aliases: [ key_file ]
-      ca_cert:
-        description:
-        - Path to a CA certificate used to authenticate with the API. Can also be specified via
-          E(K8S_AUTH_SSL_CA_CERT) environment variable.
-        aliases: [ ssl_ca_cert ]
-      validate_certs:
-        description:
-        - Whether or not to verify the API server's SSL certificates. Can also be specified via
-          E(K8S_AUTH_VERIFY_SSL) environment variable.
-        type: bool
-        aliases: [ verify_ssl ]
-      namespaces:
-        description:
-        - List of namespaces. If not specified, will fetch virtual machines from all namespaces
-          the user is authorized to access.
-      label_selector:
-        description:
-        - Define a label selector to select a subset of the fetched virtual machines.
-      network_name:
-        description:
-        - In case multiple networks are attached to a virtual machine, define which interface should
-          be returned as primary IP address.
-        aliases: [ interface_name ]
-      kube_secondary_dns:
-        description:
-        - Enable C(kubesecondarydns) derived host names when using a secondary network interface.
-        type: bool
-        default: False
-      use_service:
-        description:
-        - Enable the use of C(Services) to establish an SSH connection to a virtual machine.
-        - Services are only used if no O(connections.network_name) was provided.
-        type: bool
-        default: True
-      create_groups:
-        description:
-        - Enable the creation of groups from labels on C(VirtualMachines) and C(VirtualMachineInstances).
-        type: bool
-        default: False
-      base_domain:
-        description:
-        - Override the base domain used to construct host names. Used in case of
-          C(kubesecondarydns) or C(Services) of type C(NodePort) if O(connections.append_base_domain) is set.
-      append_base_domain:
-        description:
-        - Append the base domain of the cluster to host names constructed from SSH C(Services) of type C(NodePort).
-        type: bool
-        default: False
-      api_version:
-        description:
-        - Specify the used KubeVirt API version.
-        default: "kubevirt.io/v1"
 
 requirements:
 - "python >= 3.9"
@@ -146,35 +97,31 @@ requirements:
 EXAMPLES = """
 # Filename must end with kubevirt.[yml|yaml]
 
-- name: Authenticate with token and return all virtual machines from all accessible namespaces
-  plugin: kubevirt.core.kubevirt
-  connections:
-    - host: https://192.168.64.4:8443
-      api_key: xxxxxxxxxxxxxxxx
-      validate_certs: false
+# Authenticate with token and return all virtual machines from all accessible namespaces
+- plugin: kubevirt.core.kubevirt
+  host: https://192.168.64.4:8443
+  api_key: xxxxxxxxxxxxxxxx
+  validate_certs: false
 
-- name: Use default ~/.kube/config and return virtual machines from namespace testing connected to network bridge-network
-  plugin: kubevirt.core.kubevirt
-  connections:
-    - namespaces:
-        - testing
-      network_name: bridge-network
+# Use default ~/.kube/config and return virtual machines from namespace testing connected to network bridge-network
+- plugin: kubevirt.core.kubevirt
+  namespaces:
+    - testing
+  network_name: bridge-network
 
-- name: Use default ~/.kube/config and return virtual machines from namespace testing with label app=test
-  plugin: kubevirt.core.kubevirt
-  connections:
-    - namespaces:
-        - testing
-      label_selector: app=test
+# Use default ~/.kube/config and return virtual machines from namespace testing with label app=test
+- plugin: kubevirt.core.kubevirt
+  namespaces:
+    - testing
+  label_selector: app=test
 
-- name: Use a custom config file and a specific context
-  plugin: kubevirt.core.kubevirt
-  connections:
-    - kubeconfig: /path/to/config
-      context: 'awx/192-168-64-4:8443/developer'
+# Use a custom config file and a specific context
+- plugin: kubevirt.core.kubevirt
+  kubeconfig: /path/to/config
+  context: 'awx/192-168-64-4:8443/developer'
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, InitVar
 from json import loads
 from re import compile as re_compile
 from typing import (
@@ -246,21 +193,58 @@ class InventoryOptions:
     base_domain: Optional[str] = None
     append_base_domain: Optional[bool] = None
     host_format: Optional[str] = None
+    config_data: InitVar[Optional[Dict]] = None
 
-    def __post_init__(self):
-        # Set defaults in __post_init__ to allow instatiating class with None values
-        if self.api_version is None:
-            self.api_version = "kubevirt.io/v1"
-        if self.kube_secondary_dns is None:
-            self.kube_secondary_dns = False
-        if self.use_service is None:
-            self.use_service = True
-        if self.create_groups is None:
-            self.create_groups = False
-        if self.append_base_domain is None:
-            self.append_base_domain = False
-        if self.host_format is None:
-            self.host_format = "{namespace}-{name}"
+    def __post_init__(self, config_data: Optional[Dict]) -> None:
+        if not config_data or not isinstance(config_data, dict):
+            config_data = {}
+
+        # Copy values from config_data and set defaults for keys not present
+        self.api_version = (
+            self.api_version
+            if self.api_version is not None
+            else config_data.get("api_version", "kubevirt.io/v1")
+        )
+        self.label_selector = (
+            self.label_selector
+            if self.label_selector is not None
+            else config_data.get("label_selector")
+        )
+        self.network_name = (
+            self.network_name
+            if self.network_name is not None
+            else config_data.get("network_name", config_data.get("interface_name"))
+        )
+        self.kube_secondary_dns = (
+            self.kube_secondary_dns
+            if self.kube_secondary_dns is not None
+            else config_data.get("kube_secondary_dns", False)
+        )
+        self.use_service = (
+            self.use_service
+            if self.use_service is not None
+            else config_data.get("use_service", True)
+        )
+        self.create_groups = (
+            self.create_groups
+            if self.create_groups is not None
+            else config_data.get("create_groups", False)
+        )
+        self.base_domain = (
+            self.base_domain
+            if self.base_domain is not None
+            else config_data.get("base_domain")
+        )
+        self.append_base_domain = (
+            self.append_base_domain
+            if self.append_base_domain is not None
+            else config_data.get("append_base_domain", False)
+        )
+        self.host_format = (
+            self.host_format
+            if self.host_format is not None
+            else config_data.get("host_format", "{namespace}-{name}")
+        )
 
 
 class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
@@ -378,7 +362,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def __init__(self) -> None:
         super().__init__()
-        self.host_format = None
 
     def verify_file(self, path: str) -> None:
         """
@@ -390,20 +373,15 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def parse(self, inventory: Any, loader: Any, path: str, cache: bool = True) -> None:
         """
-        parse runs basic setup of the inventory.
+        parse is the main entry point of the inventory.
+        It checks for availability of the Kubernetes Python client,
+        gets the configuration and runs fetch_objects or
+        if there is a cache it is used instead.
         """
         super().parse(inventory, loader, path)
         cache_key = self._get_cache_prefix(path)
         config_data = self._read_config_data(path)
-        self.host_format = config_data.get("host_format")
-        self.setup(config_data, cache, cache_key)
 
-    def setup(self, config_data: Dict, cache: bool, cache_key: str) -> None:
-        """
-        setup checks for availability of the Kubernetes Python client,
-        gets the configured connections and runs fetch_objects on them.
-        If there is a cache it is returned instead.
-        """
         if not HAS_K8S_MODULE_HELPER:
             raise KubeVirtInventoryException(
                 "This module requires the Kubernetes Python client. "
@@ -418,61 +396,66 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 pass
 
         if not source_data:
-            self.fetch_objects(config_data.get("connections"))
+            self.fetch_objects(config_data)
 
-    def fetch_objects(self, connections: Optional[List[Dict]]) -> None:
+    def fetch_objects(self, config_data: Dict) -> None:
         """
-        fetch_objects populates the inventory with every configured connection.
+        fetch_objects populates the inventory with the specified parameters.
         """
-        if connections:
+        if not config_data or not isinstance(config_data, dict):
+            config_data = {}
+
+        self.connections_compatibility(config_data)
+        client = get_api_client(**config_data)
+        name = config_data.get(
+            "name", self.get_default_host_name(client.configuration.host)
+        )
+        namespaces = (
+            config_data["namespaces"]
+            if config_data.get("namespaces")
+            else self.get_available_namespaces(client)
+        )
+        opts = InventoryOptions(config_data=config_data)
+        if opts.base_domain is None:
+            opts.base_domain = self.get_cluster_domain(client)
+        for namespace in namespaces:
+            self.populate_inventory_from_namespace(client, name, namespace, opts)
+
+    def connections_compatibility(self, config_data: Dict) -> None:
+        collection_name = "kubevirt.core"
+
+        if (connections := config_data.get("connections")) is None:
+            return
+
+        self.display.deprecated(
+            msg="The 'connections' parameter is deprecated and now supports only a single list entry.",
+            version="2.0.0",
+            collection_name=collection_name,
+        )
+
+        if not isinstance(connections, list):
+            raise KubeVirtInventoryException("Expecting connections to be a list.")
+
+        if len(connections) == 1:
+            if not isinstance(connections[0], dict):
+                raise KubeVirtInventoryException(
+                    "Expecting connection to be a dictionary."
+                )
+            # Copy the single connections entry into the top level
+            for k, v in connections[0].items():
+                config_data[k] = v
             self.display.deprecated(
-                msg="The 'connections' parameter is deprecated and starting with version 2.0.0 of kubevirt.core supports only a single entry.",
+                msg="Move all of your connection parameters to the configuration top level.",
                 version="3.0.0",
-                collection_name="kubevirt.core",
+                collection_name=collection_name,
             )
-
-            if not isinstance(connections, list):
-                raise KubeVirtInventoryException("Expecting connections to be a list.")
-
-            for connection in connections:
-                if not isinstance(connection, dict):
-                    raise KubeVirtInventoryException(
-                        "Expecting connection to be a dictionary."
-                    )
-                client = get_api_client(**connection)
-                name = connection.get(
-                    "name", self.get_default_host_name(client.configuration.host)
-                )
-                if connection.get("namespaces"):
-                    namespaces = connection["namespaces"]
-                else:
-                    namespaces = self.get_available_namespaces(client)
-
-                opts = InventoryOptions(
-                    connection.get("api_version"),
-                    connection.get("label_selector"),
-                    connection.get("network_name", connection.get("interface_name")),
-                    connection.get("kube_secondary_dns"),
-                    connection.get("use_service"),
-                    connection.get("create_groups"),
-                    connection.get("base_domain", self.get_cluster_domain(client)),
-                    connection.get("append_base_domain"),
-                    self.host_format,
-                )
-                for namespace in namespaces:
-                    self.populate_inventory_from_namespace(
-                        client, name, namespace, opts
-                    )
-        else:
-            client = get_api_client()
-            name = self.get_default_host_name(client.configuration.host)
-            namespaces = self.get_available_namespaces(client)
-            opts = InventoryOptions(
-                host_format=self.host_format,
-                base_domain=self.get_cluster_domain(client),
+        elif len(connections) > 1:
+            self.display.deprecated(
+                msg="Split your connections into multiple configuration files.",
+                version="2.0.0",
+                collection_name=collection_name,
+                removed=True,
             )
-            for namespace in namespaces:
-                self.populate_inventory_from_namespace(client, name, namespace, opts)
 
     def get_cluster_domain(self, client: K8SClient) -> Optional[str]:
         """
