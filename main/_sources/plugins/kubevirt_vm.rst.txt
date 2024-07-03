@@ -70,7 +70,6 @@ The below requirements are needed on the host that executes this module.
 - kubernetes \>= 28.1.0
 - PyYAML \>= 3.11
 - jsonpatch
-- jinja2
 
 
 
