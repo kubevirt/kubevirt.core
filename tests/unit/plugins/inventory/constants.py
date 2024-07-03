@@ -8,6 +8,9 @@ __metaclass__ = type
 
 from copy import deepcopy
 
+DEFAULT_NAMESPACE = "default"
+DEFAULT_BASE_DOMAIN = "example.com"
+
 
 def merge_dicts(dict1, dict2):
     merged = deepcopy(dict1)
