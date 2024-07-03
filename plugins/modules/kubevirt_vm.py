@@ -151,7 +151,6 @@ requirements:
 - "kubernetes >= 28.1.0"
 - "PyYAML >= 3.11"
 - "jsonpatch"
-- "jinja2"
 """
 
 EXAMPLES = """
@@ -263,7 +262,6 @@ result:
 
 from copy import deepcopy
 from typing import Dict
-import traceback
 
 from ansible_collections.kubernetes.core.plugins.module_utils.ansiblemodule import (
     AnsibleModule,
@@ -282,91 +280,48 @@ from ansible_collections.kubernetes.core.plugins.module_utils.k8s.exceptions imp
     CoreException,
 )
 
-try:
-    import yaml
-except ImportError:
-    HAS_YAML = False
-    YAML_IMPORT_ERROR = traceback.format_exc()
-else:
-    HAS_YAML = True
-    YAML_IMPORT_ERROR = None
 
-try:
-    from jinja2 import Environment
-except ImportError:
-    HAS_JINJA = False
-    JINJA_IMPORT_ERROR = traceback.format_exc()
-else:
-    HAS_JINJA = True
-    JINJA_IMPORT_ERROR = None
-
-
-VM_TEMPLATE = """
-apiVersion: {{ api_version }}
-kind: VirtualMachine
-metadata:
-  {% if name %}
-  name: {{ name }}
-  {% endif %}
-  {% if generate_name %}
-  generateName: {{ generate_name }}
-  {% endif %}
-  namespace: {{ namespace }}
-  {% if annotations %}
-  annotations:
-    {{ annotations | to_yaml | indent(4) }}
-  {%- endif %}
-  {% if labels %}
-  labels:
-    {{ labels | to_yaml | indent(4) }}
-  {%- endif %}
-spec:
-  running: {{ running | lower }}
-  {% if instancetype %}
-  instancetype:
-    {{ instancetype | to_yaml | indent(4) }}
-  {%- endif %}
-  {% if preference %}
-  preference:
-    {{ preference | to_yaml | indent(4) }}
-  {%- endif %}
-  {% if data_volume_templates %}
-  dataVolumeTemplates:
-  {{ data_volume_templates | to_yaml | indent(2) }}
-  {%- endif %}
-  template:
-    {% if annotations or labels %}
-    metadata:
-      {% if annotations %}
-      annotations:
-        {{ annotations | to_yaml | indent(8) }}
-      {%- endif %}
-      {% if labels %}
-      labels:
-        {{ labels | to_yaml | indent(8) }}
-      {%- endif %}
-    {% endif %}
-    spec:
-    {% if spec %}
-      {{ spec | to_yaml | indent (6) }}
-    {%- else %}
-      domain:
-        devices: {}
-    {% endif %}
-"""
-
-
-def render_template(params: Dict) -> str:
+def create_vm(params: Dict) -> Dict:
     """
-    render_template uses Jinja2 to render the VM_TEMPLATE into a string.
+    create_vm constructs a VM from the module parameters.
     """
-    env = Environment(autoescape=False, trim_blocks=True, lstrip_blocks=True)
-    env.filters["to_yaml"] = lambda data, *_, **kw: yaml.dump(
-        data, allow_unicode=True, default_flow_style=False, **kw
-    )
+    vm = {
+        "apiVersion": params["api_version"],
+        "kind": "VirtualMachine",
+        "metadata": {
+            "namespace": params["namespace"],
+        },
+        "spec": {
+            "running": params["running"],
+            "template": {"spec": {"domain": {"devices": {}}}},
+        },
+    }
 
-    template = env.from_string(VM_TEMPLATE.strip())
-    return template.render(params)
+    if (name := params.get("name")) is not None:
+        vm["metadata"]["name"] = name
+    if (generate_name := params.get("generate_name")) is not None:
+        vm["metadata"]["generateName"] = generate_name
+
+    template_metadata = {}
+    if (annotations := params.get("annotations")) is not None:
+        vm["metadata"]["annotations"] = annotations
+        template_metadata["annotations"] = annotations
+    if (labels := params.get("labels")) is not None:
+        vm["metadata"]["labels"] = labels
+        template_metadata["labels"] = labels
+    if template_metadata:
+        vm["spec"]["template"]["metadata"] = template_metadata
+
+    if (instancetype := params.get("instancetype")) is not None:
+        vm["spec"]["instancetype"] = instancetype
+    if (preference := params.get("preference")) is not None:
+        vm["spec"]["preference"] = preference
+    if (data_volume_templates := params.get("data_volume_templates")) is not None:
+        vm["spec"]["dataVolumeTemplates"] = data_volume_templates
+    if (spec := params.get("spec")) is not None:
+        vm["spec"]["template"]["spec"] = spec
+
+    return vm
 
 
 def arg_spec() -> Dict:
@@ -428,8 +383,8 @@ def main() -> None:
         supports_check_mode=True,
     )
 
-    # Set resource_definition to our rendered template
-    module.params["resource_definition"] = render_template(module.params)
+    # Set resource_definition to our constructed VM
+    module.params["resource_definition"] = create_vm(module.params)
 
     # Set wait_condition to allow waiting for the ready state of the VirtualMachine
     if module.params["running"]:
