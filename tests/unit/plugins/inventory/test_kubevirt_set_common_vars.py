@@ -11,8 +11,6 @@ from string import ascii_lowercase
 
 import pytest
 
-from addict import Dict
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryOptions,
 )
@@ -26,6 +24,8 @@ from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
                 "metadata": {
                     "something": "idontcare",
                 },
+                "spec": {},
+                "status": {},
             },
             {},
         ),
@@ -34,6 +34,8 @@ from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
                 "metadata": {
                     "annotations": {"testanno": "testval"},
                 },
+                "spec": {},
+                "status": {},
             },
             {"annotations": {"testanno": "testval"}},
         ),
@@ -42,6 +44,8 @@ from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
                 "metadata": {
                     "labels": {"testlabel": "testval"},
                 },
+                "spec": {},
+                "status": {},
             },
             {"labels": {"testlabel": "testval"}},
         ),
@@ -50,6 +54,8 @@ from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
                 "metadata": {
                     "resourceVersion": "123",
                 },
+                "spec": {},
+                "status": {},
             },
             {"resource_version": "123"},
         ),
@@ -58,11 +64,15 @@ from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
                 "metadata": {
                     "uid": "48e6ed2c-d8a2-4172-844d-0fe7056aa180",
                 },
+                "spec": {},
+                "status": {},
             },
             {"uid": "48e6ed2c-d8a2-4172-844d-0fe7056aa180"},
         ),
         (
             {
+                "metadata": {},
+                "spec": {},
                 "status": {
                     "interfaces": [{"ipAddress": "10.10.10.10"}],
                 },
@@ -75,7 +85,7 @@ def test_set_common_vars(inventory, hosts, obj, expected):
     hostname = "default-testvm"
     prefix = "".join(choice(ascii_lowercase) for i in range(5))
     inventory.inventory.add_host(hostname)
-    inventory.set_common_vars(hostname, prefix, Dict(obj), InventoryOptions())
+    inventory.set_common_vars(hostname, prefix, obj, InventoryOptions())
 
     for key, value in expected.items():
         prefixed_key = f"{prefix}_{key}"
@@ -99,7 +109,7 @@ def test_set_common_vars_create_groups(mocker, inventory, create_groups):
     opts = InventoryOptions(create_groups=create_groups)
 
     inventory.set_common_vars(
-        hostname, "prefix", Dict({"metadata": {"labels": labels}}), opts
+        hostname, "prefix", {"metadata": {"labels": labels}, "status": {}}, opts
     )
 
     if create_groups:
@@ -111,12 +121,16 @@ def test_set_common_vars_create_groups(mocker, inventory, create_groups):
 def test_called_by_set_vars_from(mocker, inventory):
     hostname = "default-testvm"
     opts = InventoryOptions()
+    obj = {"status": {}}
 
     set_common_vars = mocker.patch.object(inventory, "set_common_vars")
 
-    inventory.set_vars_from_vm(hostname, Dict(), opts)
-    inventory.set_vars_from_vmi(hostname, Dict(), {}, opts)
+    inventory.set_vars_from_vm(hostname, obj, opts)
+    inventory.set_vars_from_vmi(hostname, obj, {}, opts)
 
     set_common_vars.assert_has_calls(
-        [mocker.call(hostname, "vm", {}, opts), mocker.call(hostname, "vmi", {}, opts)]
+        [
+            mocker.call(hostname, "vm", obj, opts),
+            mocker.call(hostname, "vmi", obj, opts),
+        ]
     )

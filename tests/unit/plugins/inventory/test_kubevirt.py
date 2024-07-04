@@ -8,8 +8,6 @@ __metaclass__ = type
 
 import pytest
 
-from addict import Dict
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryModule,
 )
@@ -46,6 +44,55 @@ def test_get_default_host_name(host, expected):
 )
 def test_format_var_name(name, expected):
     assert InventoryModule.format_var_name(name) == expected
+
+
+@pytest.mark.parametrize(
+    "obj,expected",
+    [
+        ({}, False),
+        ({"spec": {}}, False),
+        ({"status": {}}, False),
+        ({"metadata": {}}, False),
+        ({"spec": {}, "status": {}}, False),
+        ({"spec": {}, "metadata": {}}, False),
+        ({"status": {}, "metadata": {}}, False),
+        ({"spec": {}, "status": {}, "metadata": {}}, False),
+        ({"spec": {}, "status": {}, "metadata": {}, "something": {}}, False),
+        ({"spec": {}, "status": {}, "metadata": {"name": "test"}}, False),
+        ({"spec": {}, "status": {}, "metadata": {"namespace": "test"}}, False),
+        ({"spec": {}, "status": {}, "metadata": {"uid": "test"}}, False),
+        (
+            {
+                "spec": {},
+                "status": {},
+                "metadata": {"name": "test", "namespace": "test"},
+            },
+            False,
+        ),
+        (
+            {
+                "spec": {},
+                "status": {},
+                "metadata": {"name": "test", "namespace": "test", "something": "test"},
+            },
+            False,
+        ),
+        (
+            {"spec": {}, "status": {}, "metadata": {"name": "test", "uid": "test"}},
+            False,
+        ),
+        (
+            {
+                "spec": {},
+                "status": {},
+                "metadata": {"name": "test", "namespace": "test", "uid": "test"},
+            },
+            True,
+        ),
+    ],
+)
+def test_obj_is_valid(obj, expected):
+    assert InventoryModule.obj_is_valid(obj) == expected
 
 
 @pytest.mark.parametrize(
@@ -223,7 +270,7 @@ def test_get_cluster_domain(inventory, client):
 )
 def test_set_groups_from_labels(inventory, groups, labels, expected):
     hostname = "default-testvm"
-    inventory.set_groups_from_labels(hostname, Dict(labels))
+    inventory.set_groups_from_labels(hostname, labels)
     for group in expected:
         assert group in groups
         assert hostname in groups[group]["children"]

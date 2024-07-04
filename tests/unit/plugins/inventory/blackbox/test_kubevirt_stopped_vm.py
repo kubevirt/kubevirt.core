@@ -24,6 +24,7 @@ VM1 = {
         "uid": "940003aa-0160-4b7e-9e55-8ec3df72047f",
     },
     "spec": {"running": True},
+    "status": {},
 }
 
 VM2 = {
@@ -33,6 +34,7 @@ VM2 = {
         "uid": "c2c68de5-b9d7-4c25-872f-462e7245b3e6",
     },
     "spec": {"running": False},
+    "status": {},
 }
 
 VMI1 = {
@@ -41,6 +43,7 @@ VMI1 = {
         "namespace": "default",
         "uid": "a84319a9-db31-4a36-9b66-3e387578f871",
     },
+    "spec": {},
     "status": {
         "interfaces": [{"ipAddress": "10.10.10.10"}],
     },

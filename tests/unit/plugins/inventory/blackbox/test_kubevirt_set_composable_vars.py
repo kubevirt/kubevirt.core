@@ -21,7 +21,9 @@ VMI = {
     "metadata": {
         "name": "testvmi",
         "namespace": "default",
+        "uid": "6ffdef43-6c39-4441-a088-82d319ea5c13",
     },
+    "spec": {},
     "status": {
         "interfaces": [{"ipAddress": "10.10.10.10"}],
         "migrationMethod": "BlockMigration",

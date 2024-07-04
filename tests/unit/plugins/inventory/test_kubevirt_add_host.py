@@ -8,8 +8,6 @@ __metaclass__ = type
 
 import pytest
 
-from addict import Dict
-
 from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants import (
     DEFAULT_NAMESPACE,
 )
@@ -65,15 +63,11 @@ def test_add_host(inventory, groups, hosts, host_format, expected):
     inventory.inventory.add_group(namespace_group)
 
     inventory.add_host(
-        Dict(
-            {
-                "metadata": {
-                    "name": "testvm",
-                    "namespace": DEFAULT_NAMESPACE,
-                    "uid": "f8abae7c-d792-4b9b-af95-62d322ae5bc1",
-                }
-            }
-        ),
+        {
+            "name": "testvm",
+            "namespace": DEFAULT_NAMESPACE,
+            "uid": "f8abae7c-d792-4b9b-af95-62d322ae5bc1",
+        },
         host_format,
         namespace_group,
     )

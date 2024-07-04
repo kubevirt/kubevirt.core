@@ -8,8 +8,6 @@ __metaclass__ = type
 
 import pytest
 
-from addict import Dict
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryOptions,
 )
@@ -29,7 +27,7 @@ def test_use_ip_address_by_default(mocker, inventory, opts):
     hostname = "default-testvm"
     ip_address = "1.1.1.1"
 
-    inventory.set_ansible_host_and_port(Dict(), hostname, ip_address, None, opts)
+    inventory.set_ansible_host_and_port({}, hostname, ip_address, None, opts)
 
     set_variable.assert_has_calls(
         [
@@ -50,12 +48,10 @@ def test_kube_secondary_dns(mocker, inventory, base_domain):
     set_variable = mocker.patch.object(inventory.inventory, "set_variable")
 
     hostname = "default-testvm"
-    vmi = Dict(
-        {
-            "metadata": {"name": "testvm", "namespace": "default"},
-            "status": {"interfaces": [{"name": "awesome"}]},
-        }
-    )
+    vmi = {
+        "metadata": {"name": "testvm", "namespace": "default"},
+        "status": {"interfaces": [{"name": "awesome"}]},
+    }
 
     inventory.set_ansible_host_and_port(
         vmi,
@@ -85,12 +81,10 @@ def test_kube_secondary_dns_precedence_over_service(mocker, inventory):
     set_variable = mocker.patch.object(inventory.inventory, "set_variable")
 
     hostname = "default-testvm"
-    vmi = Dict(
-        {
-            "metadata": {"name": "testvm", "namespace": "default"},
-            "status": {"interfaces": [{"name": "awesome"}]},
-        }
-    )
+    vmi = {
+        "metadata": {"name": "testvm", "namespace": "default"},
+        "status": {"interfaces": [{"name": "awesome"}]},
+    }
 
     inventory.set_ansible_host_and_port(
         vmi,
@@ -170,13 +164,11 @@ def test_service(mocker, inventory, service, expected_host, expected_port):
     set_variable = mocker.patch.object(inventory.inventory, "set_variable")
 
     hostname = "default-testvm"
-    vmi = Dict(
-        {
-            "status": {
-                "nodeName": "testnode.example.com",
-            },
-        }
-    )
+    vmi = {
+        "status": {
+            "nodeName": "testnode.example.com",
+        },
+    }
 
     inventory.set_ansible_host_and_port(
         vmi,
@@ -198,13 +190,11 @@ def test_service_append_base_domain(mocker, inventory):
     set_variable = mocker.patch.object(inventory.inventory, "set_variable")
 
     hostname = "default-testvm"
-    vmi = Dict(
-        {
-            "status": {
-                "nodeName": "testnode",
-            },
-        }
-    )
+    vmi = {
+        "status": {
+            "nodeName": "testnode",
+        },
+    }
     service = {
         "spec": {
             "type": "NodePort",
@@ -243,13 +233,11 @@ def test_service_fallback(mocker, inventory, host, port):
     mocker.patch.object(inventory, "get_port_from_service", return_value=port)
 
     hostname = "default-testvm"
-    vmi = Dict(
-        {
-            "status": {
-                "nodeName": "testnode",
-            },
-        }
-    )
+    vmi = {
+        "status": {
+            "nodeName": "testnode",
+        },
+    }
     inventory.set_ansible_host_and_port(
         vmi,
         hostname,
@@ -271,7 +259,7 @@ def test_no_service_if_network_name(mocker, inventory):
 
     hostname = "default-testvm"
     inventory.set_ansible_host_and_port(
-        Dict(),
+        {},
         hostname,
         "1.2.3.4",
         {"something": "something"},

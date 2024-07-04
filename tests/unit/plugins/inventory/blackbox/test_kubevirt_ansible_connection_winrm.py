@@ -22,7 +22,9 @@ BASE_VMI = {
     "metadata": {
         "name": "testvmi",
         "namespace": "default",
+        "uid": "e86c603c-fb13-4933-bf67-de100bdba0c3",
     },
+    "spec": {},
     "status": {
         "interfaces": [{"ipAddress": "10.10.10.10"}],
     },

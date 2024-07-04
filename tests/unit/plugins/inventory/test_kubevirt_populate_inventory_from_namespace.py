@@ -8,9 +8,6 @@ __metaclass__ = type
 
 import pytest
 
-from addict import Dict
-
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryOptions,
 )
@@ -25,6 +22,8 @@ VM1 = {
         "namespace": DEFAULT_NAMESPACE,
         "uid": "940003aa-0160-4b7e-9e55-8ec3df72047f",
     },
+    "spec": {},
+    "status": {},
 }
 
 VM2 = {
@@ -33,6 +32,8 @@ VM2 = {
         "namespace": DEFAULT_NAMESPACE,
         "uid": "c2c68de5-b9d7-4c25-872f-462e7245b3e6",
     },
+    "spec": {},
+    "status": {},
 }
 
 VMI1 = {
@@ -41,6 +42,7 @@ VMI1 = {
         "namespace": DEFAULT_NAMESPACE,
         "uid": "a84319a9-db31-4a36-9b66-3e387578f871",
     },
+    "spec": {},
     "status": {
         "interfaces": [{"ipAddress": "10.10.10.10"}],
     },
@@ -52,6 +54,7 @@ VMI2 = {
         "namespace": DEFAULT_NAMESPACE,
         "uid": "fd35700a-9cbe-488b-8f32-7adbe57eadc2",
     },
+    "spec": {},
     "status": {
         "interfaces": [{"ipAddress": "10.10.10.10"}],
     },
@@ -78,20 +81,20 @@ VMI2 = {
 def test_populate_inventory_from_namespace(
     mocker, inventory, groups, vms, vmis, expected
 ):
-    _vms = {vm["metadata"]["name"]: Dict(vm) for vm in vms}
-    _vmis = {vmi["metadata"]["name"]: Dict(vmi) for vmi in vmis}
+    _vms = {vm["metadata"]["name"]: vm for vm in vms}
+    _vmis = {vmi["metadata"]["name"]: vmi for vmi in vmis}
     opts = InventoryOptions()
 
     def format_hostname(obj):
         return opts.host_format.format(
-            namespace=obj.metadata.namespace,
-            name=obj.metadata.name,
-            uid=obj.metadata.uid,
+            namespace=obj["metadata"]["namespace"],
+            name=obj["metadata"]["name"],
+            uid=obj["metadata"]["uid"],
         )
 
     def add_host_call(obj):
         return mocker.call(
-            obj,
+            obj["metadata"],
             opts.host_format,
             f"namespace_{DEFAULT_NAMESPACE}",
         )
