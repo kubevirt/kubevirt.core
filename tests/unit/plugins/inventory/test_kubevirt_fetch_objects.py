@@ -17,127 +17,93 @@ from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants im
     DEFAULT_NAMESPACE,
 )
 
-from ansible_collections.kubevirt.core.plugins.inventory import kubevirt
-
 
 @pytest.mark.parametrize(
-    "config_data,expected",
+    "opts,namespaces",
     [
         (
-            None,
-            {
-                "name": "default-hostname",
-                "namespaces": [DEFAULT_NAMESPACE],
-                "opts": InventoryOptions(),
-            },
+            InventoryOptions(),
+            [DEFAULT_NAMESPACE],
         ),
         (
-            {
-                "name": "test",
-            },
-            {
-                "name": "test",
-                "namespaces": [DEFAULT_NAMESPACE],
-                "opts": InventoryOptions(),
-            },
+            InventoryOptions(namespaces=["test"]),
+            ["test"],
         ),
         (
-            {"name": "test", "namespaces": ["test"]},
-            {"name": "test", "namespaces": ["test"], "opts": InventoryOptions()},
-        ),
-        (
-            {
-                "name": "test",
-                "namespaces": ["test"],
-                "use_service": True,
-                "create_groups": True,
-                "append_base_domain": True,
-                "base_domain": "test-domain",
-            },
-            {
-                "name": "test",
-                "namespaces": ["test"],
-                "opts": InventoryOptions(
-                    use_service=True,
-                    create_groups=True,
-                    append_base_domain=True,
-                    base_domain="test-domain",
-                ),
-            },
-        ),
-        (
-            {
-                "name": "test",
-                "namespaces": ["test"],
-                "use_service": True,
-                "create_groups": True,
-                "append_base_domain": True,
-                "base_domain": "test-domain",
-                "network_name": "test-network",
-            },
-            {
-                "name": "test",
-                "namespaces": ["test"],
-                "opts": InventoryOptions(
-                    use_service=True,
-                    create_groups=True,
-                    append_base_domain=True,
-                    base_domain="test-domain",
-                    network_name="test-network",
-                ),
-            },
-        ),
-        (
-            {
-                "name": "test",
-                "namespaces": ["test"],
-                "use_service": True,
-                "create_groups": True,
-                "append_base_domain": True,
-                "base_domain": "test-domain",
-                "interface_name": "test-interface",
-            },
-            {
-                "name": "test",
-                "namespaces": ["test"],
-                "opts": InventoryOptions(
-                    use_service=True,
-                    create_groups=True,
-                    append_base_domain=True,
-                    base_domain="test-domain",
-                    network_name="test-interface",
-                ),
-            },
+            InventoryOptions(namespaces=["test1", "test2"]),
+            ["test1", "test2"],
         ),
     ],
 )
-def test_fetch_objects(mocker, inventory, config_data, expected):
-    mocker.patch.object(kubevirt, "get_api_client")
-    mocker.patch.object(
-        inventory, "get_default_host_name", return_value="default-hostname"
-    )
-
-    cluster_domain = "test.com"
-    mocker.patch.object(inventory, "get_cluster_domain", return_value=cluster_domain)
-    expected["opts"].base_domain = expected["opts"].base_domain or cluster_domain
-
+def test_fetch_objects(mocker, inventory, opts, namespaces):
     get_available_namespaces = mocker.patch.object(
         inventory, "get_available_namespaces", return_value=[DEFAULT_NAMESPACE]
     )
-    populate_inventory_from_namespace = mocker.patch.object(
-        inventory, "populate_inventory_from_namespace"
+    get_vms_for_namespace = mocker.patch.object(
+        inventory, "get_vms_for_namespace", return_value=[{}]
+    )
+    get_vmis_for_namespace = mocker.patch.object(
+        inventory, "get_vmis_for_namespace", return_value=[{}]
+    )
+    get_ssh_services_for_namespace = mocker.patch.object(
+        inventory, "get_ssh_services_for_namespace", return_value=[]
+    )
+    get_default_hostname = mocker.patch.object(
+        inventory, "get_default_hostname", return_value="default-hostname"
+    )
+    get_cluster_domain = mocker.patch.object(
+        inventory, "get_cluster_domain", return_value="test.com"
     )
 
-    inventory.fetch_objects(config_data)
+    inventory.fetch_objects(mocker.Mock(), opts)
 
-    if config_data and "namespaces" in config_data:
+    if opts.namespaces:
         get_available_namespaces.assert_not_called()
     else:
         get_available_namespaces.assert_called()
 
-    populate_inventory_from_namespace.assert_has_calls(
-        [
-            mocker.call(mocker.ANY, expected["name"], namespace, expected["opts"])
-            for namespace in expected["namespaces"]
-        ]
+    get_vms_for_namespace.assert_has_calls(
+        [mocker.call(mocker.ANY, namespace, opts) for namespace in namespaces]
     )
+    get_vmis_for_namespace.assert_has_calls(
+        [mocker.call(mocker.ANY, namespace, opts) for namespace in namespaces]
+    )
+    get_ssh_services_for_namespace.assert_has_calls(
+        [mocker.call(mocker.ANY, namespace) for namespace in namespaces]
+    )
+    get_default_hostname.assert_called_once()
+    get_cluster_domain.assert_called_once()
+
+
+def test_fetch_objects_early_return(mocker, inventory):
+    get_available_namespaces = mocker.patch.object(
+        inventory, "get_available_namespaces", return_value=[DEFAULT_NAMESPACE]
+    )
+    get_vms_for_namespace = mocker.patch.object(
+        inventory, "get_vms_for_namespace", return_value=[]
+    )
+    get_vmis_for_namespace = mocker.patch.object(
+        inventory, "get_vmis_for_namespace", return_value=[]
+    )
+    get_ssh_services_for_namespace = mocker.patch.object(
+        inventory, "get_ssh_services_for_namespace"
+    )
+    get_default_hostname = mocker.patch.object(
+        inventory, "get_default_hostname", return_value="default-hostname"
+    )
+    get_cluster_domain = mocker.patch.object(
+        inventory, "get_cluster_domain", return_value="test.com"
+    )
+
+    inventory.fetch_objects(mocker.Mock(), InventoryOptions())
+
+    get_available_namespaces.assert_called_once()
+    get_vms_for_namespace.assert_called_once_with(
+        mocker.ANY, DEFAULT_NAMESPACE, InventoryOptions()
+    )
+    get_vmis_for_namespace.assert_called_once_with(
+        mocker.ANY, DEFAULT_NAMESPACE, InventoryOptions()
+    )
+    get_ssh_services_for_namespace.assert_not_called()
+    get_default_hostname.assert_called_once()
+    get_cluster_domain.assert_called_once()

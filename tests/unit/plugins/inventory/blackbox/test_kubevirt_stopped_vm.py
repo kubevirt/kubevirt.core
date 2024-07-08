@@ -6,15 +6,8 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import pytest
-
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryOptions,
-)
-
-from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants import (
-    DEFAULT_NAMESPACE,
 )
 
 VM1 = {
@@ -50,16 +43,16 @@ VMI1 = {
 }
 
 
-@pytest.mark.parametrize(
-    "client",
-    [
-        ({"vms": [VM1, VM2], "vmis": [VMI1]}),
-    ],
-    indirect=["client"],
-)
-def test_stopped_vm(inventory, hosts, client):
-    inventory.populate_inventory_from_namespace(
-        client, "", DEFAULT_NAMESPACE, InventoryOptions()
+def test_stopped_vm(inventory, hosts):
+    inventory.populate_inventory(
+        {
+            "default_hostname": "test",
+            "cluster_domain": "test.com",
+            "namespaces": {
+                "default": {"vms": [VM1, VM2], "vmis": [VMI1], "services": {}},
+            },
+        },
+        InventoryOptions(),
     )
 
     # The running VM should be present with ansible_host or ansible_port

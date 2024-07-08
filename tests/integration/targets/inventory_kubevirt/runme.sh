@@ -10,9 +10,12 @@ ansible-inventory -i test.kubevirt.yml -y --list --output empty.yml "$@"
 ansible-playbook playbook.yml "$@"
 
 ansible-inventory -i test.kubevirt.yml -y --list --output all.yml "$@"
+ansible-inventory -i test.cache.kubevirt.yml -y --list --output cache_before.yml "$@"
 ansible-inventory -i test.label.kubevirt.yml -y --list --output label.yml "$@"
 ansible-inventory -i test.net.kubevirt.yml -y --list --output net.yml "$@"
 
 ansible-playbook cleanup.yml "$@"
+
+ansible-inventory -i test.cache.kubevirt.yml -y --list --output cache_after.yml "$@"
 
 ansible-playbook verify.yml "$@"

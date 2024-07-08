@@ -10,6 +10,7 @@ import pytest
 
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryModule,
+    InventoryOptions,
 )
 
 from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants import (
@@ -255,6 +256,56 @@ def test_is_windows(guest_os_info, annotations, expected):
 
 def test_get_cluster_domain(inventory, client):
     assert inventory.get_cluster_domain(client) == DEFAULT_BASE_DOMAIN
+
+
+@pytest.mark.parametrize(
+    "results,expected",
+    [
+        (
+            {
+                "cluster_domain": "example.com",
+                "default_hostname": "test",
+                "namespaces": {},
+            },
+            0,
+        ),
+        (
+            {
+                "cluster_domain": "example.com",
+                "default_hostname": "test",
+                "namespaces": {"test": {"vms": [], "vmis": [], "services": {}}},
+            },
+            1,
+        ),
+        (
+            {
+                "cluster_domain": "example.com",
+                "default_hostname": "test",
+                "namespaces": {
+                    "test": {"vms": [], "vmis": [], "services": {}},
+                    "test2": {"vms": [], "vmis": [], "services": {}},
+                },
+            },
+            2,
+        ),
+    ],
+)
+def test_populate_inventory(mocker, inventory, results, expected):
+    populate_inventory_from_namespace = mocker.patch.object(
+        inventory, "populate_inventory_from_namespace"
+    )
+
+    inventory.populate_inventory(results, InventoryOptions())
+
+    opts = InventoryOptions(
+        base_domain=results["cluster_domain"], name=results["default_hostname"]
+    )
+    calls = [
+        mocker.call(namespace, data, opts)
+        for namespace, data in results["namespaces"].items()
+    ]
+    populate_inventory_from_namespace.assert_has_calls(calls)
+    assert len(calls) == expected
 
 
 @pytest.mark.parametrize(

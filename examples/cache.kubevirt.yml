@@ -1,0 +1,5 @@
+---
+plugin: kubevirt.core.kubevirt
+cache: true
+cache_plugin: ansible.builtin.jsonfile
+cache_connection: kubevirt-cache
