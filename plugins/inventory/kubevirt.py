@@ -39,6 +39,9 @@ options:
     - Optional list of cluster connection settings. If no connections are provided, the default
       I(~/.kube/config) and active context will be used, and objects will be returned for all namespaces
       the active user is authorized to access.
+    - This parameter is deprecated. Split your connections into multiple configuration files and move
+      parameters of each connection to the configuration top level.
+    - Deprecated in version C(1.5.0), will be removed in version C(3.0.0).
     type: list
     elements: dict
     suboptions:
@@ -422,6 +425,12 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         fetch_objects populates the inventory with every configured connection.
         """
         if connections:
+            self.display.deprecated(
+                msg="The 'connections' parameter is deprecated and starting with version 2.0.0 of kubevirt.core supports only a single entry.",
+                version="3.0.0",
+                collection_name="kubevirt.core",
+            )
+
             if not isinstance(connections, list):
                 raise KubeVirtInventoryException("Expecting connections to be a list.")
 
