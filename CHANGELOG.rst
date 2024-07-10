@@ -6,6 +6,34 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v1.5.0
+======
+
+Release Summary
+---------------
+
+Support for stopped VMs, deprecation of the 'connections' parameter and many cleanups.
+
+Major Changes
+-------------
+
+- chore: Update supported ansible-core versions to >=2.15 `#105 <https://github.com/kubevirt/kubevirt.core/pull/105>`_
+- feat,test(inventory): Support listing stopped VMs and major rework of unit tests  `#114 <https://github.com/kubevirt/kubevirt.core/pull/114>`_
+
+Minor Changes
+-------------
+
+- Bump e2e software versions `#109 <https://github.com/kubevirt/kubevirt.core/pull/109>`_
+- Make kubevirt_vm tests more robust `#103 <https://github.com/kubevirt/kubevirt.core/pull/103>`_
+- Several minor improvements `#115 <https://github.com/kubevirt/kubevirt.core/pull/115>`_
+- chore: Ensure compatibility with kubernetes.core >=3.1.0,<6.0.0 `#111 <https://github.com/kubevirt/kubevirt.core/pull/111>`_
+- kubevirt_vm integration tests: changed ssh key type to RSA for FIPS mode `#108 <https://github.com/kubevirt/kubevirt.core/pull/108>`_
+
+Bugfixes
+--------
+
+- fix(tests,kubevirt_vm): Fix assertion in verify.yml `#106 <https://github.com/kubevirt/kubevirt.core/pull/106>`_
+
 v1.4.0
 ======
 
