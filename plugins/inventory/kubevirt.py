@@ -39,11 +39,9 @@ options:
     - Optional list of cluster connection settings. If no connections are provided, the default
       I(~/.kube/config) and active context will be used, and objects will be returned for all namespaces
       the active user is authorized to access.
-    deprecated:
-        removed_in: "3.0.0"
-        alternative:
-        - Split your connections into multiple configuration files and move parameters of each connection
-          to the configuration top level.
+    - This parameter is deprecated. Split your connections into multiple configuration files and move
+      parameters of each connection to the configuration top level.
+    - Deprecated in version C(1.5.0), will be removed in version C(3.0.0).
     type: list
     elements: dict
     suboptions:
