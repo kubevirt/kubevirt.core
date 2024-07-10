@@ -7,7 +7,7 @@
     :trim:
 
 .. meta::
-  :antsibull-docs: 2.11.0
+  :antsibull-docs: 2.12.0
 
 .. Anchors
 
@@ -290,6 +290,8 @@ Parameters
     </div></td>
     <td><div class="ansible-option-cell">
       <p>Optional list of cluster connection settings. If no connections are provided, the default <em>~/.kube/config</em> and active context will be used, and objects will be returned for all namespaces the active user is authorized to access.</p>
+      <p>This parameter is deprecated. Split your connections into multiple configuration files and move parameters of each connection to the configuration top level.</p>
+      <p>Deprecated in version <code class='docutils literal notranslate'>1.5.0</code>, will be removed in version <code class='docutils literal notranslate'>3.0.0</code>.</p>
     </div></td>
   </tr>
   <tr class="row-odd">
