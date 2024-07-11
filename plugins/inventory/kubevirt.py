@@ -423,6 +423,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         self._populate_inventory(results, opts)
 
     def _connections_compatibility(self, config_data: Dict) -> None:
+        """
+        _connections_compatibility ensures compatibility with the connection
+        parameter found in earlier versions of this inventory plugin (<1.5.0).
+        """
         collection_name = "kubevirt.core"
         version_removed_in = "3.0.0"
 
