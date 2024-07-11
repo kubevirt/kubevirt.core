@@ -27,7 +27,7 @@ def test_use_ip_address_by_default(mocker, inventory, opts):
     hostname = "default-testvm"
     ip_address = "1.1.1.1"
 
-    inventory.set_ansible_host_and_port({}, hostname, ip_address, None, opts)
+    inventory._set_ansible_host_and_port({}, hostname, ip_address, None, opts)
 
     set_variable.assert_has_calls(
         [
@@ -53,7 +53,7 @@ def test_kube_secondary_dns(mocker, inventory, base_domain):
         "status": {"interfaces": [{"name": "awesome"}]},
     }
 
-    inventory.set_ansible_host_and_port(
+    inventory._set_ansible_host_and_port(
         vmi,
         hostname,
         "1.1.1.1",
@@ -86,7 +86,7 @@ def test_kube_secondary_dns_precedence_over_service(mocker, inventory):
         "status": {"interfaces": [{"name": "awesome"}]},
     }
 
-    inventory.set_ansible_host_and_port(
+    inventory._set_ansible_host_and_port(
         vmi,
         hostname,
         "1.1.1.1",
@@ -170,7 +170,7 @@ def test_service(mocker, inventory, service, expected_host, expected_port):
         },
     }
 
-    inventory.set_ansible_host_and_port(
+    inventory._set_ansible_host_and_port(
         vmi,
         hostname,
         "1.1.1.1",
@@ -201,7 +201,7 @@ def test_service_append_base_domain(mocker, inventory):
             "ports": [{"nodePort": 25}],
         },
     }
-    inventory.set_ansible_host_and_port(
+    inventory._set_ansible_host_and_port(
         vmi,
         hostname,
         "1.1.1.1",
@@ -229,8 +229,8 @@ def test_service_append_base_domain(mocker, inventory):
 )
 def test_service_fallback(mocker, inventory, host, port):
     set_variable = mocker.patch.object(inventory.inventory, "set_variable")
-    mocker.patch.object(inventory, "get_host_from_service", return_value=host)
-    mocker.patch.object(inventory, "get_port_from_service", return_value=port)
+    mocker.patch.object(inventory, "_get_host_from_service", return_value=host)
+    mocker.patch.object(inventory, "_get_port_from_service", return_value=port)
 
     hostname = "default-testvm"
     vmi = {
@@ -238,7 +238,7 @@ def test_service_fallback(mocker, inventory, host, port):
             "nodeName": "testnode",
         },
     }
-    inventory.set_ansible_host_and_port(
+    inventory._set_ansible_host_and_port(
         vmi,
         hostname,
         "1.1.1.1",
@@ -258,7 +258,7 @@ def test_no_service_if_network_name(mocker, inventory):
     set_variable = mocker.patch.object(inventory.inventory, "set_variable")
 
     hostname = "default-testvm"
-    inventory.set_ansible_host_and_port(
+    inventory._set_ansible_host_and_port(
         {},
         hostname,
         "1.2.3.4",

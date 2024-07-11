@@ -29,7 +29,7 @@ from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants im
     ],
 )
 def test_get_default_hostname(host, expected):
-    assert InventoryModule.get_default_hostname(host) == expected
+    assert InventoryModule._get_default_hostname(host) == expected
 
 
 @pytest.mark.parametrize(
@@ -44,7 +44,7 @@ def test_get_default_hostname(host, expected):
     ],
 )
 def test_format_var_name(name, expected):
-    assert InventoryModule.format_var_name(name) == expected
+    assert InventoryModule._format_var_name(name) == expected
 
 
 @pytest.mark.parametrize(
@@ -93,7 +93,7 @@ def test_format_var_name(name, expected):
     ],
 )
 def test_obj_is_valid(obj, expected):
-    assert InventoryModule.obj_is_valid(obj) == expected
+    assert InventoryModule._obj_is_valid(obj) == expected
 
 
 @pytest.mark.parametrize(
@@ -151,7 +151,7 @@ def test_obj_is_valid(obj, expected):
     ],
 )
 def test_get_host_from_service(service, node_name, expected):
-    assert InventoryModule.get_host_from_service(service, node_name) == expected
+    assert InventoryModule._get_host_from_service(service, node_name) == expected
 
 
 @pytest.mark.parametrize(
@@ -199,7 +199,7 @@ def test_get_host_from_service(service, node_name, expected):
     ],
 )
 def test_port_from_service(service, expected):
-    assert InventoryModule.get_port_from_service(service) == expected
+    assert InventoryModule._get_port_from_service(service) == expected
 
 
 @pytest.mark.parametrize(
@@ -251,11 +251,11 @@ def test_port_from_service(service, expected):
     ],
 )
 def test_is_windows(guest_os_info, annotations, expected):
-    assert InventoryModule.is_windows(guest_os_info, annotations) == expected
+    assert InventoryModule._is_windows(guest_os_info, annotations) == expected
 
 
 def test_get_cluster_domain(inventory, client):
-    assert inventory.get_cluster_domain(client) == DEFAULT_BASE_DOMAIN
+    assert inventory._get_cluster_domain(client) == DEFAULT_BASE_DOMAIN
 
 
 @pytest.mark.parametrize(
@@ -292,10 +292,10 @@ def test_get_cluster_domain(inventory, client):
 )
 def test_populate_inventory(mocker, inventory, results, expected):
     populate_inventory_from_namespace = mocker.patch.object(
-        inventory, "populate_inventory_from_namespace"
+        inventory, "_populate_inventory_from_namespace"
     )
 
-    inventory.populate_inventory(results, InventoryOptions())
+    inventory._populate_inventory(results, InventoryOptions())
 
     opts = InventoryOptions(
         base_domain=results["cluster_domain"], name=results["default_hostname"]
@@ -321,7 +321,7 @@ def test_populate_inventory(mocker, inventory, results, expected):
 )
 def test_set_groups_from_labels(inventory, groups, labels, expected):
     hostname = "default-testvm"
-    inventory.set_groups_from_labels(hostname, labels)
+    inventory._set_groups_from_labels(hostname, labels)
     for group in expected:
         assert group in groups
         assert hostname in groups[group]["children"]

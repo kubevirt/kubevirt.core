@@ -102,8 +102,8 @@ def test_config_data_to_opts(mocker, inventory, config_data, expected):
     mocker.patch.object(inventory, "get_cache_key")
     mocker.patch.object(inventory, "get_option")
     mocker.patch.object(kubevirt, "get_api_client")
-    mocker.patch.object(inventory, "fetch_objects")
-    populate_inventory = mocker.patch.object(inventory, "populate_inventory")
+    mocker.patch.object(inventory, "_fetch_objects")
+    populate_inventory = mocker.patch.object(inventory, "_populate_inventory")
 
     inventory.parse(None, None, "", False)
 
@@ -139,8 +139,8 @@ def test_use_of_cache(
     )
     get_option = mocker.patch.object(inventory, "get_option", return_value=cache_option)
     get_api_client = mocker.patch.object(kubevirt, "get_api_client")
-    fetch_objects = mocker.patch.object(inventory, "fetch_objects")
-    populate_inventory = mocker.patch.object(inventory, "populate_inventory")
+    fetch_objects = mocker.patch.object(inventory, "_fetch_objects")
+    populate_inventory = mocker.patch.object(inventory, "_populate_inventory")
 
     if cache_parse is None:
         inventory.parse(None, None, path)
@@ -173,7 +173,7 @@ def test_k8s_client_missing(mocker, inventory, present):
     mocker.patch.object(inventory, "_read_config_data", return_value={})
     mocker.patch.object(inventory, "get_cache_key")
     mocker.patch.object(inventory, "get_option")
-    fetch_objects = mocker.patch.object(inventory, "fetch_objects")
+    fetch_objects = mocker.patch.object(inventory, "_fetch_objects")
 
     if present:
         inventory.parse(None, None, "", False)

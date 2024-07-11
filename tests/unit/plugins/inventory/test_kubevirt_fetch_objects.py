@@ -37,25 +37,25 @@ from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants im
 )
 def test_fetch_objects(mocker, inventory, opts, namespaces):
     get_available_namespaces = mocker.patch.object(
-        inventory, "get_available_namespaces", return_value=[DEFAULT_NAMESPACE]
+        inventory, "_get_available_namespaces", return_value=[DEFAULT_NAMESPACE]
     )
     get_vms_for_namespace = mocker.patch.object(
-        inventory, "get_vms_for_namespace", return_value=[{}]
+        inventory, "_get_vms_for_namespace", return_value=[{}]
     )
     get_vmis_for_namespace = mocker.patch.object(
-        inventory, "get_vmis_for_namespace", return_value=[{}]
+        inventory, "_get_vmis_for_namespace", return_value=[{}]
     )
     get_ssh_services_for_namespace = mocker.patch.object(
-        inventory, "get_ssh_services_for_namespace", return_value=[]
+        inventory, "_get_ssh_services_for_namespace", return_value=[]
     )
     get_default_hostname = mocker.patch.object(
-        inventory, "get_default_hostname", return_value="default-hostname"
+        inventory, "_get_default_hostname", return_value="default-hostname"
     )
     get_cluster_domain = mocker.patch.object(
-        inventory, "get_cluster_domain", return_value="test.com"
+        inventory, "_get_cluster_domain", return_value="test.com"
     )
 
-    inventory.fetch_objects(mocker.Mock(), opts)
+    inventory._fetch_objects(mocker.Mock(), opts)
 
     if opts.namespaces:
         get_available_namespaces.assert_not_called()
@@ -77,25 +77,25 @@ def test_fetch_objects(mocker, inventory, opts, namespaces):
 
 def test_fetch_objects_early_return(mocker, inventory):
     get_available_namespaces = mocker.patch.object(
-        inventory, "get_available_namespaces", return_value=[DEFAULT_NAMESPACE]
+        inventory, "_get_available_namespaces", return_value=[DEFAULT_NAMESPACE]
     )
     get_vms_for_namespace = mocker.patch.object(
-        inventory, "get_vms_for_namespace", return_value=[]
+        inventory, "_get_vms_for_namespace", return_value=[]
     )
     get_vmis_for_namespace = mocker.patch.object(
-        inventory, "get_vmis_for_namespace", return_value=[]
+        inventory, "_get_vmis_for_namespace", return_value=[]
     )
     get_ssh_services_for_namespace = mocker.patch.object(
-        inventory, "get_ssh_services_for_namespace"
+        inventory, "_get_ssh_services_for_namespace"
     )
     get_default_hostname = mocker.patch.object(
-        inventory, "get_default_hostname", return_value="default-hostname"
+        inventory, "_get_default_hostname", return_value="default-hostname"
     )
     get_cluster_domain = mocker.patch.object(
-        inventory, "get_cluster_domain", return_value="test.com"
+        inventory, "_get_cluster_domain", return_value="test.com"
     )
 
-    inventory.fetch_objects(mocker.Mock(), InventoryOptions())
+    inventory._fetch_objects(mocker.Mock(), InventoryOptions())
 
     get_available_namespaces.assert_called_once()
     get_vms_for_namespace.assert_called_once_with(

@@ -85,7 +85,7 @@ def test_set_common_vars(inventory, hosts, obj, expected):
     hostname = "default-testvm"
     prefix = "".join(choice(ascii_lowercase) for i in range(5))
     inventory.inventory.add_host(hostname)
-    inventory.set_common_vars(hostname, prefix, obj, InventoryOptions())
+    inventory._set_common_vars(hostname, prefix, obj, InventoryOptions())
 
     for key, value in expected.items():
         prefixed_key = f"{prefix}_{key}"
@@ -102,13 +102,13 @@ def test_set_common_vars(inventory, hosts, obj, expected):
 )
 def test_set_common_vars_create_groups(mocker, inventory, create_groups):
     mocker.patch.object(inventory.inventory, "set_variable")
-    set_groups_from_labels = mocker.patch.object(inventory, "set_groups_from_labels")
+    set_groups_from_labels = mocker.patch.object(inventory, "_set_groups_from_labels")
 
     hostname = "default-testvm"
     labels = {"testkey": "testval"}
     opts = InventoryOptions(create_groups=create_groups)
 
-    inventory.set_common_vars(
+    inventory._set_common_vars(
         hostname, "prefix", {"metadata": {"labels": labels}, "status": {}}, opts
     )
 
@@ -123,10 +123,10 @@ def test_called_by_set_vars_from(mocker, inventory):
     opts = InventoryOptions()
     obj = {"status": {}}
 
-    set_common_vars = mocker.patch.object(inventory, "set_common_vars")
+    set_common_vars = mocker.patch.object(inventory, "_set_common_vars")
 
-    inventory.set_vars_from_vm(hostname, obj, opts)
-    inventory.set_vars_from_vmi(hostname, obj, {}, opts)
+    inventory._set_vars_from_vm(hostname, obj, opts)
+    inventory._set_vars_from_vmi(hostname, obj, {}, opts)
 
     set_common_vars.assert_has_calls(
         [

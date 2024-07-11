@@ -23,7 +23,7 @@ def test_config_data_without_connections_ignored(inventory):
         "label_selector": "app=test",
     }
 
-    inventory.connections_compatibility(config_data)
+    inventory._connections_compatibility(config_data)
 
     assert config_data["name"] == "connection-1"
     assert config_data["namespaces"] == ["default"]
@@ -46,7 +46,7 @@ def test_single_connection_supported(inventory):
         "label_selector": "app=something",
     }
 
-    inventory.connections_compatibility(config_data)
+    inventory._connections_compatibility(config_data)
 
     assert config_data["name"] == "connection-1"
     assert config_data["namespaces"] == ["default"]
@@ -58,7 +58,7 @@ def test_multiple_connections_not_supported(inventory):
     with pytest.raises(
         AnsibleError, match="Split your connections into multiple configuration files."
     ):
-        inventory.connections_compatibility(
+        inventory._connections_compatibility(
             {
                 "connections": [
                     {
@@ -84,4 +84,4 @@ def test_multiple_connections_not_supported(inventory):
 )
 def test_connections_exceptions(inventory, config_data, expected):
     with pytest.raises(KubeVirtInventoryException, match=expected):
-        inventory.connections_compatibility(config_data)
+        inventory._connections_compatibility(config_data)
