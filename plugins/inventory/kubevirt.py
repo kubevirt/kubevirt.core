@@ -251,7 +251,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
     snake_case_pattern = re_compile(r"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
 
     @staticmethod
-    def get_default_host_name(host: str) -> str:
+    def get_default_hostname(host: str) -> str:
         """
         get_default_host_name strips URL schemes from the host name and
         replaces invalid characters.

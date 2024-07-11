@@ -27,8 +27,8 @@ from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants im
         ("https://example.com:8080", "example-com_8080"),
     ],
 )
-def test_get_default_host_name(host, expected):
-    assert InventoryModule.get_default_host_name(host) == expected
+def test_get_default_hostname(host, expected):
+    assert InventoryModule.get_default_hostname(host) == expected
 
 
 @pytest.mark.parametrize(
