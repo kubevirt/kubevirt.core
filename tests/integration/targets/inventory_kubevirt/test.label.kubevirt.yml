@@ -1,7 +1,6 @@
 ---
 plugin: kubevirt.core.kubevirt
-connections:
-  - namespaces:
-      - default
-    create_groups: true
-    label_selector: app=test
+namespaces:
+  - default
+create_groups: true
+label_selector: app=test

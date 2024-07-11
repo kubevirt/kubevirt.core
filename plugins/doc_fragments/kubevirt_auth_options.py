@@ -28,7 +28,7 @@ options:
       configuration file from I(~/.kube/config).
     - Can also be specified via E(K8S_AUTH_KUBECONFIG) environment variable.
     - Multiple Kubernetes config file can be provided using separator C(;) for Windows platform or C(:) for others platforms.
-    - The kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version >= 17.17.0. Added in version 2.2.0.
+    - The kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version >= 17.17.0.
     type: raw
   context:
     description:

@@ -24,20 +24,28 @@ from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
         False,
     ],
 )
-def test_cache_is_used(mocker, inventory, cache):
-    connections = [{"test-conn": {}}]
-    config_data = {"connections": connections}
-    cache_key = "test-prefix"
+def test_parse(mocker, inventory, cache):
+    path = "/testpath"
+    cache_prefix = "test-prefix"
+    config_data = {"host_format": "test-format"}
 
-    mocker.patch.dict(inventory._cache, {cache_key: {"test-key": "test-value"}})
+    mocker.patch.dict(inventory._cache, {cache_prefix: {"test-key": "test-value"}})
+    get_cache_prefix = mocker.patch.object(
+        inventory, "_get_cache_prefix", return_value=cache_prefix
+    )
+    read_config_data = mocker.patch.object(
+        inventory, "_read_config_data", return_value=config_data
+    )
     fetch_objects = mocker.patch.object(inventory, "fetch_objects")
 
-    inventory.setup(config_data, cache, cache_key)
+    inventory.parse(None, None, path, cache)
 
+    get_cache_prefix.assert_called_once_with(path)
+    read_config_data.assert_called_once_with(path)
     if cache:
         fetch_objects.assert_not_called()
     else:
-        fetch_objects.assert_called_once_with(connections)
+        fetch_objects.assert_called_once_with(config_data)
 
 
 @pytest.mark.parametrize(
@@ -49,15 +57,17 @@ def test_cache_is_used(mocker, inventory, cache):
 )
 def test_k8s_client_missing(mocker, inventory, present):
     mocker.patch.object(kubevirt, "HAS_K8S_MODULE_HELPER", present)
+    mocker.patch.object(inventory, "_get_cache_prefix")
+    mocker.patch.object(inventory, "_read_config_data")
     fetch_objects = mocker.patch.object(inventory, "fetch_objects")
 
     if present:
-        inventory.setup({}, False, "test")
+        inventory.parse(None, None, "", False)
         fetch_objects.assert_called_once()
     else:
         with pytest.raises(
             KubeVirtInventoryException,
             match="This module requires the Kubernetes Python client. Try `pip install kubernetes`. Detail: None",
         ):
-            inventory.setup({}, False, "test")
+            inventory.parse(None, None, "", False)
         fetch_objects.assert_not_called()
