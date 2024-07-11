@@ -423,13 +423,14 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def connections_compatibility(self, config_data: Dict) -> None:
         collection_name = "kubevirt.core"
+        version_removed_in = "3.0.0"
 
         if (connections := config_data.get("connections")) is None:
             return
 
         self.display.deprecated(
             msg="The 'connections' parameter is deprecated and now supports only a single list entry.",
-            version="2.0.0",
+            version=version_removed_in,
             collection_name=collection_name,
         )
 
@@ -446,7 +447,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 config_data[k] = v
             self.display.deprecated(
                 msg="Move all of your connection parameters to the configuration top level.",
-                version="3.0.0",
+                version=version_removed_in,
                 collection_name=collection_name,
             )
         elif len(connections) > 1:
