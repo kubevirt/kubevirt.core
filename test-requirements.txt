@@ -1,4 +1,3 @@
-addict
 pytest
 pytest-ansible
 pytest-mock

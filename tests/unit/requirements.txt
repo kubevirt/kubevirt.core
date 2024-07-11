@@ -2,7 +2,6 @@
 jsonpatch
 kubernetes>=28.1.0
 PyYAML>=3.11
-addict
 pytest
 pytest-mock
 pytest-xdist

@@ -8,7 +8,7 @@ __metaclass__ = type
 
 import pytest
 
-from addict import Dict
+from kubernetes.dynamic.resource import ResourceField
 
 from ansible.template import Templar
 
@@ -96,21 +96,21 @@ def client(mocker, request):
         items = param["namespaces"]
     else:
         items = [{"metadata": {"name": DEFAULT_NAMESPACE}}]
-    namespaces.items = [Dict(item) for item in items]
+    namespaces.items = [ResourceField(item) for item in items]
 
     vms = mocker.Mock()
-    vms.items = [Dict(item) for item in param.get("vms", [])]
+    vms.items = [ResourceField(item) for item in param.get("vms", [])]
     vmis = mocker.Mock()
-    vmis.items = [Dict(item) for item in param.get("vmis", [])]
+    vmis.items = [ResourceField(item) for item in param.get("vmis", [])]
     services = mocker.Mock()
-    services.items = [Dict(item) for item in param.get("services", [])]
+    services.items = [ResourceField(item) for item in param.get("services", [])]
 
     dns = mocker.Mock()
     if "base_domain" in param:
         base_domain = param["base_domain"]
     else:
         base_domain = DEFAULT_BASE_DOMAIN
-    dns_obj = Dict({"spec": {"baseDomain": base_domain}})
+    dns_obj = ResourceField({"spec": {"baseDomain": base_domain}})
     dns.items = [dns_obj]
 
     namespace_client = mocker.Mock()
