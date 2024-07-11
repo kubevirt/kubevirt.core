@@ -29,6 +29,11 @@ Minor Changes
 - chore: Ensure compatibility with kubernetes.core >=3.1.0,<6.0.0 `#111 <https://github.com/kubevirt/kubevirt.core/pull/111>`_
 - kubevirt_vm integration tests: changed ssh key type to RSA for FIPS mode `#108 <https://github.com/kubevirt/kubevirt.core/pull/108>`_
 
+Breaking Changes / Porting Guide
+--------------------------------
+
+- cleanup(inventory): Drop support for multiple connections `#117 <https://github.com/kubevirt/kubevirt.core/pull/117>`_
+
 Bugfixes
 --------
 
