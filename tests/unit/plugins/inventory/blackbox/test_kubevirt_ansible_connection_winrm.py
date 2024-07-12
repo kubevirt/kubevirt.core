@@ -8,7 +8,6 @@ __metaclass__ = type
 
 import pytest
 
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryOptions,
 )
@@ -22,7 +21,9 @@ BASE_VMI = {
     "metadata": {
         "name": "testvmi",
         "namespace": "default",
+        "uid": "e86c603c-fb13-4933-bf67-de100bdba0c3",
     },
+    "spec": {},
     "status": {
         "interfaces": [{"ipAddress": "10.10.10.10"}],
     },
@@ -58,19 +59,25 @@ WINDOWS_VMI_4 = merge_dicts(
 
 
 @pytest.mark.parametrize(
-    "client,vmi,expected",
+    "vmi,expected",
     [
-        ({"vmis": [BASE_VMI]}, BASE_VMI, False),
-        ({"vmis": [WINDOWS_VMI_1]}, WINDOWS_VMI_1, True),
-        ({"vmis": [WINDOWS_VMI_2]}, WINDOWS_VMI_2, True),
-        ({"vmis": [WINDOWS_VMI_3]}, WINDOWS_VMI_3, True),
-        ({"vmis": [WINDOWS_VMI_4]}, WINDOWS_VMI_4, True),
+        (BASE_VMI, False),
+        (WINDOWS_VMI_1, True),
+        (WINDOWS_VMI_2, True),
+        (WINDOWS_VMI_3, True),
+        (WINDOWS_VMI_4, True),
     ],
-    indirect=["client"],
 )
-def test_ansible_connection_winrm(inventory, hosts, client, vmi, expected):
-    inventory.populate_inventory_from_namespace(
-        client, "", DEFAULT_NAMESPACE, InventoryOptions()
+def test_ansible_connection_winrm(inventory, hosts, vmi, expected):
+    inventory.populate_inventory(
+        {
+            "default_hostname": "test",
+            "cluster_domain": "test.com",
+            "namespaces": {
+                "default": {"vms": [], "vmis": [vmi], "services": {}},
+            },
+        },
+        InventoryOptions(),
     )
 
     host = f"{DEFAULT_NAMESPACE}-{vmi['metadata']['name']}"

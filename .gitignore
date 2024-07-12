@@ -145,7 +145,10 @@ kubevirt.core
 /tests/output/
 /tests/integration/inventory
 /tests/integration/targets/inventory_kubevirt/all.yml
+/tests/integration/targets/inventory_kubevirt/cache_after.yml
+/tests/integration/targets/inventory_kubevirt/cache_before.yml
 /tests/integration/targets/inventory_kubevirt/empty.yml
 /tests/integration/targets/inventory_kubevirt/label.yml
 /tests/integration/targets/inventory_kubevirt/net.yml
 /tests/integration/targets/kubevirt_vm/files
+kubevirt-cache

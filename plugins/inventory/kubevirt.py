@@ -136,7 +136,6 @@ from typing import (
 # potentially print a warning to the user if the client is missing.
 try:
     from kubernetes.dynamic.exceptions import DynamicApiError
-    from kubernetes.dynamic.resource import ResourceField
 
     HAS_K8S_MODULE_HELPER = True
     K8S_IMPORT_EXCEPTION = None
@@ -147,16 +146,10 @@ except ImportError as e:
         Dummy class, mainly used for ansible-test sanity.
         """
 
-    class ResourceField:
-        """
-        Dummy class, mainly used for ansible-test sanity.
-        """
-
     HAS_K8S_MODULE_HELPER = False
     K8S_IMPORT_EXCEPTION = e
 
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
-
 
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s.client import (
     get_api_client,
@@ -193,6 +186,8 @@ class InventoryOptions:
     base_domain: Optional[str] = None
     append_base_domain: Optional[bool] = None
     host_format: Optional[str] = None
+    namespaces: Optional[List[str]] = None
+    name: Optional[str] = None
     config_data: InitVar[Optional[Dict]] = None
 
     def __post_init__(self, config_data: Optional[Dict]) -> None:
@@ -245,6 +240,12 @@ class InventoryOptions:
             if self.host_format is not None
             else config_data.get("host_format", "{namespace}-{name}")
         )
+        self.namespaces = (
+            self.namespaces
+            if self.namespaces is not None
+            else config_data.get("namespaces")
+        )
+        self.name = self.name if self.name is not None else config_data.get("name")
 
 
 class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
@@ -258,7 +259,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
     snake_case_pattern = re_compile(r"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
 
     @staticmethod
-    def get_default_host_name(host: str) -> str:
+    def get_default_hostname(host: str) -> str:
         """
         get_default_host_name strips URL schemes from the host name and
         replaces invalid characters.
@@ -292,6 +293,20 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         suitable for use as a inventory variable name.
         """
         return InventoryModule.snake_case_pattern.sub("_", name).lower()
+
+    @staticmethod
+    def obj_is_valid(obj: Dict) -> bool:
+        """
+        obj_is_valid ensures commonly used keys are present in the passed object.
+        """
+        return bool(
+            "spec" in obj
+            and "status" in obj
+            and "metadata" in obj
+            and obj["metadata"].get("name")
+            and obj["metadata"].get("namespace")
+            and obj["metadata"].get("uid")
+        )
 
     @staticmethod
     def get_host_from_service(service: Dict, node_name: Optional[str]) -> Optional[str]:
@@ -360,9 +375,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
         return False
 
-    def __init__(self) -> None:
-        super().__init__()
-
     def verify_file(self, path: str) -> None:
         """
         verify_file ensures the inventory file is compatible with this plugin.
@@ -375,61 +387,49 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         """
         parse is the main entry point of the inventory.
         It checks for availability of the Kubernetes Python client,
-        gets the configuration and runs fetch_objects or
-        if there is a cache it is used instead.
+        gets the configuration, retrieves the cache or runs fetch_objects and
+        populates the inventory.
         """
-        super().parse(inventory, loader, path)
-        cache_key = self._get_cache_prefix(path)
-        config_data = self._read_config_data(path)
-
         if not HAS_K8S_MODULE_HELPER:
             raise KubeVirtInventoryException(
                 "This module requires the Kubernetes Python client. "
                 + f"Try `pip install kubernetes`. Detail: {K8S_IMPORT_EXCEPTION}"
             )
 
-        source_data = None
-        if cache and cache_key in self._cache:
-            try:
-                source_data = self._cache[cache_key]
-            except KeyError:
-                pass
+        super().parse(inventory, loader, path)
 
-        if not source_data:
-            self.fetch_objects(config_data)
-
-    def fetch_objects(self, config_data: Dict) -> None:
-        """
-        fetch_objects populates the inventory with the specified parameters.
-        """
-        if not config_data or not isinstance(config_data, dict):
-            config_data = {}
+        config_data = self._read_config_data(path)
+        cache_key = self.get_cache_key(path)
+        user_cache_setting = self.get_option("cache")
+        attempt_to_read_cache = user_cache_setting and cache
+        cache_needs_update = user_cache_setting and not cache
 
         self.connections_compatibility(config_data)
-        client = get_api_client(**config_data)
-        name = config_data.get(
-            "name", self.get_default_host_name(client.configuration.host)
-        )
-        namespaces = (
-            config_data["namespaces"]
-            if config_data.get("namespaces")
-            else self.get_available_namespaces(client)
-        )
         opts = InventoryOptions(config_data=config_data)
-        if opts.base_domain is None:
-            opts.base_domain = self.get_cluster_domain(client)
-        for namespace in namespaces:
-            self.populate_inventory_from_namespace(client, name, namespace, opts)
+
+        results = {}
+        if attempt_to_read_cache:
+            try:
+                results = self._cache[cache_key]
+            except KeyError:
+                cache_needs_update = True
+        if not attempt_to_read_cache or cache_needs_update:
+            results = self.fetch_objects(get_api_client(**config_data), opts)
+        if cache_needs_update:
+            self._cache[cache_key] = results
+
+        self.populate_inventory(results, opts)
 
     def connections_compatibility(self, config_data: Dict) -> None:
         collection_name = "kubevirt.core"
+        version_removed_in = "3.0.0"
 
         if (connections := config_data.get("connections")) is None:
             return
 
         self.display.deprecated(
             msg="The 'connections' parameter is deprecated and now supports only a single list entry.",
-            version="2.0.0",
+            version=version_removed_in,
             collection_name=collection_name,
         )
 
@@ -446,7 +446,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 config_data[k] = v
             self.display.deprecated(
                 msg="Move all of your connection parameters to the configuration top level.",
-                version="3.0.0",
+                version=version_removed_in,
                 collection_name=collection_name,
             )
         elif len(connections) > 1:
@@ -456,6 +456,35 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 collection_name=collection_name,
                 removed=True,
             )
+
+    def fetch_objects(self, client: Any, opts: InventoryOptions) -> Dict:
+        """
+        fetch_objects fetches all relevant objects from the K8S API.
+        """
+        namespaces = {}
+        for namespace in (
+            opts.namespaces
+            if opts.namespaces
+            else self.get_available_namespaces(client)
+        ):
+            vms = self.get_vms_for_namespace(client, namespace, opts)
+            vmis = self.get_vmis_for_namespace(client, namespace, opts)
+
+            if not vms and not vmis:
+                # Continue if no VMs and VMIs were found to avoid adding empty groups.
+                continue
+
+            namespaces[namespace] = {
+                "vms": vms,
+                "vmis": vmis,
+                "services": self.get_ssh_services_for_namespace(client, namespace),
+            }
+
+        return {
+            "default_hostname": self.get_default_hostname(client.configuration.host),
+            "cluster_domain": self.get_cluster_domain(client),
+            "namespaces": namespaces,
+        }
 
     def get_cluster_domain(self, client: K8SClient) -> Optional[str]:
         """
@@ -479,7 +508,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def get_resources(
         self, client: K8SClient, api_version: str, kind: str, **kwargs
-    ) -> List[ResourceField]:
+    ) -> List[Dict]:
         """
         get_resources uses a dynamic K8SClient to fetch resources from the K8S API.
         """
@@ -492,7 +521,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 f"Error fetching {kind} list: {self.format_dynamic_api_exc(exc)}"
             ) from exc
 
-        return result.items
+        return [item.to_dict() for item in result.items]
 
     def get_available_namespaces(self, client: K8SClient) -> List[str]:
         """
@@ -500,13 +529,14 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         configured credentials and returns them.
         """
         return [
-            namespace.metadata.name
+            namespace["metadata"]["name"]
             for namespace in self.get_resources(client, "v1", "Namespace")
+            if "metadata" in namespace and "name" in namespace["metadata"]
         ]
 
     def get_vms_for_namespace(
         self, client: K8SClient, namespace: str, opts: InventoryOptions
-    ) -> List[ResourceField]:
+    ) -> List[Dict]:
         """
         get_vms_for_namespace returns a list of all VirtualMachines in a namespace.
         """
@@ -520,7 +550,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def get_vmis_for_namespace(
         self, client: K8SClient, namespace: str, opts: InventoryOptions
-    ) -> List[ResourceField]:
+    ) -> List[Dict]:
         """
         get_vmis_for_namespace returns a list of all VirtualMachineInstances in a namespace.
         """
@@ -537,7 +567,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         get_ssh_services_for_namespace retrieves all services of a namespace exposing port 22/ssh.
         The services are mapped to the name of the corresponding domain.
         """
-        service_list = self.get_resources(
+        items = self.get_resources(
             client,
             "v1",
             "Service",
@@ -545,12 +575,12 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         )
 
         services = {}
-        for service in service_list:
+        for service in items:
             # Continue if service is not of type LoadBalancer or NodePort
-            if service.get("spec") is None:
+            if not (spec := service.get("spec")):
                 continue
 
-            if service["spec"].get("type") not in (
+            if spec.get("type") not in (
                 TYPE_LOADBALANCER,
                 TYPE_NODEPORT,
             ):
@@ -558,40 +588,58 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
             # Continue if ports are not defined, there are more than one port mapping
             # or the target port is not port 22/ssh
-            ports = service["spec"].get("ports")
-            if ports is None or len(ports) != 1 or ports[0].get("targetPort") != 22:
+            if (
+                (ports := spec.get("ports")) is None
+                or len(ports) != 1
+                or ports[0].get("targetPort") != 22
+            ):
                 continue
 
             # Only add the service to the dict if the domain selector is present
-            domain = service["spec"].get("selector", {}).get(LABEL_KUBEVIRT_IO_DOMAIN)
-            if domain is not None:
+            if domain := spec.get("selector", {}).get(LABEL_KUBEVIRT_IO_DOMAIN):
                 services[domain] = service
 
         return services
 
+    def populate_inventory(self, results: Dict, opts: InventoryOptions) -> None:
+        """
+        populate_inventory populates the inventory by completing the InventoryOptions
+        and invoking populate_inventory_from_namespace for every namespace in results.
+        """
+        if opts.base_domain is None:
+            opts.base_domain = results["cluster_domain"]
+        if opts.name is None:
+            opts.name = results["default_hostname"]
+        for namespace, data in results["namespaces"].items():
+            self.populate_inventory_from_namespace(namespace, data, opts)
+
     def populate_inventory_from_namespace(
-        self, client: K8SClient, name: str, namespace: str, opts: InventoryOptions
+        self, namespace: str, data: Dict, opts: InventoryOptions
     ) -> None:
         """
         populate_inventory_from_namespace adds groups and hosts from a
         namespace to the inventory.
         """
         vms = {
-            vm.metadata.name: vm
-            for vm in self.get_vms_for_namespace(client, namespace, opts)
+            vm["metadata"]["name"]: vm for vm in data["vms"] if self.obj_is_valid(vm)
         }
         vmis = {
-            vmi.metadata.name: vmi
-            for vmi in self.get_vmis_for_namespace(client, namespace, opts)
+            vmi["metadata"]["name"]: vmi
+            for vmi in data["vmis"]
+            if self.obj_is_valid(vmi)
         }
 
         if not vms and not vmis:
             # Return early if no VMs and VMIs were found to avoid adding empty groups.
             return
 
-        services = self.get_ssh_services_for_namespace(client, namespace)
+        services = {
+            domain: service
+            for domain, service in data["services"].items()
+            if self.obj_is_valid(service)
+        }
 
-        name = self._sanitize_group_name(name)
+        name = self._sanitize_group_name(opts.name)
         namespace_group = self._sanitize_group_name(f"namespace_{namespace}")
 
         self.inventory.add_group(name)
@@ -600,7 +648,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
         # Add found VMs and optionally enhance with VMI data
         for name, vm in vms.items():
-            hostname = self.add_host(vm, opts.host_format, namespace_group)
+            hostname = self.add_host(vm["metadata"], opts.host_format, namespace_group)
             self.set_vars_from_vm(hostname, vm, opts)
             if name in vmis:
                 self.set_vars_from_vmi(hostname, vmis[name], services, opts)
@@ -610,36 +658,32 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         for name, vmi in vmis.items():
             if name in vms:
                 continue
-            hostname = self.add_host(vmi, opts.host_format, namespace_group)
+            hostname = self.add_host(vmi["metadata"], opts.host_format, namespace_group)
             self.set_vars_from_vmi(hostname, vmi, services, opts)
             self.set_composable_vars(hostname)
 
-    def add_host(
-        self, obj: ResourceField, host_format: str, namespace_group: str
-    ) -> str:
+    def add_host(self, metadata: Dict, host_format: str, namespace_group: str) -> str:
         """
         add_hosts adds a host to the inventory.
         """
         hostname = host_format.format(
-            namespace=obj.metadata.namespace,
-            name=obj.metadata.name,
-            uid=obj.metadata.uid,
+            namespace=metadata["namespace"],
+            name=metadata["name"],
+            uid=metadata["uid"],
         )
         self.inventory.add_host(hostname)
         self.inventory.add_child(namespace_group, hostname)
 
         return hostname
 
-    def set_vars_from_vm(
-        self, hostname: str, vm: ResourceField, opts: InventoryOptions
-    ) -> None:
+    def set_vars_from_vm(self, hostname: str, vm: Dict, opts: InventoryOptions) -> None:
         """
         set_vars_from_vm sets inventory variables from a VM prefixed with vm_.
         """
         self.set_common_vars(hostname, "vm", vm, opts)
 
     def set_vars_from_vmi(
-        self, hostname: str, vmi: ResourceField, services: Dict, opts: InventoryOptions
+        self, hostname: str, vmi: Dict, services: Dict, opts: InventoryOptions
     ) -> None:
         """
         set_vars_from_vmi sets inventory variables from a VMI prefixed with vmi_ and
@@ -647,76 +691,76 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         """
         self.set_common_vars(hostname, "vmi", vmi, opts)
 
+        if not (interfaces := vmi["status"].get("interfaces")):
+            return
+
         if opts.network_name is None:
             # Use first interface
-            interface = vmi.status.interfaces[0] if vmi.status.interfaces else None
+            interface = interfaces[0]
         else:
             # Find interface by its name
             interface = next(
-                (i for i in vmi.status.interfaces if i.name == opts.network_name),
+                (i for i in interfaces if i.get("name") == opts.network_name),
                 None,
             )
 
         # If interface is not found or IP address is not reported skip this VMI
-        if interface is None or interface.ipAddress is None:
+        if not interface or not interface.get("ipAddress"):
             return
 
         # Set up the connection
         service = None
         if self.is_windows(
-            {} if not vmi.status.guestOSInfo else vmi.status.guestOSInfo.to_dict(),
-            {} if not vmi.metadata.annotations else vmi.metadata.annotations.to_dict(),
+            vmi["status"].get("guestOSInfo", {}),
+            vmi["metadata"].get("annotations", {}),
         ):
             self.inventory.set_variable(hostname, "ansible_connection", "winrm")
         else:
-            service = services.get(vmi.metadata.labels.get(LABEL_KUBEVIRT_IO_DOMAIN))
+            service = services.get(
+                vmi["metadata"].get("labels", {}).get(LABEL_KUBEVIRT_IO_DOMAIN)
+            )
         self.set_ansible_host_and_port(
             vmi,
             hostname,
-            interface.ipAddress,
+            interface["ipAddress"],
             service,
             opts,
         )
 
     def set_common_vars(
-        self, hostname: str, prefix: str, obj: ResourceField, opts: InventoryOptions
+        self, hostname: str, prefix: str, obj: Dict, opts: InventoryOptions
     ):
         """
         set_common_vars sets common inventory variables from VMs or VMIs.
         """
         # Add hostvars from metadata
-        if metadata := obj.metadata:
-            if metadata.annotations:
-                self.inventory.set_variable(
-                    hostname, f"{prefix}_annotations", metadata.annotations.to_dict()
-                )
-            if metadata.labels:
-                self.inventory.set_variable(
-                    hostname, f"{prefix}_labels", metadata.labels.to_dict()
-                )
-                # Create label groups and add vm to it if enabled
-                if opts.create_groups:
-                    self.set_groups_from_labels(hostname, metadata.labels)
-            if metadata.resourceVersion:
-                self.inventory.set_variable(
-                    hostname, f"{prefix}_resource_version", metadata.resourceVersion
-                )
-            if metadata.uid:
-                self.inventory.set_variable(hostname, f"{prefix}_uid", metadata.uid)
+        if annotations := obj["metadata"].get("annotations"):
+            self.inventory.set_variable(hostname, f"{prefix}_annotations", annotations)
+        if labels := obj["metadata"].get("labels"):
+            self.inventory.set_variable(hostname, f"{prefix}_labels", labels)
+            # Create label groups and add vm to it if enabled
+            if opts.create_groups:
+                self.set_groups_from_labels(hostname, labels)
+        if resource_version := obj["metadata"].get("resourceVersion"):
+            self.inventory.set_variable(
+                hostname, f"{prefix}_resource_version", resource_version
+            )
+        if uid := obj["metadata"].get("uid"):
+            self.inventory.set_variable(hostname, f"{prefix}_uid", uid)
 
         # Add hostvars from status
-        if obj.status:
-            for key, value in obj.status.to_dict().items():
-                name = self.format_var_name(key)
-                self.inventory.set_variable(hostname, f"{prefix}_{name}", value)
+        for key, value in obj["status"].items():
+            self.inventory.set_variable(
+                hostname, f"{prefix}_{self.format_var_name(key)}", value
+            )
 
-    def set_groups_from_labels(self, hostname: str, labels: ResourceField) -> None:
+    def set_groups_from_labels(self, hostname: str, labels: Dict) -> None:
         """
         set_groups_from_labels adds groups for each label of a VM or VMI and
         adds the host to each group.
         """
         groups = []
-        for key, value in labels.to_dict().items():
+        for key, value in labels.items():
             group_name = self._sanitize_group_name(f"label_{key}_{value}")
             if group_name not in groups:
                 groups.append(group_name)
@@ -727,7 +771,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def set_ansible_host_and_port(
         self,
-        vmi: ResourceField,
+        vmi: Dict,
         hostname: str,
         ip_address: str,
         service: Optional[Dict],
@@ -742,15 +786,13 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         if opts.kube_secondary_dns and opts.network_name:
             # Set ansible_host to the kubesecondarydns derived host name if enabled
             # See https://github.com/kubevirt/kubesecondarydns#parameters
-            ansible_host = (
-                f"{opts.network_name}.{vmi.metadata.name}.{vmi.metadata.namespace}.vm"
-            )
+            ansible_host = f"{opts.network_name}.{vmi['metadata']['name']}.{vmi['metadata']['namespace']}.vm"
             if opts.base_domain:
                 ansible_host += f".{opts.base_domain}"
         elif opts.use_service and service and not opts.network_name:
             # Set ansible_host and ansible_port to the host and port from the LoadBalancer
             # or NodePort service exposing SSH
-            node_name = vmi.status.nodeName
+            node_name = vmi["status"].get("nodeName")
             if node_name and opts.append_base_domain and opts.base_domain:
                 node_name += f".{opts.base_domain}"
             host = self.get_host_from_service(service, node_name)

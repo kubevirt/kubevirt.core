@@ -6,8 +6,6 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import pytest
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryOptions,
 )
@@ -21,7 +19,9 @@ VMI = {
     "metadata": {
         "name": "testvmi",
         "namespace": "default",
+        "uid": "6ffdef43-6c39-4441-a088-82d319ea5c13",
     },
+    "spec": {},
     "status": {
         "interfaces": [{"ipAddress": "10.10.10.10"}],
         "migrationMethod": "BlockMigration",
@@ -34,16 +34,10 @@ VMI = {
 }
 
 
-@pytest.mark.parametrize(
-    "client",
-    [{"vmis": [VMI]}],
-    indirect=["client"],
-)
 def test_set_composable_vars(
     inventory,
     groups,
     hosts,
-    client,
 ):
     inventory._options = {
         "compose": {"set_from_another_var": "vmi_node_name"},
@@ -51,8 +45,15 @@ def test_set_composable_vars(
         "keyed_groups": [{"prefix": "fedora", "key": "vmi_guest_os_info.versionId"}],
         "strict": True,
     }
-    inventory.populate_inventory_from_namespace(
-        client, "", DEFAULT_NAMESPACE, InventoryOptions()
+    inventory.populate_inventory(
+        {
+            "default_hostname": "test",
+            "cluster_domain": "test.com",
+            "namespaces": {
+                "default": {"vms": [], "vmis": [VMI], "services": {}},
+            },
+        },
+        InventoryOptions(),
     )
 
     host = f"{DEFAULT_NAMESPACE}-testvmi"

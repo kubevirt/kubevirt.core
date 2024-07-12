@@ -6,15 +6,8 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import pytest
-
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryOptions,
-)
-
-from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants import (
-    DEFAULT_NAMESPACE,
 )
 
 VM1 = {
@@ -24,6 +17,7 @@ VM1 = {
         "uid": "940003aa-0160-4b7e-9e55-8ec3df72047f",
     },
     "spec": {"running": True},
+    "status": {},
 }
 
 VM2 = {
@@ -33,6 +27,7 @@ VM2 = {
         "uid": "c2c68de5-b9d7-4c25-872f-462e7245b3e6",
     },
     "spec": {"running": False},
+    "status": {},
 }
 
 VMI1 = {
@@ -41,22 +36,23 @@ VMI1 = {
         "namespace": "default",
         "uid": "a84319a9-db31-4a36-9b66-3e387578f871",
     },
+    "spec": {},
     "status": {
         "interfaces": [{"ipAddress": "10.10.10.10"}],
     },
 }
 
 
-@pytest.mark.parametrize(
-    "client",
-    [
-        ({"vms": [VM1, VM2], "vmis": [VMI1]}),
-    ],
-    indirect=["client"],
-)
-def test_stopped_vm(inventory, hosts, client):
-    inventory.populate_inventory_from_namespace(
-        client, "", DEFAULT_NAMESPACE, InventoryOptions()
+def test_stopped_vm(inventory, hosts):
+    inventory.populate_inventory(
+        {
+            "default_hostname": "test",
+            "cluster_domain": "test.com",
+            "namespaces": {
+                "default": {"vms": [VM1, VM2], "vmis": [VMI1], "services": {}},
+            },
+        },
+        InventoryOptions(),
     )
 
     # The running VM should be present with ansible_host or ansible_port

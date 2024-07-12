@@ -38,3 +38,16 @@
       ansible.builtin.assert:
         that:
           - inv_net['all']['children']['label_app_test']['hosts'] | length == 1
+    - name: Read cached inventory after VM creation
+      ansible.builtin.include_vars:
+        file: cache_before.yml
+        name: inv_cache_before
+    - name: Read cached inventory after VM deletion
+      ansible.builtin.include_vars:
+        file: cache_after.yml
+        name: inv_cache_after
+    - name: Assert cached inventories are populated
+      ansible.builtin.assert:
+        that:
+          - inv_cache_before == inv_all
+          - inv_cache_before == inv_cache_after

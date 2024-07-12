@@ -8,10 +8,9 @@ __metaclass__ = type
 
 import pytest
 
-from addict import Dict
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryModule,
+    InventoryOptions,
 )
 
 from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants import (
@@ -29,8 +28,8 @@ from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants im
         ("https://example.com:8080", "example-com_8080"),
     ],
 )
-def test_get_default_host_name(host, expected):
-    assert InventoryModule.get_default_host_name(host) == expected
+def test_get_default_hostname(host, expected):
+    assert InventoryModule.get_default_hostname(host) == expected
 
 
 @pytest.mark.parametrize(
@@ -46,6 +45,55 @@ def test_get_default_host_name(host, expected):
 )
 def test_format_var_name(name, expected):
     assert InventoryModule.format_var_name(name) == expected
+
+
+@pytest.mark.parametrize(
+    "obj,expected",
+    [
+        ({}, False),
+        ({"spec": {}}, False),
+        ({"status": {}}, False),
+        ({"metadata": {}}, False),
+        ({"spec": {}, "status": {}}, False),
+        ({"spec": {}, "metadata": {}}, False),
+        ({"status": {}, "metadata": {}}, False),
+        ({"spec": {}, "status": {}, "metadata": {}}, False),
+        ({"spec": {}, "status": {}, "metadata": {}, "something": {}}, False),
+        ({"spec": {}, "status": {}, "metadata": {"name": "test"}}, False),
+        ({"spec": {}, "status": {}, "metadata": {"namespace": "test"}}, False),
+        ({"spec": {}, "status": {}, "metadata": {"uid": "test"}}, False),
+        (
+            {
+                "spec": {},
+                "status": {},
+                "metadata": {"name": "test", "namespace": "test"},
+            },
+            False,
+        ),
+        (
+            {
+                "spec": {},
+                "status": {},
+                "metadata": {"name": "test", "namespace": "test", "something": "test"},
+            },
+            False,
+        ),
+        (
+            {"spec": {}, "status": {}, "metadata": {"name": "test", "uid": "test"}},
+            False,
+        ),
+        (
+            {
+                "spec": {},
+                "status": {},
+                "metadata": {"name": "test", "namespace": "test", "uid": "test"},
+            },
+            True,
+        ),
+    ],
+)
+def test_obj_is_valid(obj, expected):
+    assert InventoryModule.obj_is_valid(obj) == expected
 
 
 @pytest.mark.parametrize(
@@ -211,6 +259,56 @@ def test_get_cluster_domain(inventory, client):
 
 
 @pytest.mark.parametrize(
+    "results,expected",
+    [
+        (
+            {
+                "cluster_domain": "example.com",
+                "default_hostname": "test",
+                "namespaces": {},
+            },
+            0,
+        ),
+        (
+            {
+                "cluster_domain": "example.com",
+                "default_hostname": "test",
+                "namespaces": {"test": {"vms": [], "vmis": [], "services": {}}},
+            },
+            1,
+        ),
+        (
+            {
+                "cluster_domain": "example.com",
+                "default_hostname": "test",
+                "namespaces": {
+                    "test": {"vms": [], "vmis": [], "services": {}},
+                    "test2": {"vms": [], "vmis": [], "services": {}},
+                },
+            },
+            2,
+        ),
+    ],
+)
+def test_populate_inventory(mocker, inventory, results, expected):
+    populate_inventory_from_namespace = mocker.patch.object(
+        inventory, "populate_inventory_from_namespace"
+    )
+
+    inventory.populate_inventory(results, InventoryOptions())
+
+    opts = InventoryOptions(
+        base_domain=results["cluster_domain"], name=results["default_hostname"]
+    )
+    calls = [
+        mocker.call(namespace, data, opts)
+        for namespace, data in results["namespaces"].items()
+    ]
+    populate_inventory_from_namespace.assert_has_calls(calls)
+    assert len(calls) == expected
+
+
+@pytest.mark.parametrize(
     "labels,expected",
     [
         ({}, []),
@@ -223,7 +321,7 @@ def test_get_cluster_domain(inventory, client):
 )
 def test_set_groups_from_labels(inventory, groups, labels, expected):
     hostname = "default-testvm"
-    inventory.set_groups_from_labels(hostname, Dict(labels))
+    inventory.set_groups_from_labels(hostname, labels)
     for group in expected:
         assert group in groups
         assert hostname in groups[group]["children"]

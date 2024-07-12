@@ -6,8 +6,6 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-from addict import Dict
-
 from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     InventoryOptions,
     LABEL_KUBEVIRT_IO_DOMAIN,
@@ -20,7 +18,7 @@ def test_ignore_vmi_without_interface(mocker, inventory):
         inventory, "set_ansible_host_and_port"
     )
 
-    vmi = Dict({"status": {}})
+    vmi = {"status": {}}
     inventory.set_vars_from_vmi("default-testvm", vmi, {}, InventoryOptions())
 
     set_ansible_host_and_port.assert_not_called()
@@ -33,9 +31,10 @@ def test_use_first_interface_by_default(mocker, inventory):
     )
 
     hostname = "default-testvm"
-    vmi = Dict(
-        {"status": {"interfaces": [{"ipAddress": "1.1.1.1"}, {"ipAddress": "2.2.2.2"}]}}
-    )
+    vmi = {
+        "metadata": {},
+        "status": {"interfaces": [{"ipAddress": "1.1.1.1"}, {"ipAddress": "2.2.2.2"}]},
+    }
     opts = InventoryOptions()
     inventory.set_vars_from_vmi(hostname, vmi, {}, opts)
 
@@ -51,16 +50,15 @@ def test_use_named_interface(mocker, inventory):
     )
 
     hostname = "default-testvm"
-    vmi = Dict(
-        {
-            "status": {
-                "interfaces": [
-                    {"name": "first", "ipAddress": "1.1.1.1"},
-                    {"name": "second", "ipAddress": "2.2.2.2"},
-                ]
-            }
-        }
-    )
+    vmi = {
+        "metadata": {},
+        "status": {
+            "interfaces": [
+                {"name": "first", "ipAddress": "1.1.1.1"},
+                {"name": "second", "ipAddress": "2.2.2.2"},
+            ]
+        },
+    }
     opts = InventoryOptions(network_name="second")
     inventory.set_vars_from_vmi(hostname, vmi, {}, opts)
 
@@ -75,9 +73,10 @@ def test_ignore_vmi_without_named_interface(mocker, inventory):
         inventory, "set_ansible_host_and_port"
     )
 
-    vmi = Dict(
-        {"status": {"interfaces": [{"name": "somename", "ipAddress": "1.1.1.1"}]}}
-    )
+    vmi = {
+        "metadata": {},
+        "status": {"interfaces": [{"name": "somename", "ipAddress": "1.1.1.1"}]},
+    }
     inventory.set_vars_from_vmi(
         "default-testvm", vmi, {}, InventoryOptions(network_name="awesome")
     )
@@ -92,7 +91,7 @@ def test_set_winrm_if_windows(mocker, inventory):
     set_variable = mocker.patch.object(inventory.inventory, "set_variable")
 
     hostname = "default-testvm"
-    vmi = Dict({"status": {"interfaces": [{"ipAddress": "1.1.1.1"}]}})
+    vmi = {"metadata": {}, "status": {"interfaces": [{"ipAddress": "1.1.1.1"}]}}
     inventory.set_vars_from_vmi(hostname, vmi, {}, InventoryOptions())
 
     set_variable.assert_called_once_with(hostname, "ansible_connection", "winrm")
@@ -105,12 +104,10 @@ def test_service_lookup(mocker, inventory):
     )
 
     hostname = "default-testvm"
-    vmi = Dict(
-        {
-            "metadata": {"labels": {LABEL_KUBEVIRT_IO_DOMAIN: "testdomain"}},
-            "status": {"interfaces": [{"name": "somename", "ipAddress": "1.1.1.1"}]},
-        }
-    )
+    vmi = {
+        "metadata": {"labels": {LABEL_KUBEVIRT_IO_DOMAIN: "testdomain"}},
+        "status": {"interfaces": [{"name": "somename", "ipAddress": "1.1.1.1"}]},
+    }
     opts = InventoryOptions()
     service = {"metadata": {"name": "testsvc"}}
     inventory.set_vars_from_vmi(hostname, vmi, {"testdomain": service}, opts)
