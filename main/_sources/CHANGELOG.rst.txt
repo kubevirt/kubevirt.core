@@ -37,6 +37,7 @@ Breaking Changes / Porting Guide
 Bugfixes
 --------
 
+- fix(inventory): Fix inventory source caching `#119 <https://github.com/kubevirt/kubevirt.core/pull/119>`_
 - fix(tests,kubevirt_vm): Fix assertion in verify.yml `#106 <https://github.com/kubevirt/kubevirt.core/pull/106>`_
 
 v1.4.0
