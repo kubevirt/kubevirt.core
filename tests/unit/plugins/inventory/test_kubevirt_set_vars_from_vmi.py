@@ -13,21 +13,21 @@ from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
 
 
 def test_ignore_vmi_without_interface(mocker, inventory):
-    mocker.patch.object(inventory, "set_common_vars")
+    mocker.patch.object(inventory, "_set_common_vars")
     set_ansible_host_and_port = mocker.patch.object(
-        inventory, "set_ansible_host_and_port"
+        inventory, "_set_ansible_host_and_port"
     )
 
     vmi = {"status": {}}
-    inventory.set_vars_from_vmi("default-testvm", vmi, {}, InventoryOptions())
+    inventory._set_vars_from_vmi("default-testvm", vmi, {}, InventoryOptions())
 
     set_ansible_host_and_port.assert_not_called()
 
 
 def test_use_first_interface_by_default(mocker, inventory):
-    mocker.patch.object(inventory, "set_common_vars")
+    mocker.patch.object(inventory, "_set_common_vars")
     set_ansible_host_and_port = mocker.patch.object(
-        inventory, "set_ansible_host_and_port"
+        inventory, "_set_ansible_host_and_port"
     )
 
     hostname = "default-testvm"
@@ -36,7 +36,7 @@ def test_use_first_interface_by_default(mocker, inventory):
         "status": {"interfaces": [{"ipAddress": "1.1.1.1"}, {"ipAddress": "2.2.2.2"}]},
     }
     opts = InventoryOptions()
-    inventory.set_vars_from_vmi(hostname, vmi, {}, opts)
+    inventory._set_vars_from_vmi(hostname, vmi, {}, opts)
 
     set_ansible_host_and_port.assert_called_once_with(
         vmi, hostname, "1.1.1.1", None, opts
@@ -44,9 +44,9 @@ def test_use_first_interface_by_default(mocker, inventory):
 
 
 def test_use_named_interface(mocker, inventory):
-    mocker.patch.object(inventory, "set_common_vars")
+    mocker.patch.object(inventory, "_set_common_vars")
     set_ansible_host_and_port = mocker.patch.object(
-        inventory, "set_ansible_host_and_port"
+        inventory, "_set_ansible_host_and_port"
     )
 
     hostname = "default-testvm"
@@ -60,7 +60,7 @@ def test_use_named_interface(mocker, inventory):
         },
     }
     opts = InventoryOptions(network_name="second")
-    inventory.set_vars_from_vmi(hostname, vmi, {}, opts)
+    inventory._set_vars_from_vmi(hostname, vmi, {}, opts)
 
     set_ansible_host_and_port.assert_called_once_with(
         vmi, hostname, "2.2.2.2", None, opts
@@ -68,16 +68,16 @@ def test_use_named_interface(mocker, inventory):
 
 
 def test_ignore_vmi_without_named_interface(mocker, inventory):
-    mocker.patch.object(inventory, "set_common_vars")
+    mocker.patch.object(inventory, "_set_common_vars")
     set_ansible_host_and_port = mocker.patch.object(
-        inventory, "set_ansible_host_and_port"
+        inventory, "_set_ansible_host_and_port"
     )
 
     vmi = {
         "metadata": {},
         "status": {"interfaces": [{"name": "somename", "ipAddress": "1.1.1.1"}]},
     }
-    inventory.set_vars_from_vmi(
+    inventory._set_vars_from_vmi(
         "default-testvm", vmi, {}, InventoryOptions(network_name="awesome")
     )
 
@@ -85,22 +85,22 @@ def test_ignore_vmi_without_named_interface(mocker, inventory):
 
 
 def test_set_winrm_if_windows(mocker, inventory):
-    mocker.patch.object(inventory, "set_common_vars")
-    mocker.patch.object(inventory, "is_windows", return_value=True)
-    mocker.patch.object(inventory, "set_ansible_host_and_port")
+    mocker.patch.object(inventory, "_set_common_vars")
+    mocker.patch.object(inventory, "_is_windows", return_value=True)
+    mocker.patch.object(inventory, "_set_ansible_host_and_port")
     set_variable = mocker.patch.object(inventory.inventory, "set_variable")
 
     hostname = "default-testvm"
     vmi = {"metadata": {}, "status": {"interfaces": [{"ipAddress": "1.1.1.1"}]}}
-    inventory.set_vars_from_vmi(hostname, vmi, {}, InventoryOptions())
+    inventory._set_vars_from_vmi(hostname, vmi, {}, InventoryOptions())
 
     set_variable.assert_called_once_with(hostname, "ansible_connection", "winrm")
 
 
 def test_service_lookup(mocker, inventory):
-    mocker.patch.object(inventory, "set_common_vars")
+    mocker.patch.object(inventory, "_set_common_vars")
     set_ansible_host_and_port = mocker.patch.object(
-        inventory, "set_ansible_host_and_port"
+        inventory, "_set_ansible_host_and_port"
     )
 
     hostname = "default-testvm"
@@ -110,7 +110,7 @@ def test_service_lookup(mocker, inventory):
     }
     opts = InventoryOptions()
     service = {"metadata": {"name": "testsvc"}}
-    inventory.set_vars_from_vmi(hostname, vmi, {"testdomain": service}, opts)
+    inventory._set_vars_from_vmi(hostname, vmi, {"testdomain": service}, opts)
 
     set_ansible_host_and_port.assert_called_once_with(
         vmi, hostname, "1.1.1.1", service, opts

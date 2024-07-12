@@ -57,7 +57,7 @@ SVC_NP_SSH = {
     indirect=["client"],
 )
 def test_get_ssh_services_for_namespace(inventory, client):
-    assert inventory.get_ssh_services_for_namespace(client, DEFAULT_NAMESPACE) == {
+    assert inventory._get_ssh_services_for_namespace(client, DEFAULT_NAMESPACE) == {
         "test-lb-ssh": SVC_LB_SSH,
         "test-np-ssh": SVC_NP_SSH,
     }
@@ -165,4 +165,4 @@ SVC_NO_SELECTOR = {
     indirect=["client"],
 )
 def test_ignore_unwanted_services(inventory, client):
-    assert not inventory.get_ssh_services_for_namespace(client, DEFAULT_NAMESPACE)
+    assert not inventory._get_ssh_services_for_namespace(client, DEFAULT_NAMESPACE)

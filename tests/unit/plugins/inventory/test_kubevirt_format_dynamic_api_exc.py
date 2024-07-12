@@ -52,5 +52,6 @@ def status_reason_error(mocker):
 )
 def test_format_dynamic_api_exc(request, exc, expected):
     assert (
-        InventoryModule.format_dynamic_api_exc(request.getfixturevalue(exc)) == expected
+        InventoryModule._format_dynamic_api_exc(request.getfixturevalue(exc))
+        == expected
     )

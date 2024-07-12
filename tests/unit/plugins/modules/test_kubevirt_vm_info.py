@@ -24,85 +24,62 @@ from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock impo
 )
 
 
-@pytest.fixture(scope="module")
-def find_args_default():
-    return {
-        "kind": "VirtualMachine",
-        "api_version": "kubevirt.io/v1",
-        "name": None,
-        "namespace": None,
-        "label_selectors": [],
-        "field_selectors": [],
-        "wait": None,
-        "wait_sleep": 5,
-        "wait_timeout": 120,
-        "condition": {"type": "Ready", "status": True},
-    }
-
-
-@pytest.fixture(scope="module")
-def find_args_name_namespace(find_args_default):
-    return find_args_default | {
-        "name": "testvm",
-        "namespace": "default",
-    }
-
-
-@pytest.fixture(scope="module")
-def find_args_label_selector(find_args_default):
-    return find_args_default | {
-        "label_selectors": ["app=test"],
-    }
-
-
-@pytest.fixture(scope="module")
-def find_args_field_selector(find_args_default):
-    return find_args_default | {
-        "field_selectors": ["app=test"],
-    }
-
-
-@pytest.fixture(scope="module")
-def find_args_running(find_args_default):
-    return find_args_default | {
-        "wait": True,
-        "condition": {"type": "Ready", "status": True},
-    }
-
-
-@pytest.fixture(scope="module")
-def find_args_stopped(find_args_default):
-    return find_args_default | {
-        "wait": True,
-        "condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
-    }
-
-
-@pytest.mark.parametrize(
-    "module_args",
-    [
-        {"running": False},
-    ],
-)
-def test_module_fails_when_required_args_missing(mocker, module_args):
+def test_module_fails_when_required_args_missing(mocker):
     mocker.patch.object(AnsibleModule, "fail_json", fail_json)
     with pytest.raises(AnsibleFailJson):
-        set_module_args(module_args)
+        set_module_args({"running": False})
         kubevirt_vm_info.main()
+
+
+FIND_ARGS_DEFAULT = {
+    "kind": "VirtualMachine",
+    "api_version": "kubevirt.io/v1",
+    "name": None,
+    "namespace": None,
+    "label_selectors": [],
+    "field_selectors": [],
+    "wait": None,
+    "wait_sleep": 5,
+    "wait_timeout": 120,
+    "condition": {"type": "Ready", "status": True},
+}
+
+FIND_ARGS_NAME_NAMESPACE = FIND_ARGS_DEFAULT | {
+    "name": "testvm",
+    "namespace": "default",
+}
+
+FIND_ARGS_LABEL_SELECTOR = FIND_ARGS_DEFAULT | {
+    "label_selectors": ["app=test"],
+}
+
+FIND_ARGS_FIELD_SELECTOR = FIND_ARGS_DEFAULT | {
+    "field_selectors": ["app=test"],
+}
+
+FIND_ARGS_RUNNING = FIND_ARGS_DEFAULT | {
+    "wait": True,
+    "condition": {"type": "Ready", "status": True},
+}
+
+FIND_ARGS_STOPPED = FIND_ARGS_DEFAULT | {
+    "wait": True,
+    "condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
+}
 
 
 @pytest.mark.parametrize(
     "module_args,find_args",
     [
-        ({}, "find_args_default"),
-        ({"name": "testvm", "namespace": "default"}, "find_args_name_namespace"),
-        ({"label_selectors": "app=test"}, "find_args_label_selector"),
-        ({"field_selectors": "app=test"}, "find_args_field_selector"),
-        ({"wait": True, "running": True}, "find_args_running"),
-        ({"wait": True, "running": False}, "find_args_stopped"),
+        ({}, FIND_ARGS_DEFAULT),
+        ({"name": "testvm", "namespace": "default"}, FIND_ARGS_NAME_NAMESPACE),
+        ({"label_selectors": "app=test"}, FIND_ARGS_LABEL_SELECTOR),
+        ({"field_selectors": "app=test"}, FIND_ARGS_FIELD_SELECTOR),
+        ({"wait": True, "running": True}, FIND_ARGS_RUNNING),
+        ({"wait": True, "running": False}, FIND_ARGS_STOPPED),
     ],
 )
-def test_module(request, mocker, module_args, find_args):
+def test_module(mocker, module_args, find_args):
     mocker.patch.object(AnsibleModule, "exit_json", exit_json)
     mocker.patch.object(kubevirt_vm_info, "get_api_client")
 
@@ -120,4 +97,4 @@ def test_module(request, mocker, module_args, find_args):
         set_module_args(module_args)
         kubevirt_vm_info.main()
 
-    find.assert_called_once_with(**request.getfixturevalue(find_args))
+    find.assert_called_once_with(**find_args)

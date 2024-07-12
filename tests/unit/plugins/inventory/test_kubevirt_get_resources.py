@@ -30,19 +30,19 @@ from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants im
     indirect=["client"],
 )
 def test_get_resources(inventory, client):
-    assert inventory.get_resources(client, "v1", "Namespace") == [
+    assert inventory._get_resources(client, "v1", "Namespace") == [
         {"metadata": {"name": DEFAULT_NAMESPACE}}
     ]
-    assert inventory.get_resources(client, "v1", "Service") == [
+    assert inventory._get_resources(client, "v1", "Service") == [
         {"metadata": {"name": "testsvc"}}
     ]
-    assert inventory.get_resources(client, "config.openshift.io/v1", "DNS") == [
+    assert inventory._get_resources(client, "config.openshift.io/v1", "DNS") == [
         {"spec": {"baseDomain": DEFAULT_BASE_DOMAIN}}
     ]
-    assert inventory.get_resources(client, "kubevirt.io/v1", "VirtualMachine") == [
+    assert inventory._get_resources(client, "kubevirt.io/v1", "VirtualMachine") == [
         {"metadata": {"name": "testvm"}}
     ]
-    assert inventory.get_resources(
+    assert inventory._get_resources(
         client, "kubevirt.io/v1", "VirtualMachineInstance"
     ) == [{"metadata": {"name": "testvmi"}}]
 
@@ -67,7 +67,7 @@ def test_get_resources(inventory, client):
     indirect=["client"],
 )
 def test_get_available_namespaces(inventory, client, expected):
-    assert inventory.get_available_namespaces(client) == expected
+    assert inventory._get_available_namespaces(client) == expected
 
 
 @pytest.mark.parametrize(
@@ -83,7 +83,7 @@ def test_get_available_namespaces(inventory, client, expected):
     indirect=["client"],
 )
 def test_get_vms_for_namespace(inventory, client):
-    assert inventory.get_vms_for_namespace(
+    assert inventory._get_vms_for_namespace(
         client, DEFAULT_NAMESPACE, InventoryOptions()
     ) == [{"metadata": {"name": "testvm1"}}, {"metadata": {"name": "testvm2"}}]
 
@@ -101,6 +101,6 @@ def test_get_vms_for_namespace(inventory, client):
     indirect=["client"],
 )
 def test_get_vmis_for_namespace(inventory, client):
-    assert inventory.get_vmis_for_namespace(
+    assert inventory._get_vmis_for_namespace(
         client, DEFAULT_NAMESPACE, InventoryOptions()
     ) == [{"metadata": {"name": "testvmi1"}}, {"metadata": {"name": "testvmi2"}}]

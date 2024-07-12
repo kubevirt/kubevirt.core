@@ -69,7 +69,7 @@ WINDOWS_VMI_4 = merge_dicts(
     ],
 )
 def test_ansible_connection_winrm(inventory, hosts, vmi, expected):
-    inventory.populate_inventory(
+    inventory._populate_inventory(
         {
             "default_hostname": "test",
             "cluster_domain": "test.com",

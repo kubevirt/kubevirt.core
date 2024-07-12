@@ -45,7 +45,7 @@ def test_set_composable_vars(
         "keyed_groups": [{"prefix": "fedora", "key": "vmi_guest_os_info.versionId"}],
         "strict": True,
     }
-    inventory.populate_inventory(
+    inventory._populate_inventory(
         {
             "default_hostname": "test",
             "cluster_domain": "test.com",

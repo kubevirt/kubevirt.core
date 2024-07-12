@@ -62,7 +62,7 @@ def test_add_host(inventory, groups, hosts, host_format, expected):
     namespace_group = "namespace_default"
     inventory.inventory.add_group(namespace_group)
 
-    inventory.add_host(
+    inventory._add_host(
         {
             "name": "testvm",
             "namespace": DEFAULT_NAMESPACE,

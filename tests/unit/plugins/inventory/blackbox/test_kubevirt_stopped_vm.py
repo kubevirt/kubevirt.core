@@ -44,7 +44,7 @@ VMI1 = {
 
 
 def test_stopped_vm(inventory, hosts):
-    inventory.populate_inventory(
+    inventory._populate_inventory(
         {
             "default_hostname": "test",
             "cluster_domain": "test.com",

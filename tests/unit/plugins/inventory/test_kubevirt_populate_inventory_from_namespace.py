@@ -129,15 +129,15 @@ def test_populate_inventory_from_namespace(
             set_vars_from_vmi_calls.append(mocker.call(hostname, vmi, {}, opts))
             set_composable_vars_calls.append(mocker.call(hostname))
 
-    obj_is_valid = mocker.patch.object(inventory, "obj_is_valid", return_value=True)
+    obj_is_valid = mocker.patch.object(inventory, "_obj_is_valid", return_value=True)
     add_host = mocker.patch.object(
-        inventory, "add_host", side_effect=add_host_side_effects
+        inventory, "_add_host", side_effect=add_host_side_effects
     )
-    set_vars_from_vm = mocker.patch.object(inventory, "set_vars_from_vm")
-    set_vars_from_vmi = mocker.patch.object(inventory, "set_vars_from_vmi")
-    set_composable_vars = mocker.patch.object(inventory, "set_composable_vars")
+    set_vars_from_vm = mocker.patch.object(inventory, "_set_vars_from_vm")
+    set_vars_from_vmi = mocker.patch.object(inventory, "_set_vars_from_vmi")
+    set_composable_vars = mocker.patch.object(inventory, "_set_composable_vars")
 
-    inventory.populate_inventory_from_namespace(
+    inventory._populate_inventory_from_namespace(
         DEFAULT_NAMESPACE, {"vms": vms, "vmis": vmis, "services": {}}, opts
     )
 
