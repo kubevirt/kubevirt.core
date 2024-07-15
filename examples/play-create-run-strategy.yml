@@ -1,0 +1,42 @@
+---
+- name: Playbook creating a virtual machine with multus network
+  hosts: localhost
+  tasks:
+    - name: Create VM
+      kubevirt.core.kubevirt_vm:
+        state: present
+        name: testvm
+        namespace: default
+        labels:
+          app: test
+        instancetype:
+          name: u1.medium
+        preference:
+          name: fedora
+        run_strategy: Manual
+        spec:
+          domain:
+            devices:
+              interfaces:
+                - name: default
+                  masquerade: {}
+                - name: bridge-network
+                  bridge: {}
+          networks:
+            - name: default
+              pod: {}
+            - name: bridge-network
+              multus:
+                networkName: kindexgw
+          volumes:
+            - containerDisk:
+                image: quay.io/containerdisks/fedora:latest
+              name: containerdisk
+            - cloudInitNoCloud:
+                userData: |-
+                  #cloud-config
+                  # The default username is: fedora
+                  ssh_authorized_keys:
+                    - ssh-ed25519 AAAA...
+              name: cloudinit
+        wait: true
