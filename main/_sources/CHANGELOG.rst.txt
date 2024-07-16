@@ -28,6 +28,7 @@ Minor Changes
 - Several minor improvements `#115 <https://github.com/kubevirt/kubevirt.core/pull/115>`_
 - Several small cleanups `#122 <https://github.com/kubevirt/kubevirt.core/pull/122>`_
 - chore: Ensure compatibility with kubernetes.core >=3.1.0,<6.0.0 `#111 <https://github.com/kubevirt/kubevirt.core/pull/111>`_
+- feat(kubevirt_vm): Add support for RunStrategy `#124 <https://github.com/kubevirt/kubevirt.core/pull/124>`_
 - kubevirt_vm integration tests: changed ssh key type to RSA for FIPS mode `#108 <https://github.com/kubevirt/kubevirt.core/pull/108>`_
 
 Breaking Changes / Porting Guide

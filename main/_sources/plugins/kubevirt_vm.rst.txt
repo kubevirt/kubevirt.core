@@ -577,6 +577,30 @@ Parameters
 
   <tr class="row-even">
     <td><div class="ansible-option-cell">
+      <div class="ansibleOptionAnchor" id="parameter-run_strategy"></div>
+      <p class="ansible-option-title"><strong>run_strategy</strong></p>
+      <a class="ansibleOptionLink" href="#parameter-run_strategy" title="Permalink to this option"></a>
+      <p class="ansible-option-type-line">
+        <span class="ansible-option-type">string</span>
+      </p>
+      <p><em class="ansible-option-versionadded">added in kubevirt.core 2.0.0</em></p>
+    </div></td>
+    <td><div class="ansible-option-cell">
+      <p>Specify the <code class='docutils literal notranslate'>RunStrategy</code> of the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+      <p>Mutually exclusive with <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-running"><span class="std std-ref"><span class="pre">running</span></span></a></strong></code>.</p>
+      <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+      <ul class="simple">
+        <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;Always&#34;</code></p></li>
+        <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;Halted&#34;</code></p></li>
+        <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;Manual&#34;</code></p></li>
+        <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;RerunOnFailure&#34;</code></p></li>
+        <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;Once&#34;</code></p></li>
+      </ul>
+
+    </div></td>
+  </tr>
+  <tr class="row-odd">
+    <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-running"></div>
       <p class="ansible-option-title"><strong>running</strong></p>
       <a class="ansibleOptionLink" href="#parameter-running" title="Permalink to this option"></a>
@@ -586,15 +610,17 @@ Parameters
     </div></td>
     <td><div class="ansible-option-cell">
       <p>Specify whether the <code class='docutils literal notranslate'>VirtualMachine</code> should be running or not.</p>
+      <p>Mutually exclusive with <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-run_strategy"><span class="std std-ref"><span class="pre">run_strategy</span></span></a></strong></code>.</p>
+      <p>Defaults to <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-running"><span class="std std-ref"><span class="pre">running=yes</span></span></a></code> when <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-running"><span class="std std-ref"><span class="pre">running</span></span></a></strong></code> and <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-run_strategy"><span class="std std-ref"><span class="pre">run_strategy</span></span></a></strong></code> are not set.</p>
       <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
       <ul class="simple">
         <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
-        <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>true</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+        <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">true</code></p></li>
       </ul>
 
     </div></td>
   </tr>
-  <tr class="row-odd">
+  <tr class="row-even">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-spec"></div>
       <p class="ansible-option-title"><strong>spec</strong></p>
@@ -608,7 +634,7 @@ Parameters
       <p>See <a href='https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec'>https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec</a></p>
     </div></td>
   </tr>
-  <tr class="row-even">
+  <tr class="row-odd">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-state"></div>
       <p class="ansible-option-title"><strong>state</strong></p>
@@ -630,7 +656,7 @@ Parameters
 
     </div></td>
   </tr>
-  <tr class="row-odd">
+  <tr class="row-even">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-username"></div>
       <p class="ansible-option-title"><strong>username</strong></p>
@@ -644,7 +670,7 @@ Parameters
       <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_USERNAME</code> environment variable.</p>
     </div></td>
   </tr>
-  <tr class="row-even">
+  <tr class="row-odd">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-validate_certs"></div>
       <div class="ansibleOptionAnchor" id="parameter-verify_ssl"></div>
@@ -666,7 +692,7 @@ Parameters
 
     </div></td>
   </tr>
-  <tr class="row-odd">
+  <tr class="row-even">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-wait"></div>
       <p class="ansible-option-title"><strong>wait</strong></p>
@@ -685,7 +711,7 @@ Parameters
 
     </div></td>
   </tr>
-  <tr class="row-even">
+  <tr class="row-odd">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-wait_sleep"></div>
       <p class="ansible-option-title"><strong>wait_sleep</strong></p>
@@ -700,7 +726,7 @@ Parameters
       <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">5</code></p>
     </div></td>
   </tr>
-  <tr class="row-odd">
+  <tr class="row-even">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-wait_timeout"></div>
       <p class="ansible-option-title"><strong>wait_timeout</strong></p>
