@@ -101,11 +101,27 @@ VM_DEFINITION_STOPPED = {
     },
 }
 
+VM_DEFINITION_HALTED = {
+    "apiVersion": "kubevirt.io/v1",
+    "kind": "VirtualMachine",
+    "metadata": {
+        "name": "testvm",
+        "namespace": "default",
+    },
+    "spec": {
+        "runStrategy": "Halted",
+        "template": {
+            "spec": {
+                "domain": {"devices": {}},
+            },
+        },
+    },
+}
+
 MODULE_PARAMS_DEFAULT = {
     "api_version": "kubevirt.io/v1",
     "annotations": None,
     "labels": None,
-    "running": True,
     "instancetype": None,
     "preference": None,
     "data_volume_templates": None,
@@ -174,6 +190,12 @@ MODULE_PARAMS_STOPPED = MODULE_PARAMS_DEFAULT | {
     "running": False,
 }
 
+MODULE_PARAMS_HALTED = MODULE_PARAMS_DEFAULT | {
+    "name": "testvm",
+    "namespace": "default",
+    "run_strategy": "Halted",
+}
+
 MODULE_PARAMS_DELETE = MODULE_PARAMS_DEFAULT | {
     "name": "testvm",
     "namespace": "default",
@@ -183,24 +205,37 @@ MODULE_PARAMS_DELETE = MODULE_PARAMS_DEFAULT | {
 
 K8S_MODULE_PARAMS_CREATE = MODULE_PARAMS_CREATE | {
     "generate_name": None,
+    "running": None,
+    "run_strategy": None,
     "resource_definition": VM_DEFINITION_CREATE,
     "wait_condition": {"type": "Ready", "status": True},
 }
 
 K8S_MODULE_PARAMS_RUNNING = MODULE_PARAMS_RUNNING | {
     "generate_name": None,
+    "run_strategy": None,
     "resource_definition": VM_DEFINITION_RUNNING,
     "wait_condition": {"type": "Ready", "status": True},
 }
 
 K8S_MODULE_PARAMS_STOPPED = MODULE_PARAMS_STOPPED | {
     "generate_name": None,
+    "run_strategy": None,
     "resource_definition": VM_DEFINITION_STOPPED,
+    "wait_condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
+}
+
+K8S_MODULE_PARAMS_HALTED = MODULE_PARAMS_HALTED | {
+    "generate_name": None,
+    "running": None,
+    "resource_definition": VM_DEFINITION_HALTED,
     "wait_condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
 }
 
 K8S_MODULE_PARAMS_DELETE = MODULE_PARAMS_DELETE | {
     "generate_name": None,
+    "running": None,
+    "run_strategy": None,
     "resource_definition": VM_DEFINITION_RUNNING,
     "wait_condition": {"type": "Ready", "status": True},
 }
@@ -225,6 +260,12 @@ K8S_MODULE_PARAMS_DELETE = MODULE_PARAMS_DELETE | {
             MODULE_PARAMS_STOPPED,
             K8S_MODULE_PARAMS_STOPPED,
             VM_DEFINITION_STOPPED,
+            "update",
+        ),
+        (
+            MODULE_PARAMS_HALTED,
+            K8S_MODULE_PARAMS_HALTED,
+            VM_DEFINITION_HALTED,
             "update",
         ),
         (
@@ -262,8 +303,13 @@ def test_module(mocker, module_params, k8s_module_params, vm_definition, method)
 
 CREATE_VM_PARAMS = {
     "api_version": "kubevirt.io/v1",
-    "running": True,
     "namespace": "default",
+}
+
+CREATE_VM_PARAMS_RUN_STRATEGY = {
+    "api_version": "kubevirt.io/v1",
+    "namespace": "default",
+    "run_strategy": "Manual",
 }
 
 CREATE_VM_PARAMS_ANNOTATIONS = CREATE_VM_PARAMS | {
@@ -331,6 +377,24 @@ CREATED_VM = {
     },
     "spec": {
         "running": True,
+        "template": {
+            "spec": {
+                "domain": {
+                    "devices": {},
+                },
+            },
+        },
+    },
+}
+
+CREATED_VM_RUN_STRATEGY = {
+    "apiVersion": "kubevirt.io/v1",
+    "kind": "VirtualMachine",
+    "metadata": {
+        "namespace": "default",
+    },
+    "spec": {
+        "runStrategy": "Manual",
         "template": {
             "spec": {
                 "domain": {
@@ -528,6 +592,7 @@ CREATED_VM_SPECS = {
     "params,expected",
     [
         (CREATE_VM_PARAMS, CREATED_VM),
+        (CREATE_VM_PARAMS_RUN_STRATEGY, CREATED_VM_RUN_STRATEGY),
         (CREATE_VM_PARAMS_ANNOTATIONS, CREATED_VM_ANNOTATIONS),
         (CREATE_VM_PARAMS_LABELS, CREATED_VM_LABELS),
         (CREATE_VM_PARAMS_INSTANCETYPE, CREATED_VM_INSTANCETYPE),
@@ -540,3 +605,46 @@ CREATED_VM_SPECS = {
 )
 def test_create_vm(params, expected):
     assert kubevirt_vm.create_vm(params) == expected
+
+
+@pytest.mark.parametrize(
+    "params,expected",
+    [
+        ({"running": None, "run_strategy": "Manual"}, {}),
+        (
+            {"running": None, "run_strategy": None},
+            {"wait_condition": kubevirt_vm.WAIT_CONDITION_READY},
+        ),
+        (
+            {"running": True, "run_strategy": None},
+            {"wait_condition": kubevirt_vm.WAIT_CONDITION_READY},
+        ),
+        (
+            {"running": None, "run_strategy": "Always"},
+            {"wait_condition": kubevirt_vm.WAIT_CONDITION_READY},
+        ),
+        (
+            {"running": None, "run_strategy": "RerunOnFailure"},
+            {"wait_condition": kubevirt_vm.WAIT_CONDITION_READY},
+        ),
+        (
+            {"running": None, "run_strategy": "Once"},
+            {"wait_condition": kubevirt_vm.WAIT_CONDITION_READY},
+        ),
+        (
+            {"running": False, "run_strategy": None},
+            {"wait_condition": kubevirt_vm.WAIT_CONDITION_VMI_NOT_EXISTS},
+        ),
+        (
+            {"running": None, "run_strategy": "Halted"},
+            {"wait_condition": kubevirt_vm.WAIT_CONDITION_VMI_NOT_EXISTS},
+        ),
+    ],
+)
+def test_set_wait_condition(mocker, params, expected):
+    module = mocker.Mock()
+    module.params = params
+
+    kubevirt_vm.set_wait_condition(module)
+
+    assert module.params == params | expected

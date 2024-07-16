@@ -61,8 +61,21 @@ options:
   running:
     description:
     - Specify whether the C(VirtualMachine) should be running or not.
+    - Mutually exclusive with O(run_strategy).
+    - Defaults to O(running=yes) when O(running) and O(run_strategy) are not set.
     type: bool
-    default: yes
+  run_strategy:
+    description:
+    - Specify the C(RunStrategy) of the C(VirtualMachine).
+    - Mutually exclusive with O(running).
+    type: str
+    choices:
+    - Always
+    - Halted
+    - Manual
+    - RerunOnFailure
+    - Once
+    version_added: 2.0.0
   instancetype:
     description:
     - Specify the C(Instancetype) matcher of the C(VirtualMachine).
@@ -280,6 +293,13 @@ from ansible_collections.kubernetes.core.plugins.module_utils.k8s.exceptions imp
     CoreException,
 )
 
+WAIT_CONDITION_READY = {"type": "Ready", "status": True}
+WAIT_CONDITION_VMI_NOT_EXISTS = {
+    "type": "Ready",
+    "status": False,
+    "reason": "VMINotExists",
+}
+
 
 def create_vm(params: Dict) -> Dict:
     """
@@ -292,7 +312,6 @@ def create_vm(params: Dict) -> Dict:
             "namespace": params["namespace"],
         },
         "spec": {
-            "running": params["running"],
             "template": {"spec": {"domain": {"devices": {}}}},
         },
     }
@@ -312,6 +331,12 @@ def create_vm(params: Dict) -> Dict:
     if template_metadata:
         vm["spec"]["template"]["metadata"] = template_metadata
 
+    if (run_strategy := params.get("run_strategy")) is not None:
+        vm["spec"]["runStrategy"] = run_strategy
+    else:
+        vm["spec"]["running"] = (
+            running if (running := params.get("running")) is not None else True
+        )
     if (instancetype := params.get("instancetype")) is not None:
         vm["spec"]["instancetype"] = instancetype
     if (preference := params.get("preference")) is not None:
@@ -322,6 +347,21 @@ def create_vm(params: Dict) -> Dict:
         vm["spec"]["template"]["spec"] = spec
 
     return vm
+
+
+def set_wait_condition(module: AnsibleK8SModule) -> None:
+    """
+    set_wait_condition sets the wait_condition to allow waiting for the ready
+    state of the VirtualMachine depending on the module parameters running
+    and run_strategy.
+    """
+    if (
+        module.params["running"] is False
+        or (run_strategy := module.params["run_strategy"]) == "Halted"
+    ):
+        module.params["wait_condition"] = WAIT_CONDITION_VMI_NOT_EXISTS
+    elif run_strategy != "Manual":
+        module.params["wait_condition"] = WAIT_CONDITION_READY
 
 
 def arg_spec() -> Dict:
@@ -335,7 +375,10 @@ def arg_spec() -> Dict:
         "namespace": {"required": True},
         "annotations": {"type": "dict"},
         "labels": {"type": "dict"},
-        "running": {"type": "bool", "default": True},
+        "running": {"type": "bool"},
+        "run_strategy": {
+            "choices": ["Always", "Halted", "Manual", "RerunOnFailure", "Once"]
+        },
         "instancetype": {"type": "dict"},
         "preference": {"type": "dict"},
         "data_volume_templates": {"type": "list", "elements": "dict"},
@@ -376,6 +419,7 @@ def main() -> None:
         argument_spec=arg_spec(),
         mutually_exclusive=[
             ("name", "generate_name"),
+            ("running", "run_strategy"),
         ],
         required_one_of=[
             ("name", "generate_name"),
@@ -387,14 +431,7 @@ def main() -> None:
     module.params["resource_definition"] = create_vm(module.params)
 
     # Set wait_condition to allow waiting for the ready state of the VirtualMachine
-    if module.params["running"]:
-        module.params["wait_condition"] = {"type": "Ready", "status": True}
-    else:
-        module.params["wait_condition"] = {
-            "type": "Ready",
-            "status": False,
-            "reason": "VMINotExists",
-        }
+    set_wait_condition(module)
 
     try:
         runner.run_module(module)
