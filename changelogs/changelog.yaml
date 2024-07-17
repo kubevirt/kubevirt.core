@@ -144,3 +144,14 @@ releases:
     - 114.yaml
     - 115.yaml
     release_date: '2024-07-10'
+  2.0.0:
+    changes:
+      release_summary: The deprecation of the 'connections' parameter is
+        continued by dropping support for multiple connections. Inventory
+        configurations with a single connection remain working for now.
+        This backwards compatibility will be dropped in version 3.0.0 of the
+        collection.
+
+        Inventory source caching is now working and allows to reduce the load
+        on the control plane of a cluster from which an inventory is built.
+    release_date: '2024-07-17'
