@@ -6,6 +6,32 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v2.0.0
+======
+
+Release Summary
+---------------
+
+The deprecation of the 'connections' parameter is continued by dropping support for multiple connections. Inventory configurations with a single connection remain working for now. This backwards compatibility will be dropped in version 3.0.0 of the collection.
+Inventory source caching is now working and allows to reduce the load on the control plane of a cluster from which an inventory is built.
+
+Minor Changes
+-------------
+
+- Several small cleanups `#122 <https://github.com/kubevirt/kubevirt.core/pull/122>`_
+- feat(kubevirt_vm): Add support for RunStrategy `#124 <https://github.com/kubevirt/kubevirt.core/pull/124>`_
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- chore: Bump version to 2.0.0 `#125 <https://github.com/kubevirt/kubevirt.core/pull/125>`_
+- cleanup(inventory): Drop support for multiple connections `#117 <https://github.com/kubevirt/kubevirt.core/pull/117>`_
+
+Bugfixes
+--------
+
+- fix(inventory): Fix inventory source caching `#119 <https://github.com/kubevirt/kubevirt.core/pull/119>`_
+
 v1.5.0
 ======
 

@@ -146,12 +146,35 @@ releases:
     release_date: '2024-07-10'
   2.0.0:
     changes:
-      release_summary: The deprecation of the 'connections' parameter is
-        continued by dropping support for multiple connections. Inventory
-        configurations with a single connection remain working for now.
-        This backwards compatibility will be dropped in version 3.0.0 of the
-        collection.
+      breaking_changes:
+      - 'chore: Bump version to 2.0.0 `#125 <https://github.com/kubevirt/kubevirt.core/pull/125>`_
 
-        Inventory source caching is now working and allows to reduce the load
-        on the control plane of a cluster from which an inventory is built.
+        '
+      - 'cleanup(inventory): Drop support for multiple connections `#117 <https://github.com/kubevirt/kubevirt.core/pull/117>`_
+
+        '
+      bugfixes:
+      - 'fix(inventory): Fix inventory source caching `#119 <https://github.com/kubevirt/kubevirt.core/pull/119>`_
+
+        '
+      minor_changes:
+      - 'Several small cleanups `#122 <https://github.com/kubevirt/kubevirt.core/pull/122>`_
+
+        '
+      - 'feat(kubevirt_vm): Add support for RunStrategy `#124 <https://github.com/kubevirt/kubevirt.core/pull/124>`_
+
+        '
+      release_summary: 'The deprecation of the ''connections'' parameter is continued
+        by dropping support for multiple connections. Inventory configurations with
+        a single connection remain working for now. This backwards compatibility will
+        be dropped in version 3.0.0 of the collection.
+
+        Inventory source caching is now working and allows to reduce the load on the
+        control plane of a cluster from which an inventory is built.'
+    fragments:
+    - 117.yaml
+    - 119.yaml
+    - 122.yaml
+    - 124.yaml
+    - 125.yaml
     release_date: '2024-07-17'
