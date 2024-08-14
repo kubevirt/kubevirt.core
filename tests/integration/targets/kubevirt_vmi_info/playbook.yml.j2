@@ -1,0 +1,67 @@
+---
+- name: Create VM
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Create a VM
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        instancetype:
+          name: u1.small
+        preference:
+          name: centos.stream9
+        spec:
+          domain:
+            devices: {}
+          volumes:
+            - containerDisk:
+                image: quay.io/containerdisks/centos-stream:9
+              name: containerdisk
+        wait: true
+        wait_timeout: 600
+
+- name: Describe created VMI
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Describe a VMI
+      kubevirt.core.kubevirt_vmi_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+      register: describe
+    - name: Assert module reported no changes
+      ansible.builtin.assert:
+        that:
+          - not describe.changed
+          - describe.resources | length == 1
+
+- name: Delete VM
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Delete a VM
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: absent
+        wait: true
+
+- name: Verify VM deletion
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Delete a VM
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: absent
+      register: delete
+    - name: Assert module reported no changes
+      ansible.builtin.assert:
+        that:
+          - not delete.changed

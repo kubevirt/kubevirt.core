@@ -163,4 +163,5 @@ kubevirt.core
 /tests/integration/targets/kubevirt_vm/wait_for_vm.yml
 /tests/integration/targets/kubevirt_vm/files
 /tests/integration/targets/kubevirt_vm_info/playbook.yml
+/tests/integration/targets/kubevirt_vmi_info/playbook.yml
 kubevirt-cache
