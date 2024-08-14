@@ -30,7 +30,6 @@ set_default_params() {
 
   KUBEVIRT_VERSION=${KUBEVIRT_VERSION:-v1.2.2}
   KUBEVIRT_CDI_VERSION=${KUBEVIRT_CDI_VERSION:-v1.59.0}
-  KUBEVIRT_COMMON_INSTANCETYPES_VERSION=${KUBEVIRT_COMMON_INSTANCETYPES_VERSION:-v1.0.0}
   KUBEVIRT_USE_EMULATION=${KUBEVIRT_USE_EMULATION:-"false"}
 
   CNAO_VERSION=${CNAO_VERSION:-v0.93.0}
@@ -244,7 +243,8 @@ deploy_kubevirt_containerized_data_importer() {
 
 deploy_kubevirt_common_instancetypes() {
   echo "Deploying KubeVirt common-instancetypes"
-  ${KUBECTL} apply -f "https://github.com/kubevirt/common-instancetypes/releases/download/${KUBEVIRT_COMMON_INSTANCETYPES_VERSION}/common-instancetypes-all-bundle-${KUBEVIRT_COMMON_INSTANCETYPES_VERSION}.yaml"
+  ${KUBECTL} patch kubevirt kubevirt --namespace kubevirt --type=merge --patch '{"spec":{"configuration":{"developerConfiguration":{"featureGates": ["CommonInstancetypesDeploymentGate"]}}}}'
+  ${KUBECTL} wait --for=condition=Available kubevirt kubevirt --namespace=kubevirt --timeout=5m
 }
 
 deploy_cnao() {
