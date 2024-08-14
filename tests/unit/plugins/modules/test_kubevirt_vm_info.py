@@ -15,6 +15,9 @@ from ansible_collections.kubernetes.core.plugins.module_utils.k8s.service import
 from ansible_collections.kubevirt.core.plugins.modules import (
     kubevirt_vm_info,
 )
+from ansible_collections.kubevirt.core.plugins.module_utils import (
+    info,
+)
 from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock import (
     AnsibleExitJson,
     AnsibleFailJson,
@@ -81,7 +84,7 @@ FIND_ARGS_STOPPED = FIND_ARGS_DEFAULT | {
 )
 def test_module(mocker, module_args, find_args):
     mocker.patch.object(AnsibleModule, "exit_json", exit_json)
-    mocker.patch.object(kubevirt_vm_info, "get_api_client")
+    mocker.patch.object(info, "get_api_client")
 
     find = mocker.patch.object(
         K8sService,

@@ -161,46 +161,11 @@ from ansible_collections.kubernetes.core.plugins.module_utils.args_common import
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s.core import (
     AnsibleK8SModule,
 )
-from ansible_collections.kubernetes.core.plugins.module_utils.k8s.client import (
-    get_api_client,
+
+from ansible_collections.kubevirt.core.plugins.module_utils.info import (
+    INFO_ARG_SPEC,
+    execute_info_module,
 )
-from ansible_collections.kubernetes.core.plugins.module_utils.k8s.exceptions import (
-    CoreException,
-)
-from ansible_collections.kubernetes.core.plugins.module_utils.k8s.service import (
-    K8sService,
-)
-
-
-def execute_module(module, svc):
-    """
-    execute_module defines the kind and wait_condition and runs the lookup
-    of resources.
-    """
-    # Set kind to query for VirtualMachines
-    KIND = "VirtualMachine"
-
-    # Set wait_condition to allow waiting for the ready state of the
-    # VirtualMachine based on the running parameter.
-    if module.params["running"] is None or module.params["running"]:
-        wait_condition = {"type": "Ready", "status": True}
-    else:
-        wait_condition = {"type": "Ready", "status": False, "reason": "VMINotExists"}
-
-    facts = svc.find(
-        kind=KIND,
-        api_version=module.params["api_version"],
-        name=module.params["name"],
-        namespace=module.params["namespace"],
-        label_selectors=module.params["label_selectors"],
-        field_selectors=module.params["field_selectors"],
-        wait=module.params["wait"],
-        wait_sleep=module.params["wait_sleep"],
-        wait_timeout=module.params["wait_timeout"],
-        condition=wait_condition,
-    )
-
-    module.exit_json(changed=False, **facts)
 
 
 def arg_spec():
@@ -208,16 +173,9 @@ def arg_spec():
     arg_spec defines the argument spec of this module.
     """
     spec = {
-        "api_version": {"default": "kubevirt.io/v1"},
-        "name": {},
-        "namespace": {},
-        "label_selectors": {"type": "list", "elements": "str", "default": []},
-        "field_selectors": {"type": "list", "elements": "str", "default": []},
         "running": {"type": "bool"},
-        "wait": {"type": "bool"},
-        "wait_sleep": {"type": "int", "default": 5},
-        "wait_timeout": {"type": "int", "default": 120},
     }
+    spec.update(deepcopy(INFO_ARG_SPEC))
     spec.update(deepcopy(AUTH_ARG_SPEC))
 
     return spec
@@ -234,12 +192,17 @@ def main():
         supports_check_mode=True,
     )
 
-    try:
-        client = get_api_client(module)
-        svc = K8sService(client, module)
-        execute_module(module, svc)
-    except CoreException as exc:
-        module.fail_from_exception(exc)
+    # Set kind to query for VirtualMachines
+    kind = "VirtualMachine"
+
+    # Set wait_condition to allow waiting for the ready state of the
+    # VirtualMachine based on the running parameter.
+    if module.params["running"] is None or module.params["running"]:
+        wait_condition = {"type": "Ready", "status": True}
+    else:
+        wait_condition = {"type": "Ready", "status": False, "reason": "VMINotExists"}
+
+    execute_info_module(module, kind, wait_condition)
 
 
 if __name__ == "__main__":
