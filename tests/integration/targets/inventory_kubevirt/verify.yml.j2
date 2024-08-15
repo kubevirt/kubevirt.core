@@ -11,7 +11,7 @@
     - name: Assert empty inventory
       ansible.builtin.assert:
         that:
-          - inv_empty['all'] is not defined or inv_empty['all']['children']['test']['children']['namespace_default']['hosts'] is not defined
+          - inv_empty['all'] is not defined or inv_empty['all']['children']['test']['children']['namespace_{{ NAMESPACE | replace("-", "_") }}']['hosts'] is not defined
     - name: Read inventory after VM creation
       ansible.builtin.include_vars:
         file: all.yml
@@ -21,7 +21,7 @@
         that:
           - inv_all['all']['children']['label_app_test']['hosts'] | length == 1
           - inv_all['all']['children']['label_foo_bar']['hosts'] | length == 1
-          - "'default-testvm-stopped' in inv_all['all']['children']['test']['children']['namespace_default']['hosts']"
+          - "'{{ NAMESPACE }}-testvm-stopped' in inv_all['all']['children']['test']['children']['namespace_{{ NAMESPACE | replace("-", "_") }}']['hosts']"
     - name: Read filtered inventory
       ansible.builtin.include_vars:
         file: label.yml

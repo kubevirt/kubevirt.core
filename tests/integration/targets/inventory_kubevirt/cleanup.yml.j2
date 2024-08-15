@@ -8,19 +8,19 @@
       kubevirt.core.kubevirt_vm:
         state: absent
         name: testvm1
-        namespace: default
+        namespace: {{ NAMESPACE }}
         wait: true
 
     - name: Delete another VM
       kubevirt.core.kubevirt_vm:
         state: absent
         name: testvm2
-        namespace: default
+        namespace: {{ NAMESPACE }}
         wait: true
 
     - name: Delete the stopped VM
       kubevirt.core.kubevirt_vm:
         state: absent
         name: testvm-stopped
-        namespace: default
+        namespace: {{ NAMESPACE }}
         wait: true

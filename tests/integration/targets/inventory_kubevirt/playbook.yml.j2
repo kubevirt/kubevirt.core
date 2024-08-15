@@ -8,7 +8,7 @@
       kubevirt.core.kubevirt_vm:
         state: present
         name: testvm1
-        namespace: default
+        namespace: {{ NAMESPACE }}
         labels:
           app: test
         spec:
@@ -26,7 +26,7 @@
               pod: {}
             - name: bridge-network
               multus:
-                networkName: kindexgw
+                networkName: {{ SECONDARY_NETWORK }}
           volumes:
             - containerDisk:
                 image: quay.io/containerdisks/centos-stream:9
@@ -38,7 +38,7 @@
       kubevirt.core.kubevirt_vm:
         state: present
         name: testvm2
-        namespace: default
+        namespace: {{ NAMESPACE }}
         labels:
           foo: bar
         spec:
@@ -57,7 +57,7 @@
       kubevirt.core.kubevirt_vm:
         state: present
         name: testvm-stopped
-        namespace: default
+        namespace: {{ NAMESPACE }}
         running: false
         spec:
           domain:
