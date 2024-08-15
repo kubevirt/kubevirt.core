@@ -7,7 +7,7 @@
     - name: Create a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
-        namespace: default
+        namespace: {{ NAMESPACE }}
         instancetype:
           name: u1.small
         preference:
@@ -30,7 +30,7 @@
     - name: Describe a VM
       kubevirt.core.kubevirt_vm_info:
         name: testvm
-        namespace: default
+        namespace: {{ NAMESPACE }}
       register: describe
     - name: Assert module reported no changes
       ansible.builtin.assert:
@@ -46,7 +46,7 @@
     - name: Delete a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
-        namespace: default
+        namespace: {{ NAMESPACE }}
         state: absent
         wait: true
 
@@ -58,7 +58,7 @@
     - name: Delete a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
-        namespace: default
+        namespace: {{ NAMESPACE }}
         state: absent
       register: delete
     - name: Assert module reported no changes
