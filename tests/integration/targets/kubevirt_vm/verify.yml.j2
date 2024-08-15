@@ -7,7 +7,7 @@
     - name: Create a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
-        namespace: default
+        namespace: {{ NAMESPACE }}
         labels:
           app: test
       register: recreate
@@ -29,7 +29,7 @@
     - name: Delete a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
-        namespace: default
+        namespace: {{ NAMESPACE }}
         state: absent
         wait: true
 
@@ -41,7 +41,7 @@
     - name: Delete a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
-        namespace: default
+        namespace: {{ NAMESPACE }}
         state: absent
       register: delete
     - name: Assert module reported no changes

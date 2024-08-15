@@ -157,5 +157,9 @@ kubevirt.core
 /tests/integration/targets/inventory_kubevirt/test.label.kubevirt.yml
 /tests/integration/targets/inventory_kubevirt/test.net.kubevirt.yml
 /tests/integration/targets/inventory_kubevirt/verify.yml
+/tests/integration/targets/kubevirt_vm/playbook.yml
+/tests/integration/targets/kubevirt_vm/test.kubevirt.yml
+/tests/integration/targets/kubevirt_vm/verify.yml
+/tests/integration/targets/kubevirt_vm/wait_for_vm.yml
 /tests/integration/targets/kubevirt_vm/files
 kubevirt-cache

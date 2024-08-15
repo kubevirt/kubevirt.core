@@ -7,14 +7,14 @@
     - name: Wait up to 900 seconds for port 22 to become open
       ansible.builtin.wait_for:
         port: 22
-        host: "{{ hostvars['default-testvm'].ansible_host }}"
+        host: "{{ '{{' }} hostvars['{{ NAMESPACE }}-testvm'].ansible_host {{ '}}' }}"
         search_regex: OpenSSH
         delay: 10
         timeout: 900
 
 - name: Connect to VM
   gather_facts: true
-  hosts: default-testvm
+  hosts: {{ NAMESPACE }}-testvm
   remote_user: cloud-user
   vars:
     ansible_python_interpreter: /usr/bin/python3
