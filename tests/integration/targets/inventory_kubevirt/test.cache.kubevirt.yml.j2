@@ -2,7 +2,7 @@
 plugin: kubevirt.core.kubevirt
 name: test
 namespaces:
-  - default
+  - {{ NAMESPACE }}
 create_groups: true
 cache: true
 cache_plugin: ansible.builtin.jsonfile

@@ -1,14 +1,30 @@
 #!/usr/bin/env bash
 set -eux
-set -o pipefail
 
 export ANSIBLE_CALLBACKS_ENABLED=ansible.posix.profile_tasks
 export ANSIBLE_INVENTORY_ENABLED=kubevirt.core.kubevirt
 export ANSIBLE_HOST_KEY_CHECKING=False
 
+NAMESPACE="test-kubevirt-vm-$(tr -dc '[:lower:]' < /dev/urandom | head -c 5)"
+SECONDARY_NETWORK=${SECONDARY_NETWORK:-default/kindexgw}
+
+cleanup() {
+    ansible localhost -m kubernetes.core.k8s -a "name=${NAMESPACE} api_version=v1 kind=Namespace state=absent"
+    rm -rf playbook.yml test.kubevirt.yml verify.yml wait_for_vm.yml files
+}
+trap cleanup EXIT
+
+# Prepare the test environment
+ansible localhost -m kubernetes.core.k8s -a "name=${NAMESPACE} api_version=v1 kind=Namespace state=present"
+ansible-playbook \
+  -e "NAMESPACE=${NAMESPACE}" \
+  -e "SECONDARY_NETWORK=${SECONDARY_NETWORK}" \
+  generate.yml
+
 [ -d files ] || mkdir files
 [ -f files/testkey ] || (ssh-keygen -t rsa -C test@test -f files/testkey -N "")
 
+# Run the tests
 ansible-playbook playbook.yml "$@"
 
 ansible-inventory -i test.kubevirt.yml -y --list "$@"

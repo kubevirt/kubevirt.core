@@ -7,7 +7,7 @@
     - name: Create a VM
       kubevirt.core.kubevirt_vm:
         name: testvm
-        namespace: default
+        namespace: {{ NAMESPACE }}
         labels:
           app: test
         instancetype:
@@ -27,7 +27,7 @@
               pod: {}
             - name: bridge-network
               multus:
-                networkName: kindexgw
+                networkName: {{ SECONDARY_NETWORK }}
           volumes:
             - containerDisk:
                 image: quay.io/containerdisks/centos-stream:9
@@ -36,7 +36,7 @@
                 userData: |-
                   #cloud-config
                   ssh_authorized_keys:
-                    - {{ lookup('file', 'testkey.pub') }}
+                    - {{ '{{' }} lookup('file', 'testkey.pub') {{ '}}' }}
               name: cloudinitdisk
         wait: true
         wait_timeout: 600

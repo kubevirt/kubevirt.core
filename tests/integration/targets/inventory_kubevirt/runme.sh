@@ -1,10 +1,28 @@
 #!/usr/bin/env bash
 set -eux
-set -o pipefail
 
 export ANSIBLE_CALLBACKS_ENABLED=ansible.posix.profile_tasks
 export ANSIBLE_INVENTORY_ENABLED=kubevirt.core.kubevirt
 
+NAMESPACE="test-inventory-kubevirt-$(tr -dc '[:lower:]' < /dev/urandom | head -c 5)"
+SECONDARY_NETWORK=${SECONDARY_NETWORK:-default/kindexgw}
+
+cleanup() {
+    ansible localhost -m kubernetes.core.k8s -a "name=${NAMESPACE} api_version=v1 kind=Namespace state=absent"
+    rm -rf all.yml cache_after.yml cache_before.yml cleanup.yml empty.yml label.yml net.yml playbook.yml \
+           test.cache.kubevirt.yml test.kubevirt.yml test.label.kubevirt.yml test.net.kubevirt.yml verify.yml \
+           kubevirt-cache
+}
+trap cleanup EXIT
+
+# Prepare the test environment
+ansible localhost -m kubernetes.core.k8s -a "name=${NAMESPACE} api_version=v1 kind=Namespace state=present"
+ansible-playbook \
+  -e "NAMESPACE=${NAMESPACE}" \
+  -e "SECONDARY_NETWORK=${SECONDARY_NETWORK}" \
+  generate.yml
+
+# Run the tests
 ansible-inventory -i test.kubevirt.yml -y --list --output empty.yml "$@"
 
 ansible-playbook playbook.yml "$@"

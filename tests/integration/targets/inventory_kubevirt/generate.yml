@@ -1,0 +1,19 @@
+---
+- name: Generate test files
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Generate test files
+      ansible.builtin.template:
+        src: "{{ item }}.yml.j2"
+        dest: "{{ item }}.yml"
+        mode: "0644"
+      with_items:
+        - cleanup
+        - playbook
+        - test.cache.kubevirt
+        - test.kubevirt
+        - test.label.kubevirt
+        - test.net.kubevirt
+        - verify

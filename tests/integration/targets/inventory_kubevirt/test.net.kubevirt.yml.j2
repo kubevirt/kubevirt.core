@@ -1,6 +1,6 @@
 ---
 plugin: kubevirt.core.kubevirt
 namespaces:
-  - default
+  - {{ NAMESPACE }}
 create_groups: true
-label_selector: app=test
+network_name: bridge-network

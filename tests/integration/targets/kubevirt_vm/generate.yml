@@ -1,0 +1,16 @@
+---
+- name: Generate test files
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Generate test files
+      ansible.builtin.template:
+        src: "{{ item }}.yml.j2"
+        dest: "{{ item }}.yml"
+        mode: "0644"
+      with_items:
+        - playbook
+        - test.kubevirt
+        - verify
+        - wait_for_vm
