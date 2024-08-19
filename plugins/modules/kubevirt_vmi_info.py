@@ -9,16 +9,16 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 DOCUMENTATION = """
-module: kubevirt_vm_info
+module: kubevirt_vmi_info
 
-short_description: Describe KubeVirt VirtualMachines
+short_description: Describe KubeVirt VirtualMachineInstances
 
 author:
 - "KubeVirt.io Project (!UNKNOWN)"
 
 description:
-  - Use the Kubernetes Python client to perform read operations on KubeVirt C(VirtualMachines).
-  - Pass options to find C(VirtualMachines) as module arguments.
+  - Use the Kubernetes Python client to perform read operations on KubeVirt C(VirtualMachineInstances).
+  - Pass options to find C(VirtualMachineInstances) as module arguments.
   - Authenticate using either a config file, certificates, password or token.
   - Supports check mode.
 
@@ -33,11 +33,11 @@ options:
     default: kubevirt.io/v1
   name:
     description:
-    - Specify the name of the C(VirtualMachine).
+    - Specify the name of the C(VirtualMachineInstance).
     type: str
   namespace:
     description:
-    - Specify the namespace of C(VirtualMachines).
+    - Specify the namespace of C(VirtualMachineInstances).
     type: str
   label_selectors:
     description: List of label selectors to use to filter results.
@@ -49,18 +49,10 @@ options:
     type: list
     elements: str
     default: []
-  running:
-    description:
-    - Specify whether the C(VirtualMachine) should be running or not.
-    - This affects the ready condition to wait for.
-    - This requires O(wait=yes).
-    type: bool
-    version_added: 1.4.0
   wait:
     description:
-    - Whether to wait for the C(VirtualMachine) to end up in the ready state.
-    - By default this is waiting for the C(VirtualMachine) to be up and running.
-    - Modify this behavior by setting O(running).
+    - Whether to wait for the C(VirtualMachineInstance) to end up in the ready state.
+    - By default this is waiting for the C(VirtualMachineInstance) to be up and running.
     type: bool
   wait_sleep:
     description:
@@ -82,49 +74,42 @@ requirements:
 """
 
 EXAMPLES = """
-- name: Get an existing VirtualMachine
-  kubevirt.core.kubevirt_vm_info:
-    name: testvm
+- name: Get an existing VirtualMachineInstance
+  kubevirt.core.kubevirt_vmi_info:
+    name: testvmi
     namespace: default
-  register: default_testvm
+  register: default_testvmi
 
-- name: Get a list of all VirtualMachines
-  kubevirt.core.kubevirt_vm_info:
+- name: Get a list of all VirtualMachinesInstances
+  kubevirt.core.kubevirt_vmi_info:
     namespace: default
-  register: vm_list
+  register: vmi_list
 
-- name: Get a list of all VirtualMachines from any namespace
-  kubevirt.core.kubevirt_vm_info:
-  register: vm_list
+- name: Get a list of all VirtualMachineInstances from any namespace
+  kubevirt.core.kubevirt_vmi_info:
+  register: vmi_list
 
-- name: Search for all VirtualMachines labelled app=test
-  kubevirt.core.kubevirt_vm_info:
+- name: Search for all VirtualMachineInstances labelled app=test
+  kubevirt.core.kubevirt_vmi_info:
     label_selectors:
       - app=test
 
-- name: Wait until the VirtualMachine is running
+- name: Wait until the VirtualMachineInstace is ready
   kubevirt.core.kubevirt_vm_info:
     name: testvm
     namespace: default
-    wait: true
-
-- name: Wait until the VirtualMachine is stopped
-  kubevirt.core.kubevirt_vm_info:
-    name: testvm
-    namespace: default
-    running: false
     wait: true
 """
 
 RETURN = """
 api_found:
   description:
-  - Whether the specified O(api_version) and C(VirtualMachine) C(Kind) were successfully mapped to an existing API on the target cluster.
+  - Whether the specified O(api_version) and C(VirtualMachineInstance) C(Kind) were successfully mapped to an existing API on the target cluster.
   returned: always
   type: bool
 resources:
   description:
-  - The C(VirtualMachines) that exist.
+  - The C(VirtualMachineInstances) that exist.
   returned: success
   type: complex
   contains:
@@ -141,11 +126,11 @@ resources:
       returned: success
       type: dict
     spec:
-      description: Specific attributes of the C(VirtualMachine). Can vary based on the O(api_version).
+      description: Specific attributes of the C(VirtualMachineInstance). Can vary based on the O(api_version).
       returned: success
       type: dict
     status:
-      description: Current status details for the C(VirtualMachine).
+      description: Current status details for the C(VirtualMachineInstance).
       returned: success
       type: dict
 """
@@ -172,9 +157,7 @@ def arg_spec():
     """
     arg_spec defines the argument spec of this module.
     """
-    spec = {
-        "running": {"type": "bool"},
-    }
+    spec = {}
     spec.update(deepcopy(INFO_ARG_SPEC))
     spec.update(deepcopy(AUTH_ARG_SPEC))
 
@@ -188,19 +171,14 @@ def main():
     module = AnsibleK8SModule(
         module_class=AnsibleModule,
         argument_spec=arg_spec(),
-        required_by={"running": "wait"},
         supports_check_mode=True,
     )
 
-    # Set kind to query for VirtualMachines
-    kind = "VirtualMachine"
+    # Set kind to query for VirtualMachineInstances
+    kind = "VirtualMachineInstance"
 
-    # Set wait_condition to allow waiting for the ready state of the
-    # VirtualMachine based on the running parameter.
-    if module.params["running"] is None or module.params["running"]:
-        wait_condition = {"type": "Ready", "status": True}
-    else:
-        wait_condition = {"type": "Ready", "status": False, "reason": "VMINotExists"}
+    # Set wait_condition to allow waiting for the ready state of the VirtualMachineInstance
+    wait_condition = {"type": "Ready", "status": True}
 
     execute_info_module(module, kind, wait_condition)
 
