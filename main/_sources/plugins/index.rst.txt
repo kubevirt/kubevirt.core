@@ -13,4 +13,5 @@ Plugin Index
 
    kubevirt_vm
    kubevirt_vm_info
+   kubevirt_vmi_info
 

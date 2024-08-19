@@ -21,6 +21,7 @@ Minor Changes
 - Run integration tests in random namespaces `#130 <https://github.com/kubevirt/kubevirt.core/pull/130>`_
 - Several small cleanups `#122 <https://github.com/kubevirt/kubevirt.core/pull/122>`_
 - feat(kubevirt_vm): Add support for RunStrategy `#124 <https://github.com/kubevirt/kubevirt.core/pull/124>`_
+- feat: Add kubevirt_vmi_info module `#129 <https://github.com/kubevirt/kubevirt.core/pull/129>`_
 
 Breaking Changes / Porting Guide
 --------------------------------
