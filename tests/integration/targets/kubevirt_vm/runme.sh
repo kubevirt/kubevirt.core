@@ -5,6 +5,10 @@ export ANSIBLE_CALLBACKS_ENABLED=ansible.posix.profile_tasks
 export ANSIBLE_INVENTORY_ENABLED=kubevirt.core.kubevirt
 export ANSIBLE_HOST_KEY_CHECKING=False
 
+if [ -f "extra_vars.sh" ]; then
+    source extra_vars.sh
+fi
+
 NAMESPACE="test-kubevirt-vm-$(tr -dc '[:lower:]' < /dev/urandom | head -c 5)"
 SECONDARY_NETWORK=${SECONDARY_NETWORK:-default/kindexgw}
 

@@ -4,6 +4,10 @@ set -eux
 export ANSIBLE_CALLBACKS_ENABLED=ansible.posix.profile_tasks
 export ANSIBLE_INVENTORY_ENABLED=kubevirt.core.kubevirt
 
+if [ -f "extra_vars.sh" ]; then
+    source extra_vars.sh
+fi
+
 NAMESPACE="test-inventory-kubevirt-$(tr -dc '[:lower:]' < /dev/urandom | head -c 5)"
 SECONDARY_NETWORK=${SECONDARY_NETWORK:-default/kindexgw}
 
