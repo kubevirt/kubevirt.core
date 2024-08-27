@@ -3,6 +3,10 @@ set -eux
 
 export ANSIBLE_CALLBACKS_ENABLED=ansible.posix.profile_tasks
 
+if [ -f "extra_vars.sh" ]; then
+    source extra_vars.sh
+fi
+
 NAMESPACE="test-kubevirt-vmi-info-$(tr -dc '[:lower:]' < /dev/urandom | head -c 5)"
 
 cleanup() {
