@@ -1,4 +1,3 @@
-
 .. Document meta
 
 :orphan:
@@ -7,7 +6,7 @@
     :trim:
 
 .. meta::
-  :antsibull-docs: 2.12.0
+  :antsibull-docs: 2.13.1
 
 .. Anchors
 
@@ -51,8 +50,8 @@ Synopsis
 
 - Fetch virtual machines from one or more namespaces with an optional label selector.
 - Groups by cluster name, namespaces and labels.
-- Uses \ :ansval:`\*.kubevirt.[yml|yaml]`\  YAML configuration file to set parameter values.
-- By default it uses the active context in \ :emphasis:`~/.kube/config`\  and will return all virtual machines for all namespaces the active user is authorized to access.
+- Uses :ansval:`\*.kubevirt.[yml|yaml]` YAML configuration file to set parameter values.
+- By default it uses the active context in :emphasis:`~/.kube/config` and will return all virtual machines for all namespaces the active user is authorized to access.
 
 
 .. Aliases
@@ -1036,7 +1035,7 @@ Notes
 -----
 
 .. note::
-   - To avoid SSL certificate validation errors when \ :ansopt:`kubevirt.core.kubevirt#inventory:validate\_certs=yes`\ , the full certificate chain for the API server must be provided via \ :ansopt:`kubevirt.core.kubevirt#inventory:ca\_cert`\  or in the \ :ansopt:`kubevirt.core.kubevirt#inventory:kubeconfig`\  file.
+   - To avoid SSL certificate validation errors when :ansopt:`kubevirt.core.kubevirt#inventory:validate\_certs=yes`\ , the full certificate chain for the API server must be provided via :ansopt:`kubevirt.core.kubevirt#inventory:ca\_cert` or in the :ansopt:`kubevirt.core.kubevirt#inventory:kubeconfig` file.
 
 .. Seealso
 
@@ -1048,7 +1047,6 @@ Examples
 
 .. code-block:: yaml+jinja
 
-    
     # Filename must end with kubevirt.[yml|yaml]
 
     # Authenticate with token and return all virtual machines from all accessible namespaces
@@ -1076,7 +1074,6 @@ Examples
 
 
 
-
 .. Facts
 
 
@@ -1091,7 +1088,7 @@ Examples
 Authors
 ~~~~~~~
 
-- KubeVirt.io Project 
+- KubeVirt.io Project
 
 
 .. hint::
@@ -1101,4 +1098,3 @@ Authors
 
 
 .. Parsing errors
-
