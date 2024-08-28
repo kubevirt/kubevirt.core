@@ -110,7 +110,7 @@ jobs:
 
       - name: Install kind / kubectl
         if: inputs.ansible_test_targets != ''
-        uses: helm/kind-action@v1.9.0
+        uses: helm/kind-action@v1.10.0
         with:
           version: v0.23.0
           install_only: true
