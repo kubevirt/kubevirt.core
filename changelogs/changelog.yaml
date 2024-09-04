@@ -180,5 +180,15 @@ releases:
     release_date: '2024-07-17'
   2.1.0:
     changes:
+      minor_changes:
+      - 'Run integration tests in random namespaces `#130 <https://github.com/kubevirt/kubevirt.core/pull/130>`_
+
+        '
+      - 'feat: Add kubevirt_vmi_info module `#129 <https://github.com/kubevirt/kubevirt.core/pull/129>`_
+
+        '
       release_summary: The kubevirt_vmi_info module was added to this collection.
+    fragments:
+    - 129.yaml
+    - 130.yaml
     release_date: '2024-09-04'
