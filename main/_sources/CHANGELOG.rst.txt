@@ -6,6 +6,20 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v2.1.0
+======
+
+Release Summary
+---------------
+
+The kubevirt_vmi_info module was added to this collection.
+
+Minor Changes
+-------------
+
+- Run integration tests in random namespaces `#130 <https://github.com/kubevirt/kubevirt.core/pull/130>`_
+- feat: Add kubevirt_vmi_info module `#129 <https://github.com/kubevirt/kubevirt.core/pull/129>`_
+
 v2.0.0
 ======
 
@@ -18,10 +32,8 @@ Inventory source caching is now working and allows to reduce the load on the con
 Minor Changes
 -------------
 
-- Run integration tests in random namespaces `#130 <https://github.com/kubevirt/kubevirt.core/pull/130>`_
 - Several small cleanups `#122 <https://github.com/kubevirt/kubevirt.core/pull/122>`_
 - feat(kubevirt_vm): Add support for RunStrategy `#124 <https://github.com/kubevirt/kubevirt.core/pull/124>`_
-- feat: Add kubevirt_vmi_info module `#129 <https://github.com/kubevirt/kubevirt.core/pull/129>`_
 
 Breaking Changes / Porting Guide
 --------------------------------
