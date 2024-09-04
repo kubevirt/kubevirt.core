@@ -178,3 +178,7 @@ releases:
     - 124.yaml
     - 125.yaml
     release_date: '2024-07-17'
+  2.1.0:
+    changes:
+      release_summary: The kubevirt_vmi_info module was added to this collection.
+    release_date: '2024-09-04'
