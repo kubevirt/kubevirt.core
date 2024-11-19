@@ -28,7 +28,7 @@ set_default_params() {
   KUBECTL=${KUBECTL:-$BIN_DIR/kubectl}
   KUBECTL_VERSION=${KUBECTL_VERSION:-v1.31.2}
 
-  KUBEVIRT_VERSION=${KUBEVIRT_VERSION:-v1.3.1}
+  KUBEVIRT_VERSION=${KUBEVIRT_VERSION:-v1.4.0}
   KUBEVIRT_CDI_VERSION=${KUBEVIRT_CDI_VERSION:-v1.60.3}
   KUBEVIRT_USE_EMULATION=${KUBEVIRT_USE_EMULATION:-"false"}
 
@@ -241,12 +241,6 @@ deploy_kubevirt_containerized_data_importer() {
   ${KUBECTL} apply -f "https://github.com/kubevirt/containerized-data-importer/releases/download/${KUBEVIRT_CDI_VERSION}/cdi-cr.yaml"
 }
 
-deploy_kubevirt_common_instancetypes() {
-  echo "Deploying KubeVirt common-instancetypes"
-  ${KUBECTL} patch kubevirt kubevirt --namespace kubevirt --type=merge --patch '{"spec":{"configuration":{"developerConfiguration":{"featureGates": ["CommonInstancetypesDeploymentGate"]}}}}'
-  ${KUBECTL} wait --for=condition=Available kubevirt kubevirt --namespace=kubevirt --timeout=5m
-}
-
 deploy_cnao() {
   echo "Deploying CNAO (with multus and bridge CNIs)"
   ${KUBECTL} apply -f "https://github.com/kubevirt/cluster-network-addons-operator/releases/download/${CNAO_VERSION}/namespace.yaml"
@@ -313,7 +307,7 @@ cleanup() {
 }
 
 usage() {
-  echo -n "$0 [--install-kind] [--install-kubectl] [--configure-inotify-limits] [--create-registry] [--create-cluster] [--deploy-kubevirt] [--deploy-kubevirt-common-instancetypes] [--deploy-cnao] [--create-nad] [--cleanup] [--namespace]"
+  echo -n "$0 [--install-kind] [--install-kubectl] [--configure-inotify-limits] [--create-registry] [--create-cluster] [--deploy-kubevirt] [--deploy-cnao] [--create-nad] [--cleanup] [--namespace]"
 }
 
 set_default_options() {
@@ -325,7 +319,6 @@ set_default_options() {
   OPT_CONFIGURE_SECONDARY_NETWORK=false
   OPT_DEPLOY_KUBEVIRT=false
   OPT_DEPLOY_KUBEVIRT_CDI=false
-  OPT_DEPLOY_KUBEVIRT_COMMON_INSTANCETYPES=false
   OPT_DEPLOY_CNAO=false
   OPT_CREATE_NAD=false
   OPT_CLEANUP=false
@@ -342,7 +335,6 @@ parse_args() {
     --configure-secondary-network) OPT_CONFIGURE_SECONDARY_NETWORK=true ;;
     --deploy-kubevirt) OPT_DEPLOY_KUBEVIRT=true ;;
     --deploy-kubevirt-cdi) OPT_DEPLOY_KUBEVIRT_CDI=true ;;
-    --deploy-kubevirt-common-instancetypes) OPT_DEPLOY_KUBEVIRT_COMMON_INSTANCETYPES=true ;;
     --deploy-cnao) OPT_DEPLOY_CNAO=true ;;
     --create-nad) OPT_CREATE_NAD=true ;;
     --cleanup) OPT_CLEANUP=true ;;
@@ -384,7 +376,6 @@ if [ "${ARGCOUNT}" -eq "0" ]; then
   OPT_CONFIGURE_SECONDARY_NETWORK=true
   OPT_DEPLOY_KUBEVIRT=true
   OPT_DEPLOY_KUBEVIRT_CDI=true
-  OPT_DEPLOY_KUBEVIRT_COMMON_INSTANCETYPES=true
   OPT_DEPLOY_CNAO=true
   OPT_CREATE_NAD=true
 fi
@@ -428,10 +419,6 @@ fi
 
 if [ "${OPT_DEPLOY_KUBEVIRT_CDI}" == true ]; then
   deploy_kubevirt_containerized_data_importer
-fi
-
-if [ "${OPT_DEPLOY_KUBEVIRT_COMMON_INSTANCETYPES}" == true ]; then
-  deploy_kubevirt_common_instancetypes
 fi
 
 if [ "${OPT_DEPLOY_CNAO}" == true ]; then
