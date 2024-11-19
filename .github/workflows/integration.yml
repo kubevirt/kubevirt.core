@@ -146,7 +146,6 @@ jobs:
             --configure-secondary-network \
             --deploy-kubevirt \
             --deploy-kubevirt-cdi \
-            --deploy-kubevirt-common-instancetypes \
             --deploy-cnao \
             --create-cluster \
             --create-nad
