@@ -79,7 +79,9 @@ jobs:
       - name: Run ansible-lint
         run: |
           ansible-lint --version
-          ansible-lint -v
+          # Remove --exclude flag once ansible-lint was updated to ignore ansible-compat's new cache location
+          # See https://github.com/ansible/ansible-lint/issues/4477
+          ansible-lint -v --exclude .cache .ansible
         working-directory: ${{ env.collection_dir }}
 
       - name: Run shellcheck
