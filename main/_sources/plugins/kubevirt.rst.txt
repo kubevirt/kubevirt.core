@@ -6,7 +6,7 @@
     :trim:
 
 .. meta::
-  :antsibull-docs: 2.16.2
+  :antsibull-docs: 2.16.3
 
 .. Anchors
 
@@ -50,7 +50,7 @@ Synopsis
 
 - Fetch virtual machines from one or more namespaces with an optional label selector.
 - Groups by cluster name, namespaces and labels.
-- Uses :ansval:`\*.kubevirt.[yml|yaml]` YAML configuration file to set parameter values.
+- Uses :ansval:`\*.kubevirt.[yml\|yaml]` YAML configuration file to set parameter values.
 - By default it uses the active context in :emphasis:`~/.kube/config` and will return all virtual machines for all namespaces the active user is authorized to access.
 
 
