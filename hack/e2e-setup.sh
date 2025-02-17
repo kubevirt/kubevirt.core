@@ -23,7 +23,7 @@ set_default_params() {
   BIN_DIR=${BIN_DIR:-$DIR/../bin}
 
   KIND=${KIND:-$BIN_DIR/kind}
-  KIND_VERSION=${KIND_VERSION:-v0.26.0}
+  KIND_VERSION=${KIND_VERSION:-v0.27.0}
 
   KUBECTL=${KUBECTL:-$BIN_DIR/kubectl}
   KUBECTL_VERSION=${KUBECTL_VERSION:-v1.32.2}
