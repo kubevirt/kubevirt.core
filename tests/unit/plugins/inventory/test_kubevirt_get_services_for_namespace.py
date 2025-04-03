@@ -46,20 +46,99 @@ SVC_NP_SSH = {
     },
 }
 
+SVC_LB_WINRM_HTTP = {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": {"name": "test-lb-winrm-http"},
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 5985,
+                "targetPort": 5985,
+            },
+        ],
+        "type": "LoadBalancer",
+        "selector": {"kubevirt.io/domain": "test-lb-winrm-http"},
+    },
+}
+
+SVC_NP_WINRM_HTTP = {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": {"name": "test-np-winrm-http"},
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 5985,
+                "targetPort": 5985,
+            },
+        ],
+        "type": "NodePort",
+        "selector": {"kubevirt.io/domain": "test-np-winrm-http"},
+    },
+}
+
+SVC_LB_WINRM_HTTPS = {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": {"name": "test-lb-winrm-https"},
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 5986,
+                "targetPort": 5986,
+            },
+        ],
+        "type": "LoadBalancer",
+        "selector": {"kubevirt.io/domain": "test-lb-winrm-https"},
+    },
+}
+
+SVC_NP_WINRM_HTTPS = {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": {"name": "test-np-winrm-https"},
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 5986,
+                "targetPort": 5986,
+            },
+        ],
+        "type": "NodePort",
+        "selector": {"kubevirt.io/domain": "test-np-winrm-https"},
+    },
+}
+
 
 @pytest.mark.parametrize(
     "client",
     [
         {
-            "services": [SVC_LB_SSH, SVC_NP_SSH],
+            "services": [
+                SVC_LB_SSH,
+                SVC_NP_SSH,
+                SVC_LB_WINRM_HTTP,
+                SVC_NP_WINRM_HTTP,
+                SVC_LB_WINRM_HTTPS,
+                SVC_NP_WINRM_HTTPS,
+            ],
         },
     ],
     indirect=["client"],
 )
-def test_get_ssh_services_for_namespace(inventory, client):
-    assert inventory._get_ssh_services_for_namespace(client, DEFAULT_NAMESPACE) == {
-        "test-lb-ssh": SVC_LB_SSH,
-        "test-np-ssh": SVC_NP_SSH,
+def test_get_services_for_namespace(inventory, client):
+    assert inventory._get_services_for_namespace(client, DEFAULT_NAMESPACE) == {
+        "test-lb-ssh": [SVC_LB_SSH],
+        "test-np-ssh": [SVC_NP_SSH],
+        "test-lb-winrm-http": [SVC_LB_WINRM_HTTP],
+        "test-np-winrm-http": [SVC_NP_WINRM_HTTP],
+        "test-lb-winrm-https": [SVC_LB_WINRM_HTTPS],
+        "test-np-winrm-https": [SVC_NP_WINRM_HTTPS],
     }
 
 
@@ -165,4 +244,4 @@ SVC_NO_SELECTOR = {
     indirect=["client"],
 )
 def test_ignore_unwanted_services(inventory, client):
-    assert not inventory._get_ssh_services_for_namespace(client, DEFAULT_NAMESPACE)
+    assert not inventory._get_services_for_namespace(client, DEFAULT_NAMESPACE)

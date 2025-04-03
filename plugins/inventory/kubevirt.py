@@ -163,6 +163,9 @@ LABEL_KUBEVIRT_IO_DOMAIN = "kubevirt.io/domain"
 TYPE_LOADBALANCER = "LoadBalancer"
 TYPE_NODEPORT = "NodePort"
 ID_MSWINDOWS = "mswindows"
+SERVICE_TARGET_PORT_SSH = 22
+SERVICE_TARGET_PORT_WINRM_HTTP = 5985
+SERVICE_TARGET_PORT_WINRM_HTTPS = 5986
 
 
 class KubeVirtInventoryException(Exception):
@@ -307,6 +310,24 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             and obj["metadata"].get("namespace")
             and obj["metadata"].get("uid")
         )
+
+    @staticmethod
+    def _find_service_with_target_port(
+        services: List[Dict], target_port: int
+    ) -> Optional[Dict]:
+        """
+        _find_service_with_target_port returns the first found service with a given
+        target port in the passed in list of services or otherwise None.
+        """
+        for service in services:
+            if (
+                (ports := service.get("spec", {}).get("ports")) is not None
+                and len(ports) == 1
+                and ports[0].get("targetPort", 0) == target_port
+            ):
+                return service
+
+        return None
 
     @staticmethod
     def _get_host_from_service(
@@ -483,7 +504,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             namespaces[namespace] = {
                 "vms": vms,
                 "vmis": vmis,
-                "services": self._get_ssh_services_for_namespace(client, namespace),
+                "services": self._get_services_for_namespace(client, namespace),
             }
 
         return {
@@ -568,11 +589,11 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             label_selector=opts.label_selector,
         )
 
-    def _get_ssh_services_for_namespace(
+    def _get_services_for_namespace(
         self, client: K8SClient, namespace: str
-    ) -> Dict:
+    ) -> Dict[str, List[Dict]]:
         """
-        _get_ssh_services_for_namespace retrieves all services of a namespace exposing port 22/ssh.
+        _get_services_for_namespace retrieves all services of a namespace exposing ssh or winrm.
         The services are mapped to the name of the corresponding domain.
         """
         items = self._get_resources(
@@ -595,17 +616,24 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 continue
 
             # Continue if ports are not defined, there are more than one port mapping
-            # or the target port is not port 22/ssh
+            # or the target port is not port 22 (ssh) or port 5985 or 5986 (winrm).
             if (
                 (ports := spec.get("ports")) is None
                 or len(ports) != 1
-                or ports[0].get("targetPort") != 22
+                or ports[0].get("targetPort")
+                not in [
+                    SERVICE_TARGET_PORT_SSH,
+                    SERVICE_TARGET_PORT_WINRM_HTTP,
+                    SERVICE_TARGET_PORT_WINRM_HTTPS,
+                ]
             ):
                 continue
 
-            # Only add the service to the dict if the domain selector is present
+            # Only add the service to the list if the domain selector is present
             if domain := spec.get("selector", {}).get(LABEL_KUBEVIRT_IO_DOMAIN):
-                services[domain] = service
+                if domain not in services:
+                    services[domain] = []
+                services[domain].append(service)
 
         return services
 
@@ -642,9 +670,8 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             return
 
         services = {
-            domain: service
-            for domain, service in data["services"].items()
-            if self._obj_is_valid(service)
+            domain: [service for service in services if self._obj_is_valid(service)]
+            for domain, services in data["services"].items()
         }
 
         name = self._sanitize_group_name(opts.name)
@@ -695,7 +722,11 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         self._set_common_vars(hostname, "vm", vm, opts)
 
     def _set_vars_from_vmi(
-        self, hostname: str, vmi: Dict, services: Dict, opts: InventoryOptions
+        self,
+        hostname: str,
+        vmi: Dict,
+        services: Dict[str, List[Dict]],
+        opts: InventoryOptions,
     ) -> None:
         """
         _set_vars_from_vmi sets inventory variables from a VMI prefixed with vmi_ and
@@ -720,6 +751,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         if not interface or not interface.get("ipAddress"):
             return
 
+        _services = services.get(
+            vmi["metadata"].get("labels", {}).get(LABEL_KUBEVIRT_IO_DOMAIN), []
+        )
+
         # Set up the connection
         service = None
         if self._is_windows(
@@ -727,10 +762,18 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             vmi["metadata"].get("annotations", {}),
         ):
             self.inventory.set_variable(hostname, "ansible_connection", "winrm")
-        else:
-            service = services.get(
-                vmi["metadata"].get("labels", {}).get(LABEL_KUBEVIRT_IO_DOMAIN)
+            service = self._find_service_with_target_port(
+                _services, SERVICE_TARGET_PORT_WINRM_HTTPS
             )
+            if service is None:
+                service = self._find_service_with_target_port(
+                    _services, SERVICE_TARGET_PORT_WINRM_HTTP
+                )
+        else:
+            service = self._find_service_with_target_port(
+                _services, SERVICE_TARGET_PORT_SSH
+            )
+
         self._set_ansible_host_and_port(
             vmi,
             hostname,

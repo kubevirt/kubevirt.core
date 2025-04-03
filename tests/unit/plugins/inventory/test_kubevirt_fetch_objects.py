@@ -45,8 +45,8 @@ def test_fetch_objects(mocker, inventory, opts, namespaces):
     get_vmis_for_namespace = mocker.patch.object(
         inventory, "_get_vmis_for_namespace", return_value=[{}]
     )
-    get_ssh_services_for_namespace = mocker.patch.object(
-        inventory, "_get_ssh_services_for_namespace", return_value=[]
+    get_services_for_namespace = mocker.patch.object(
+        inventory, "_get_services_for_namespace", return_value=[]
     )
     get_default_hostname = mocker.patch.object(
         inventory, "_get_default_hostname", return_value="default-hostname"
@@ -68,7 +68,7 @@ def test_fetch_objects(mocker, inventory, opts, namespaces):
     get_vmis_for_namespace.assert_has_calls(
         [mocker.call(mocker.ANY, namespace, opts) for namespace in namespaces]
     )
-    get_ssh_services_for_namespace.assert_has_calls(
+    get_services_for_namespace.assert_has_calls(
         [mocker.call(mocker.ANY, namespace) for namespace in namespaces]
     )
     get_default_hostname.assert_called_once()
@@ -85,8 +85,8 @@ def test_fetch_objects_early_return(mocker, inventory):
     get_vmis_for_namespace = mocker.patch.object(
         inventory, "_get_vmis_for_namespace", return_value=[]
     )
-    get_ssh_services_for_namespace = mocker.patch.object(
-        inventory, "_get_ssh_services_for_namespace"
+    get_services_for_namespace = mocker.patch.object(
+        inventory, "_get_services_for_namespace"
     )
     get_default_hostname = mocker.patch.object(
         inventory, "_get_default_hostname", return_value="default-hostname"
@@ -104,6 +104,6 @@ def test_fetch_objects_early_return(mocker, inventory):
     get_vmis_for_namespace.assert_called_once_with(
         mocker.ANY, DEFAULT_NAMESPACE, InventoryOptions()
     )
-    get_ssh_services_for_namespace.assert_not_called()
+    get_services_for_namespace.assert_not_called()
     get_default_hostname.assert_called_once()
     get_cluster_domain.assert_called_once()

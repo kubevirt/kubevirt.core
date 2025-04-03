@@ -97,6 +97,56 @@ def test_obj_is_valid(obj, expected):
 
 
 @pytest.mark.parametrize(
+    "services,target_port,expected",
+    [
+        ([], 1234, None),
+        ([{"spec": {"something": "something"}}], 1234, None),
+        ([{"spec": {"ports": []}}], 1234, None),
+        ([{"spec": {"ports": [{"port": 1234}]}}], 1234, None),
+        ([{"spec": {"ports": [{"targetPort": 2222}]}}], 1234, None),
+        (
+            [{"spec": {"ports": [{"targetPort": 1234}]}}],
+            1234,
+            {"spec": {"ports": [{"targetPort": 1234}]}},
+        ),
+        (
+            [
+                {
+                    "metadata": {"name": "first"},
+                    "spec": {"ports": [{"targetPort": 1234}]},
+                },
+                {
+                    "metadata": {"name": "second"},
+                    "spec": {"ports": [{"targetPort": 1234}]},
+                },
+            ],
+            1234,
+            {"metadata": {"name": "first"}, "spec": {"ports": [{"targetPort": 1234}]}},
+        ),
+        (
+            [
+                {
+                    "metadata": {"name": "first"},
+                    "spec": {"ports": [{"targetPort": 2222}]},
+                },
+                {
+                    "metadata": {"name": "second"},
+                    "spec": {"ports": [{"targetPort": 1234}]},
+                },
+            ],
+            1234,
+            {"metadata": {"name": "second"}, "spec": {"ports": [{"targetPort": 1234}]}},
+        ),
+    ],
+)
+def test_find_service_with_target_port(services, target_port, expected):
+    assert (
+        InventoryModule._find_service_with_target_port(services, target_port)
+        == expected
+    )
+
+
+@pytest.mark.parametrize(
     "service,node_name,expected",
     [
         ({}, None, None),
