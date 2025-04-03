@@ -22,6 +22,7 @@ BASE_VMI = {
         "name": "testvmi",
         "namespace": "default",
         "uid": "e86c603c-fb13-4933-bf67-de100bdba0c3",
+        "labels": {"kubevirt.io/domain": "testdomain"},
     },
     "spec": {},
     "status": {
@@ -56,28 +57,57 @@ WINDOWS_VMI_4 = merge_dicts(
         "metadata": {"annotations": {"vm.kubevirt.io/os": "windows2k22"}},
     },
 )
+SVC_LB_WINRM_HTTPS = {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": {
+        "name": "test-lb-winrm-https",
+        "namespace": "default",
+        "uid": "22f20931-e47b-4074-a2a8-21fa59073dfd",
+    },
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 12345,
+                "targetPort": 5986,
+            },
+        ],
+        "type": "LoadBalancer",
+        "selector": {"kubevirt.io/domain": "testdomain"},
+    },
+    "status": {"loadBalancer": {"ingress": [{"ip": "192.168.1.100"}]}},
+}
 
 
 @pytest.mark.parametrize(
-    "vmi,expected",
+    "vmi,expected,use_service",
     [
-        (BASE_VMI, False),
-        (WINDOWS_VMI_1, True),
-        (WINDOWS_VMI_2, True),
-        (WINDOWS_VMI_3, True),
-        (WINDOWS_VMI_4, True),
+        (BASE_VMI, False, False),
+        (WINDOWS_VMI_1, True, True),
+        (WINDOWS_VMI_2, True, True),
+        (WINDOWS_VMI_3, True, True),
+        (WINDOWS_VMI_4, True, True),
+        (WINDOWS_VMI_1, True, False),
+        (WINDOWS_VMI_2, True, False),
+        (WINDOWS_VMI_3, True, False),
+        (WINDOWS_VMI_4, True, False),
     ],
 )
-def test_ansible_connection_winrm(inventory, hosts, vmi, expected):
+def test_ansible_connection_winrm(inventory, hosts, vmi, expected, use_service):
     inventory._populate_inventory(
         {
             "default_hostname": "test",
             "cluster_domain": "test.com",
             "namespaces": {
-                "default": {"vms": [], "vmis": [vmi], "services": {}},
+                "default": {
+                    "vms": [],
+                    "vmis": [vmi],
+                    "services": {"testdomain": [SVC_LB_WINRM_HTTPS]},
+                }
             },
         },
-        InventoryOptions(),
+        InventoryOptions(use_service=use_service),
     )
 
     host = f"{DEFAULT_NAMESPACE}-{vmi['metadata']['name']}"
@@ -85,3 +115,9 @@ def test_ansible_connection_winrm(inventory, hosts, vmi, expected):
         assert hosts[host]["ansible_connection"] == "winrm"
     else:
         assert "ansible_connection" not in hosts[host]
+    if use_service:
+        assert hosts[host]["ansible_host"] == "192.168.1.100"
+        assert hosts[host]["ansible_port"] == 12345
+    else:
+        assert hosts[host]["ansible_host"] == "10.10.10.10"
+        assert hosts[host]["ansible_port"] is None
