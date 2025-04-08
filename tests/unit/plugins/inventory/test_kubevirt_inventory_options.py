@@ -18,6 +18,7 @@ def test_inventory_options_defaults():
     assert opts.network_name is None
     assert opts.kube_secondary_dns is False
     assert opts.use_service is True
+    assert opts.unset_ansible_port is True
     assert opts.create_groups is False
     assert opts.base_domain is None
     assert opts.append_base_domain is False
@@ -30,6 +31,7 @@ def test_inventory_options_override_defaults():
     network_name = "test-network"
     kube_secondary_dns = True
     use_service = False
+    unset_ansible_port = False
     create_groups = True
     base_domain = "test-domain.com"
     append_base_domain = True
@@ -41,6 +43,7 @@ def test_inventory_options_override_defaults():
         network_name=network_name,
         kube_secondary_dns=kube_secondary_dns,
         use_service=use_service,
+        unset_ansible_port=unset_ansible_port,
         create_groups=create_groups,
         base_domain=base_domain,
         append_base_domain=append_base_domain,
@@ -51,6 +54,7 @@ def test_inventory_options_override_defaults():
     assert opts.network_name == network_name
     assert opts.kube_secondary_dns == kube_secondary_dns
     assert opts.use_service == use_service
+    assert opts.unset_ansible_port == unset_ansible_port
     assert opts.create_groups == create_groups
     assert opts.base_domain == base_domain
     assert opts.append_base_domain == append_base_domain

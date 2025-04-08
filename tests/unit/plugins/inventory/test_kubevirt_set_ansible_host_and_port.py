@@ -272,3 +272,25 @@ def test_no_service_if_network_name(mocker, inventory):
             mocker.call(hostname, "ansible_port", None),
         ]
     )
+
+
+@pytest.mark.parametrize(
+    "opts,expected",
+    [
+        (InventoryOptions(), True),
+        (InventoryOptions(unset_ansible_port=True), True),
+        (InventoryOptions(unset_ansible_port=False), False),
+    ],
+)
+def test_unset_ansible_port(mocker, inventory, opts, expected):
+    set_variable = mocker.patch.object(inventory.inventory, "set_variable")
+
+    hostname = "default-testvm"
+    ip_address = "1.1.1.1"
+
+    inventory._set_ansible_host_and_port({}, hostname, ip_address, None, opts)
+
+    calls = [mocker.call(hostname, "ansible_host", ip_address)]
+    if expected:
+        calls.append(mocker.call(hostname, "ansible_port", None))
+    set_variable.assert_has_calls(calls)
