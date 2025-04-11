@@ -930,6 +930,27 @@ Parameters
   </tr>
   <tr class="row-odd">
     <td><div class="ansible-option-cell">
+      <div class="ansibleOptionAnchor" id="parameter-unset_ansible_port"></div>
+      <p class="ansible-option-title"><strong>unset_ansible_port</strong></p>
+      <a class="ansibleOptionLink" href="#parameter-unset_ansible_port" title="Permalink to this option"></a>
+      <p class="ansible-option-type-line">
+        <span class="ansible-option-type">boolean</span>
+      </p>
+      <p><em class="ansible-option-versionadded">added in kubevirt.core 2.2.0</em></p>
+
+    </div></td>
+    <td><div class="ansible-option-cell">
+      <p>Try to unset the value of <code class='docutils literal notranslate'>ansible_port</code> if no non-default value was found.</p>
+      <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+      <ul class="simple">
+        <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">false</code></p></li>
+        <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>true</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+      </ul>
+
+    </div></td>
+  </tr>
+  <tr class="row-even">
+    <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-use_extra_vars"></div>
       <p class="ansible-option-title"><strong>use_extra_vars</strong></p>
       <a class="ansibleOptionLink" href="#parameter-use_extra_vars" title="Permalink to this option"></a>
@@ -962,7 +983,7 @@ Parameters
       </ul>
     </div></td>
   </tr>
-  <tr class="row-even">
+  <tr class="row-odd">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-use_service"></div>
       <p class="ansible-option-title"><strong>use_service</strong></p>
@@ -983,7 +1004,7 @@ Parameters
 
     </div></td>
   </tr>
-  <tr class="row-odd">
+  <tr class="row-even">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-username"></div>
       <p class="ansible-option-title"><strong>username</strong></p>
@@ -998,7 +1019,7 @@ Parameters
       <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_USERNAME</code> environment variable.</p>
     </div></td>
   </tr>
-  <tr class="row-even">
+  <tr class="row-odd">
     <td><div class="ansible-option-cell">
       <div class="ansibleOptionAnchor" id="parameter-validate_certs"></div>
       <div class="ansibleOptionAnchor" id="parameter-verify_ssl"></div>
