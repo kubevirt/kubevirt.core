@@ -63,6 +63,12 @@ options:
     - Services are only used if no O(network_name) was provided.
     type: bool
     default: True
+  unset_ansible_port:
+    description:
+    - Try to unset the value of C(ansible_port) if no non-default value was found.
+    type: bool
+    default: True
+    version_added: 2.2.0
   create_groups:
     description:
     - Enable the creation of groups from labels on C(VirtualMachines) and C(VirtualMachineInstances).
@@ -185,6 +191,7 @@ class InventoryOptions:
     network_name: Optional[str] = None
     kube_secondary_dns: Optional[bool] = None
     use_service: Optional[bool] = None
+    unset_ansible_port: Optional[bool] = None
     create_groups: Optional[bool] = None
     base_domain: Optional[str] = None
     append_base_domain: Optional[bool] = None
@@ -222,6 +229,11 @@ class InventoryOptions:
             self.use_service
             if self.use_service is not None
             else config_data.get("use_service", True)
+        )
+        self.unset_ansible_port = (
+            self.unset_ansible_port
+            if self.unset_ansible_port is not None
+            else config_data.get("unset_ansible_port", True)
         )
         self.create_groups = (
             self.create_groups
@@ -861,7 +873,8 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             ansible_host = ip_address
 
         self.inventory.set_variable(hostname, "ansible_host", ansible_host)
-        self.inventory.set_variable(hostname, "ansible_port", ansible_port)
+        if opts.unset_ansible_port or ansible_port is not None:
+            self.inventory.set_variable(hostname, "ansible_port", ansible_port)
 
     def _set_composable_vars(self, hostname: str) -> None:
         """
