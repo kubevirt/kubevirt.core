@@ -23,14 +23,21 @@ from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock impo
     AnsibleFailJson,
     exit_json,
     fail_json,
-    set_module_args,
 )
+
+# Handle import errors of patch_module_args.
+# It is only available on ansible-core >=2.19.
+try:
+    from ansible.module_utils.testing import patch_module_args
+except ImportError as e:
+    from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock import (
+        patch_module_args,
+    )
 
 
 def test_module_fails_when_required_args_missing(mocker):
     mocker.patch.object(AnsibleModule, "fail_json", fail_json)
-    with pytest.raises(AnsibleFailJson):
-        set_module_args({"running": False})
+    with pytest.raises(AnsibleFailJson), patch_module_args({"running": False}):
         kubevirt_vm_info.main()
 
 
@@ -96,8 +103,7 @@ def test_module(mocker, module_args, find_args):
         },
     )
 
-    with pytest.raises(AnsibleExitJson):
-        set_module_args(module_args)
+    with pytest.raises(AnsibleExitJson), patch_module_args(module_args):
         kubevirt_vm_info.main()
 
     find.assert_called_once_with(**find_args)
