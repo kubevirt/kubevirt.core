@@ -10,16 +10,24 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import json
+from contextlib import contextmanager
+from json import dumps
+from typing import (
+    Any,
+    Dict,
+)
+from unittest import mock
 
 from ansible.module_utils import basic
 from ansible.module_utils.common.text.converters import to_bytes
 
 
-def set_module_args(args):
+@contextmanager
+def patch_module_args(args: Dict[str, Any] | None = None):
     """prepare arguments so that they will be picked up during module creation"""
-    args = json.dumps({"ANSIBLE_MODULE_ARGS": args})
-    basic._ANSIBLE_ARGS = to_bytes(args)
+    args = dumps({"ANSIBLE_MODULE_ARGS": args})
+    with mock.patch.object(basic, "_ANSIBLE_ARGS", to_bytes(args)):
+        yield
 
 
 class AnsibleExitJson(Exception):

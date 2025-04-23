@@ -157,6 +157,14 @@ except ImportError as e:
 
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
 
+# Handle import errors of trust_as_template.
+# It is only available on ansible-core >=2.19.
+try:
+    from ansible.template import trust_as_template
+except ImportError:
+    trust_as_template = None
+
+
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s.client import (
     get_api_client,
     K8SClient,
@@ -445,13 +453,13 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         results = {}
         if attempt_to_read_cache:
             try:
-                results = self._cache[cache_key]
+                results = self.cache[cache_key]
             except KeyError:
                 cache_needs_update = True
         if not attempt_to_read_cache or cache_needs_update:
             results = self._fetch_objects(get_api_client(**config_data), opts)
         if cache_needs_update:
-            self._cache[cache_key] = results
+            self.cache[cache_key] = results
 
         self._populate_inventory(results, opts)
 
@@ -883,12 +891,32 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         """
         hostvars = self.inventory.get_host(hostname).get_vars()
         strict = self.get_option("strict")
+
+        def trust_compose_groups(data: Dict) -> Dict:
+            if trust_as_template is not None:
+                return {k: trust_as_template(v) for k, v in data.items()}
+            return data
+
+        def trust_keyed_groups(data: List) -> List:
+            if trust_as_template is not None:
+                return [{**d, "key": trust_as_template(d["key"])} for d in data]
+            return data
+
         self._set_composite_vars(
-            self.get_option("compose"), hostvars, hostname, strict=True
+            trust_compose_groups(self.get_option("compose")),
+            hostvars,
+            hostname,
+            strict=True,
         )
         self._add_host_to_composed_groups(
-            self.get_option("groups"), hostvars, hostname, strict=strict
+            trust_compose_groups(self.get_option("groups")),
+            hostvars,
+            hostname,
+            strict=strict,
         )
         self._add_host_to_keyed_groups(
-            self.get_option("keyed_groups"), hostvars, hostname, strict=strict
+            trust_keyed_groups(self.get_option("keyed_groups")),
+            hostvars,
+            hostname,
+            strict=strict,
         )

@@ -17,6 +17,8 @@ from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     KubeVirtInventoryException,
 )
 
+from ansible.plugins.inventory import Cacheable
+
 
 @pytest.mark.parametrize(
     "config_data,expected",
@@ -96,9 +98,8 @@ from ansible_collections.kubevirt.core.plugins.inventory.kubevirt import (
     ],
 )
 def test_config_data_to_opts(mocker, inventory, config_data, expected):
-    read_config_data = mocker.patch.object(
-        inventory, "_read_config_data", return_value=config_data
-    )
+    mocker.patch.object(Cacheable, "cache", new_callable=mocker.PropertyMock)
+    mocker.patch.object(inventory, "_read_config_data", return_value=config_data)
     mocker.patch.object(inventory, "get_cache_key")
     mocker.patch.object(inventory, "get_option")
     mocker.patch.object(kubevirt, "get_api_client")
@@ -129,7 +130,9 @@ def test_use_of_cache(
     path = "/testpath"
     config_data = {"host_format": "test-format"}
 
-    mocker.patch.dict(inventory._cache, cache_data)
+    mocker.patch.object(
+        Cacheable, "cache", new_callable=mocker.PropertyMock, return_value=cache_data
+    )
 
     read_config_data = mocker.patch.object(
         inventory, "_read_config_data", return_value=config_data
@@ -168,6 +171,7 @@ def test_use_of_cache(
     ],
 )
 def test_k8s_client_missing(mocker, inventory, present):
+    mocker.patch.object(Cacheable, "cache", new_callable=mocker.PropertyMock)
     mocker.patch.object(kubevirt, "HAS_K8S_MODULE_HELPER", present)
     mocker.patch.object(kubevirt, "get_api_client")
     mocker.patch.object(inventory, "_read_config_data", return_value={})
