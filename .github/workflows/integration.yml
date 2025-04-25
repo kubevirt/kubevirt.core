@@ -8,24 +8,8 @@ on:
         default: >-
           [
             {
-              "ansible-version": "stable-2.15",
-              "python-version": "3.12"
-            },
-            {
-              "ansible-version": "stable-2.15",
-              "python-version": "3.13"
-            },
-            {
-              "ansible-version": "stable-2.16",
-              "python-version": "3.9"
-            },
-            {
               "ansible-version": "stable-2.16",
               "python-version": "3.13"
-            },
-            {
-              "ansible-version": "stable-2.17",
-              "python-version": "3.9"
             },
             {
               "ansible-version": "stable-2.17",
@@ -33,23 +17,15 @@ on:
             },
             {
               "ansible-version": "stable-2.18",
-              "python-version": "3.9"
+              "python-version": "3.10"
             },
             {
-              "ansible-version": "stable-2.18",
+              "ansible-version": "stable-2.19",
               "python-version": "3.10"
             },
             {
               "ansible-version": "milestone",
-              "python-version": "3.9"
-            },
-            {
-              "ansible-version": "milestone",
               "python-version": "3.10"
-            },
-            {
-              "ansible-version": "devel",
-              "python-version": "3.9"
             },
             {
               "ansible-version": "devel",
@@ -87,14 +63,13 @@ jobs:
       matrix:
         test-target: ${{ fromJSON(inputs.ansible_test_targets) }}
         ansible-version:
-          - stable-2.15
           - stable-2.16
           - stable-2.17
           - stable-2.18
+          - stable-2.19
           - milestone
           - devel
         python-version:
-          - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
