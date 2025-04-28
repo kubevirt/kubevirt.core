@@ -333,7 +333,9 @@ def create_vm(params: Dict) -> Dict:
 
     if (run_strategy := params.get("run_strategy")) is not None:
         vm["spec"]["runStrategy"] = run_strategy
+        vm["spec"]["running"] = None
     else:
+        vm["spec"]["runStrategy"] = None
         vm["spec"]["running"] = (
             running if (running := params.get("running")) is not None else True
         )
