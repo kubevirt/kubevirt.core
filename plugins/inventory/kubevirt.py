@@ -141,13 +141,18 @@ from typing import (
 # Set HAS_K8S_MODULE_HELPER and k8s_import exception accordingly to
 # potentially print a warning to the user if the client is missing.
 try:
-    from kubernetes.dynamic.exceptions import DynamicApiError
+    from kubernetes.dynamic.exceptions import DynamicApiError, ResourceNotFoundError
 
     HAS_K8S_MODULE_HELPER = True
     K8S_IMPORT_EXCEPTION = None
 except ImportError as e:
 
     class DynamicApiError(Exception):
+        """
+        Dummy class, mainly used for ansible-test sanity.
+        """
+
+    class ResourceNotFoundError(Exception):
         """
         Dummy class, mainly used for ansible-test sanity.
         """
@@ -575,9 +580,18 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         _get_available_namespaces lists all namespaces accessible with the
         configured credentials and returns them.
         """
+
+        namespaces = []
+        try:
+            namespaces = self._get_resources(
+                client, "project.openshift.io/v1", "Project"
+            )
+        except ResourceNotFoundError:
+            namespaces = self._get_resources(client, "v1", "Namespace")
+
         return [
             namespace["metadata"]["name"]
-            for namespace in self._get_resources(client, "v1", "Namespace")
+            for namespace in namespaces
             if "metadata" in namespace and "name" in namespace["metadata"]
         ]
 

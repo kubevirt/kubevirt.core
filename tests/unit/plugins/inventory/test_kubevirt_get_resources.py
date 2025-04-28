@@ -63,6 +63,27 @@ def test_get_resources(inventory, client):
             },
             [DEFAULT_NAMESPACE, "test"],
         ),
+        (
+            {
+                "projects": [
+                    {"metadata": {"name": DEFAULT_NAMESPACE}},
+                    {"metadata": {"name": "testproject"}},
+                ]
+            },
+            [DEFAULT_NAMESPACE, "testproject"],
+        ),
+        (
+            {
+                "namespaces": [
+                    {"metadata": {"name": DEFAULT_NAMESPACE}},
+                    {"metadata": {"name": "test"}},
+                ],
+                "projects": [
+                    {"metadata": {"name": "testproject"}},
+                ],
+            },
+            ["testproject"],
+        ),
     ],
     indirect=["client"],
 )

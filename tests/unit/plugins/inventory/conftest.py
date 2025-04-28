@@ -8,6 +8,7 @@ __metaclass__ = type
 
 import pytest
 
+from kubernetes.dynamic.exceptions import ResourceNotFoundError
 from kubernetes.dynamic.resource import ResourceField
 
 from ansible.template import Templar
@@ -113,6 +114,9 @@ def client(mocker, request):
     dns_obj = ResourceField({"spec": {"baseDomain": base_domain}})
     dns.items = [dns_obj]
 
+    projects = mocker.Mock()
+    projects.items = [ResourceField(item) for item in param.get("projects", [])]
+
     namespace_client = mocker.Mock()
     namespace_client.get = mocker.Mock(return_value=namespaces)
     vm_client = mocker.Mock()
@@ -130,6 +134,14 @@ def client(mocker, request):
     dns_client = mocker.Mock()
     dns_client.get = dns_client_get
 
+    def project_client_get():
+        if not projects.items:
+            raise ResourceNotFoundError
+        return projects
+
+    project_client = mocker.Mock()
+    project_client.get = project_client_get
+
     def resources_get(api_version="", kind=""):
         if api_version.lower() == "v1":
             if kind.lower() == "namespace":
@@ -138,6 +150,11 @@ def client(mocker, request):
                 return service_client
         elif api_version.lower() == "config.openshift.io/v1" and kind.lower() == "dns":
             return dns_client
+        elif (
+            api_version.lower() == "project.openshift.io/v1"
+            and kind.lower() == "project"
+        ):
+            return project_client
         elif "kubevirt.io/" in api_version.lower():
             if kind.lower() == "virtualmachine":
                 return vm_client
