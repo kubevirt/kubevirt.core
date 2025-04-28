@@ -282,6 +282,11 @@ result:
       type: str
 """
 
+# Monkey patch service.diff_objects to temporarily fix the changed logic
+from ansible_collections.kubevirt.core.plugins.module_utils.diff import (
+    _patch_diff_objects,
+)
+
 from copy import deepcopy
 from typing import Dict
 
@@ -457,4 +462,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    _patch_diff_objects()
     main()

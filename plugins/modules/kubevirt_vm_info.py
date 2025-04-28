@@ -159,6 +159,11 @@ resources:
       type: dict
 """
 
+# Monkey patch service.diff_objects to temporarily fix the changed logic
+from ansible_collections.kubevirt.core.plugins.module_utils.diff import (
+    _patch_diff_objects,
+)
+
 from copy import deepcopy
 
 from ansible_collections.kubernetes.core.plugins.module_utils.ansiblemodule import (
@@ -223,4 +228,5 @@ def main():
 
 
 if __name__ == "__main__":
+    _patch_diff_objects()
     main()
