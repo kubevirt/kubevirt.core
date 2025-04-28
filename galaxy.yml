@@ -6,7 +6,7 @@ readme: README.md
 authors:
   - KubeVirt Project (kubevirt.io)
 dependencies:
-  kubernetes.core: '>=3.1.0,<6.0.0'
+  kubernetes.core: '>=5.2.0,<6.0.0'
 description: Lean Ansible bindings for KubeVirt
 license_file: LICENSE
 tags:
