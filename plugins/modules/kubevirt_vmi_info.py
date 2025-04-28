@@ -66,6 +66,15 @@ options:
     - Ignored if O(wait) is not set.
     default: 120
     type: int
+  hidden_fields:
+    description:
+    - Hide fields matching this option in the result.
+    - An example might be O(hidden_fields=[metadata.managedFields])
+      or O(hidden_fields=[metadata.annotations[kubemacpool.io/transaction-timestamp]]).
+    type: list
+    elements: str
+    default: ['metadata.annotations[kubemacpool.io/transaction-timestamp]', metadata.managedFields]
+    version_added: 2.2.0
 
 requirements:
   - "python >= 3.9"
@@ -157,7 +166,16 @@ def arg_spec():
     """
     arg_spec defines the argument spec of this module.
     """
-    spec = {}
+    spec = {
+        "hidden_fields": {
+            "type": "list",
+            "elements": "str",
+            "default": [
+                "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+                "metadata.managedFields",
+            ],
+        },
+    }
     spec.update(deepcopy(INFO_ARG_SPEC))
     spec.update(deepcopy(AUTH_ARG_SPEC))
 
