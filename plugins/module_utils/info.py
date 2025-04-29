@@ -43,6 +43,7 @@ def execute_info_module(module, kind, wait_condition):
             wait=module.params["wait"],
             wait_sleep=module.params["wait_sleep"],
             wait_timeout=module.params["wait_timeout"],
+            hidden_fields=module.params["hidden_fields"],
             condition=wait_condition,
         )
         module.exit_json(changed=False, **facts)

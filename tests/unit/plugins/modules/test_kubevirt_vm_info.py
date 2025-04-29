@@ -52,6 +52,10 @@ FIND_ARGS_DEFAULT = {
     "wait_sleep": 5,
     "wait_timeout": 120,
     "condition": {"type": "Ready", "status": True},
+    "hidden_fields": [
+        "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+        "metadata.managedFields",
+    ],
 }
 
 FIND_ARGS_NAME_NAMESPACE = FIND_ARGS_DEFAULT | {
@@ -77,6 +81,13 @@ FIND_ARGS_STOPPED = FIND_ARGS_DEFAULT | {
     "condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
 }
 
+FIND_ARGS_HIDDEN_FIELDS = FIND_ARGS_DEFAULT | {
+    "hidden_fields": [
+        "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+        "metadata.annotations[kubectl.kubernetes.io/last-applied-configuration]",
+    ],
+}
+
 
 @pytest.mark.parametrize(
     "module_args,find_args",
@@ -87,6 +98,15 @@ FIND_ARGS_STOPPED = FIND_ARGS_DEFAULT | {
         ({"field_selectors": "app=test"}, FIND_ARGS_FIELD_SELECTOR),
         ({"wait": True, "running": True}, FIND_ARGS_RUNNING),
         ({"wait": True, "running": False}, FIND_ARGS_STOPPED),
+        (
+            {
+                "hidden_fields": [
+                    "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+                    "metadata.annotations[kubectl.kubernetes.io/last-applied-configuration]",
+                ]
+            },
+            FIND_ARGS_HIDDEN_FIELDS,
+        ),
     ],
 )
 def test_module(mocker, module_args, find_args):

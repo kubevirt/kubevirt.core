@@ -210,12 +210,26 @@ MODULE_PARAMS_DELETE = MODULE_PARAMS_DEFAULT | {
     "wait": True,
 }
 
+MODULE_PARAMS_HIDDEN_FIELDS = MODULE_PARAMS_DEFAULT | {
+    "name": "testvm",
+    "namespace": "default",
+    "running": False,
+    "hidden_fields": [
+        "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+        "metadata.annotations[kubectl.kubernetes.io/last-applied-configuration]",
+    ],
+}
+
 K8S_MODULE_PARAMS_CREATE = MODULE_PARAMS_CREATE | {
     "generate_name": None,
     "running": None,
     "run_strategy": None,
     "resource_definition": VM_DEFINITION_CREATE,
     "wait_condition": {"type": "Ready", "status": True},
+    "hidden_fields": [
+        "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+        "metadata.managedFields",
+    ],
 }
 
 K8S_MODULE_PARAMS_RUNNING = MODULE_PARAMS_RUNNING | {
@@ -223,6 +237,10 @@ K8S_MODULE_PARAMS_RUNNING = MODULE_PARAMS_RUNNING | {
     "run_strategy": None,
     "resource_definition": VM_DEFINITION_RUNNING,
     "wait_condition": {"type": "Ready", "status": True},
+    "hidden_fields": [
+        "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+        "metadata.managedFields",
+    ],
 }
 
 K8S_MODULE_PARAMS_STOPPED = MODULE_PARAMS_STOPPED | {
@@ -230,6 +248,10 @@ K8S_MODULE_PARAMS_STOPPED = MODULE_PARAMS_STOPPED | {
     "run_strategy": None,
     "resource_definition": VM_DEFINITION_STOPPED,
     "wait_condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
+    "hidden_fields": [
+        "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+        "metadata.managedFields",
+    ],
 }
 
 K8S_MODULE_PARAMS_HALTED = MODULE_PARAMS_HALTED | {
@@ -237,6 +259,10 @@ K8S_MODULE_PARAMS_HALTED = MODULE_PARAMS_HALTED | {
     "running": None,
     "resource_definition": VM_DEFINITION_HALTED,
     "wait_condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
+    "hidden_fields": [
+        "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+        "metadata.managedFields",
+    ],
 }
 
 K8S_MODULE_PARAMS_DELETE = MODULE_PARAMS_DELETE | {
@@ -245,6 +271,17 @@ K8S_MODULE_PARAMS_DELETE = MODULE_PARAMS_DELETE | {
     "run_strategy": None,
     "resource_definition": VM_DEFINITION_RUNNING,
     "wait_condition": {"type": "Ready", "status": True},
+    "hidden_fields": [
+        "metadata.annotations[kubemacpool.io/transaction-timestamp]",
+        "metadata.managedFields",
+    ],
+}
+
+K8S_MODULE_PARAMS_HIDDEN_FIELDS = MODULE_PARAMS_HIDDEN_FIELDS | {
+    "generate_name": None,
+    "run_strategy": None,
+    "resource_definition": VM_DEFINITION_STOPPED,
+    "wait_condition": {"type": "Ready", "status": False, "reason": "VMINotExists"},
 }
 
 
@@ -280,6 +317,12 @@ K8S_MODULE_PARAMS_DELETE = MODULE_PARAMS_DELETE | {
             K8S_MODULE_PARAMS_DELETE,
             VM_DEFINITION_RUNNING,
             "delete",
+        ),
+        (
+            MODULE_PARAMS_HIDDEN_FIELDS,
+            K8S_MODULE_PARAMS_HIDDEN_FIELDS,
+            VM_DEFINITION_STOPPED,
+            "update",
         ),
     ],
 )
