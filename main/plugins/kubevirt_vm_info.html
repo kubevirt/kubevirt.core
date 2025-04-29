@@ -262,6 +262,23 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 </tr>
 <tr class="row-odd">
   <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-hidden_fields"></div>
+    <p class="ansible-option-title"><strong>hidden_fields</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-hidden_fields" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">list</span>
+      / <span class="ansible-option-elements">elements=string</span>
+    </p>
+    <p><em class="ansible-option-versionadded">added in kubevirt.core 2.2.0</em></p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Hide fields matching this option in the result.</p>
+    <p>An example might be <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-hidden_fields"><span class="std std-ref"><span class="pre">hidden_fields=[metadata.managedFields]</span></span></a></code> or <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-hidden_fields"><span class="std std-ref"><span class="pre">hidden_fields=[metadata.annotations[kubemacpool.io/transaction-timestamp]]</span></span></a></code>.</p>
+    <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">[&#34;metadata.annotations[kubemacpool.io/transaction-timestamp]&#34;, &#34;metadata.managedFields&#34;]</code></p>
+  </div></td>
+</tr>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-host"></div>
     <p class="ansible-option-title"><strong>host</strong></p>
     <a class="ansibleOptionLink" href="#parameter-host" title="Permalink to this option"></a>
@@ -274,7 +291,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_HOST</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-impersonate_groups"></div>
     <p class="ansible-option-title"><strong>impersonate_groups</strong></p>
@@ -289,7 +306,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_IMPERSONATE_GROUPS</code> environment variable, e.g. <code class='docutils literal notranslate'>Group1,Group2</code>.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-impersonate_user"></div>
     <p class="ansible-option-title"><strong>impersonate_user</strong></p>
@@ -303,7 +320,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_IMPERSONATE_USER</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-kubeconfig"></div>
     <p class="ansible-option-title"><strong>kubeconfig</strong></p>
@@ -319,7 +336,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>The kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version &gt;= 17.17.0.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-label_selectors"></div>
     <p class="ansible-option-title"><strong>label_selectors</strong></p>
@@ -334,7 +351,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">[]</code></p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-name"></div>
     <p class="ansible-option-title"><strong>name</strong></p>
@@ -347,7 +364,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Specify the name of the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-namespace"></div>
     <p class="ansible-option-title"><strong>namespace</strong></p>
@@ -360,7 +377,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Specify the namespace of <code class='docutils literal notranslate'>VirtualMachines</code>.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-no_proxy"></div>
     <p class="ansible-option-title"><strong>no_proxy</strong></p>
@@ -377,7 +394,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Example value is <code class='docutils literal notranslate'>localhost,.local,.example.com,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16</code>.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-password"></div>
     <p class="ansible-option-title"><strong>password</strong></p>
@@ -392,7 +409,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Please read the description of the <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-username"><span class="std std-ref"><span class="pre">username</span></span></a></strong></code> option for a discussion of when this option is applicable.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-persist_config"></div>
     <p class="ansible-option-title"><strong>persist_config</strong></p>
@@ -414,7 +431,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy"></div>
     <p class="ansible-option-title"><strong>proxy</strong></p>
@@ -429,7 +446,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Please note that this module does not pick up typical proxy settings from the environment (e.g. <code class="xref std std-envvar literal notranslate">HTTP_PROXY</code>).</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy_headers"></div>
     <p class="ansible-option-title"><strong>proxy_headers</strong></p>
@@ -443,7 +460,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Documentation can be found here <a href='https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers'>https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers</a>.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy_headers/basic_auth"></div>
     <p class="ansible-option-title"><strong>basic_auth</strong></p>
@@ -457,7 +474,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PROXY_HEADERS_BASIC_AUTH</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy_headers/proxy_basic_auth"></div>
     <p class="ansible-option-title"><strong>proxy_basic_auth</strong></p>
@@ -471,7 +488,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy_headers/user_agent"></div>
     <p class="ansible-option-title"><strong>user_agent</strong></p>
@@ -486,7 +503,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
   </div></td>
 </tr>
 
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-running"></div>
     <p class="ansible-option-title"><strong>running</strong></p>
@@ -508,7 +525,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-username"></div>
     <p class="ansible-option-title"><strong>username</strong></p>
@@ -522,7 +539,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_USERNAME</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-validate_certs"></div>
     <div class="ansibleOptionAnchor" id="parameter-verify_ssl"></div>
@@ -544,7 +561,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-wait"></div>
     <p class="ansible-option-title"><strong>wait</strong></p>
@@ -565,7 +582,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-wait_sleep"></div>
     <p class="ansible-option-title"><strong>wait_sleep</strong></p>
@@ -580,7 +597,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">5</code></p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-wait_timeout"></div>
     <p class="ansible-option-title"><strong>wait_timeout</strong></p>
