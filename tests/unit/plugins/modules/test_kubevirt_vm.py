@@ -44,6 +44,7 @@ VM_DEFINITION_CREATE = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "instancetype": {"name": "u1.medium"},
         "preference": {"name": "fedora"},
         "dataVolumeTemplates": [
@@ -83,6 +84,7 @@ VM_DEFINITION_RUNNING = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "template": {
             "spec": {
                 "domain": {"devices": {}},
@@ -100,6 +102,7 @@ VM_DEFINITION_STOPPED = {
     },
     "spec": {
         "running": False,
+        "runStrategy": None,
         "template": {
             "spec": {
                 "domain": {"devices": {}},
@@ -116,6 +119,7 @@ VM_DEFINITION_HALTED = {
         "namespace": "default",
     },
     "spec": {
+        "running": None,
         "runStrategy": "Halted",
         "template": {
             "spec": {
@@ -426,6 +430,7 @@ CREATED_VM = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "template": {
             "spec": {
                 "domain": {
@@ -443,6 +448,7 @@ CREATED_VM_RUN_STRATEGY = {
         "namespace": "default",
     },
     "spec": {
+        "running": None,
         "runStrategy": "Manual",
         "template": {
             "spec": {
@@ -465,6 +471,7 @@ CREATED_VM_LABELS = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "template": {
             "metadata": {
                 "labels": {"test": "test"},
@@ -489,6 +496,7 @@ CREATED_VM_ANNOTATIONS = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "template": {
             "metadata": {
                 "annotations": {"test": "test"},
@@ -510,6 +518,7 @@ CREATED_VM_INSTANCETYPE = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "instancetype": {"name": "u1.medium"},
         "template": {
             "spec": {
@@ -529,6 +538,7 @@ CREATED_VM_PREFERENCE = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "preference": {"name": "fedora"},
         "template": {
             "spec": {
@@ -548,6 +558,7 @@ CREATED_VM_DATAVOLUMETEMPLATE = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "dataVolumeTemplates": [
             {
                 "metadata": {"name": "testdv"},
@@ -583,6 +594,7 @@ CREATED_VM_NAME = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "template": {
             "spec": {
                 "domain": {
@@ -602,6 +614,7 @@ CREATED_VM_GENERATE_NAME = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "template": {
             "spec": {
                 "domain": {
@@ -620,6 +633,7 @@ CREATED_VM_SPECS = {
     },
     "spec": {
         "running": True,
+        "runStrategy": None,
         "template": {
             "spec": {
                 "domain": {
