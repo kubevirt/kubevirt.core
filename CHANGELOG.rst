@@ -6,6 +6,14 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v2.2.0
+======
+
+Release Summary
+---------------
+
+This release brings some new features and enables compatibility with ansible-core-2.19.
+
 v2.1.0
 ======
 
