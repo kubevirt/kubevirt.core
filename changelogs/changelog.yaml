@@ -192,3 +192,7 @@ releases:
     - 129.yaml
     - 130.yaml
     release_date: '2024-09-04'
+  2.2.0:
+    changes:
+      release_summary: This release brings some new features and enables compatibility with ansible-core-2.19.
+    release_date: '2025-04-30'
