@@ -239,6 +239,12 @@ deploy_kubevirt_containerized_data_importer() {
   echo "Deploying KubeVirt containerized-data-importer"
   ${KUBECTL} apply -f "https://github.com/kubevirt/containerized-data-importer/releases/download/${KUBEVIRT_CDI_VERSION}/cdi-operator.yaml"
   ${KUBECTL} apply -f "https://github.com/kubevirt/containerized-data-importer/releases/download/${KUBEVIRT_CDI_VERSION}/cdi-cr.yaml"
+
+  echo "Waiting for KubeVirt containerized-data-importer to be ready"
+  ${KUBECTL} wait --for=condition=Available cdi cdi --timeout=5m
+
+  echo "Successfully deployed KubeVirt containerized-data-importer:"
+  ${KUBECTL} get pods -n cdi
 }
 
 deploy_cnao() {
@@ -307,7 +313,7 @@ cleanup() {
 }
 
 usage() {
-  echo -n "$0 [--install-kind] [--install-kubectl] [--configure-inotify-limits] [--create-registry] [--create-cluster] [--deploy-kubevirt] [--deploy-cnao] [--create-nad] [--cleanup] [--namespace]"
+  echo -n "$0 [--install-kind] [--install-kubectl] [--configure-inotify-limits] [--create-registry] [--create-cluster] [--deploy-kubevirt] [--deploy-kubevirt-cdi] [--deploy-cnao] [--create-nad] [--cleanup] [--namespace]"
 }
 
 set_default_options() {
