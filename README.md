@@ -20,6 +20,7 @@ See the [Ansible core support matrix](https://docs.ansible.com/ansible/latest/re
 * `kubevirt`: Inventory source for KubeVirt VirtualMachines
 * `kubevirt_vm`: Create or delete KubeVirt VirtualMachines
 * `kubevirt_vm_info`: Describe KubeVirt VirtualMachines
+* `kubevirt_vmi_info`: Describe KubeVirt VirtualMachineInstances
 
 ## Using this collection
 
