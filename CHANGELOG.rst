@@ -6,6 +6,31 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v2.2.1
+======
+
+Release Summary
+---------------
+
+This release brings some new features and enables compatibility with ansible-core-2.19.
+The inventory now tries to lookup winrm services for Windows hosts if enabled.
+The unset_ansible_port option was added to the inventory. It allows to control if the value of ansible_port should be unset if no non-default value was found.
+The hidden_fields argument was added to kubevirt_vm and kubevirt_{vm,vmi}_info which allows to hide and ignore certain fields in the returned definition of a VM or VMI.
+If no namespaces were configured the inventory now tries to use OCP Projects if available.
+It is now possible to switch between running and run_strategy with kubevirt_vm.
+This is a maintenance release with no functional changes compared to version 2.2.0. Only the changelog was fixed.
+
+Minor Changes
+-------------
+
+- chore: Bump supported python and ansible-core versions `#176 <https://github.com/kubevirt/kubevirt.core/pull/176>`_
+- feat(inventory): Add unset_ansible_port option `#173 <https://github.com/kubevirt/kubevirt.core/pull/173>`_
+- feat(inventory): Lookup winrm services for Windows hosts `#171 <https://github.com/kubevirt/kubevirt.core/pull/171>`_
+- feat(inventory): Use OCP projects if available `#179 <https://github.com/kubevirt/kubevirt.core/pull/179>`_
+- feat(modules): Add hidden_fields argument `#178 <https://github.com/kubevirt/kubevirt.core/pull/178>`_
+- fix(kubevirt_vm): Allow switching between running and run_strategy `#180 <https://github.com/kubevirt/kubevirt.core/pull/180>`_
+- fix: Ensure compatibility with ansible-core >= 2.19 `#175 <https://github.com/kubevirt/kubevirt.core/pull/175>`_
+
 v2.2.0
 ======
 
