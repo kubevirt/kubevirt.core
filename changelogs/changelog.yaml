@@ -242,3 +242,7 @@ releases:
         This is a maintenance release with no functional changes compared to version
         2.2.0. Only the changelog was fixed.'
     release_date: '2025-05-16'
+  2.2.2:
+    changes:
+      release_summary: This is a maintenance release to trigger a rebuild. No functional changes.
+    release_date: '2025-05-20'
