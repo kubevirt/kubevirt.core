@@ -244,5 +244,6 @@ releases:
     release_date: '2025-05-16'
   2.2.2:
     changes:
-      release_summary: This is a maintenance release to trigger a rebuild. No functional changes.
+      release_summary: This is a maintenance release to trigger a rebuild. No functional
+        changes.
     release_date: '2025-05-20'
