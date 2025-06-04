@@ -247,3 +247,8 @@ releases:
       release_summary: This is a maintenance release to trigger a rebuild. No functional
         changes.
     release_date: '2025-05-20'
+  2.2.3:
+    changes:
+      release_summary: This release ensures compatibility with kubernets.core >=5.2.0,<7.0.0.
+        changes.
+    release_date: '2025-06-04'
