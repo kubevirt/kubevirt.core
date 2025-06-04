@@ -1,12 +1,12 @@
 ---
 namespace: kubevirt
 name: core
-version: "2.2.2"
+version: "2.2.3"
 readme: README.md
 authors:
   - KubeVirt Project (kubevirt.io)
 dependencies:
-  kubernetes.core: '>=5.2.0,<6.0.0'
+  kubernetes.core: '>=5.2.0,<7.0.0'
 description: Lean Ansible bindings for KubeVirt
 license_file: LICENSE
 tags:
