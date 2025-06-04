@@ -249,6 +249,12 @@ releases:
     release_date: '2025-05-20'
   2.2.3:
     changes:
+      minor_changes:
+      - 'Bump dependency on kubernetes.core and collection version `#192 <https://github.com/kubevirt/kubevirt.core/pull/192>`_
+
+        '
       release_summary: This release ensures compatibility with kubernets.core >=5.2.0,<7.0.0.
         changes.
+    fragments:
+    - 192.yaml
     release_date: '2025-06-04'

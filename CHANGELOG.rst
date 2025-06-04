@@ -6,6 +6,19 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v2.2.3
+======
+
+Release Summary
+---------------
+
+This release ensures compatibility with kubernets.core >=5.2.0,<7.0.0. changes.
+
+Minor Changes
+-------------
+
+- Bump dependency on kubernetes.core and collection version `#192 <https://github.com/kubevirt/kubevirt.core/pull/192>`_
+
 v2.2.2
 ======
 
