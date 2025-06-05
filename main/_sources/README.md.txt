@@ -114,4 +114,4 @@ Every voice is important. If you have something on your mind, create an issue or
 
 Apache License 2.0
 
-See [LICENSE](./LICENSE) to see the full text.
+See [LICENSE](https://github.com/kubevirt/kubevirt.core/blob/main/LICENSE) to see the full text.
