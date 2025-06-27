@@ -2,3 +2,4 @@ pytest
 pytest-ansible
 pytest-mock
 pytest-xdist
+typing-extensions
