@@ -121,6 +121,10 @@ jobs:
           {
             "ansible-version": "devel",
             "python-version": "3.10"
+          },
+          {
+            "ansible-version": "devel",
+            "python-version": "3.11"
           }
         ]
 
@@ -154,6 +158,10 @@ jobs:
           {
             "ansible-version": "devel",
             "python-version": "3.10"
+          },
+          {
+            "ansible-version": "devel",
+            "python-version": "3.11"
           }
         ]
 
