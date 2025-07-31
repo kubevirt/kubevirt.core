@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="2.19.1" name="antsibull-docs" />
+<meta content="2.20.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>kubevirt – Inventory source for KubeVirt VirtualMachines and VirtualMachineInstances &mdash; KubeVirt Ansible Collection  documentation</title>
@@ -610,7 +610,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>The default value when the host variable&#x27;s value is an empty string.</p>
+    <p>The default value when the host variable&#x27;s value is <code class="ansible-value literal notranslate">None</code> or an empty string.</p>
     <p>This option is mutually exclusive with <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-keyed_groups/trailing_separator"><span class="std std-ref"><span class="pre">keyed_groups[].trailing_separator</span></span></a></strong></code>.</p>
   </div></td>
 </tr>
@@ -684,7 +684,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
   <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-    <p>Set this option to <code class="ansible-value literal notranslate">false</code> to omit the <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-keyed_groups/separator"><span class="std std-ref"><span class="pre">keyed_groups[].separator</span></span></a></strong></code> after the host variable when the value is an empty string.</p>
+    <p>Set this option to <code class="ansible-value literal notranslate">false</code> to omit the <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-keyed_groups/separator"><span class="std std-ref"><span class="pre">keyed_groups[].separator</span></span></a></strong></code> after the host variable when the value is <code class="ansible-value literal notranslate">None</code> or an empty string.</p>
     <p>This option is mutually exclusive with <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-keyed_groups/default_value"><span class="std std-ref"><span class="pre">keyed_groups[].default_value</span></span></a></strong></code>.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
@@ -1121,6 +1121,8 @@ For example, an ansible.cfg entry (further up in the list) is overwritten by an 
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>To avoid SSL certificate validation errors when <code class="ansible-option-value docutils literal notranslate"><a class="reference external" href="https://docs.ansible.com/ansible/latest/collections/kubevirt/core/kubevirt_inventory.html#ansible-collections-kubevirt-core-kubevirt-inventory-parameter-validate-certs" title="(in Ansible v11)"><span><span class="pre">validate_certs=yes</span></span></a></code>, the full certificate chain for the API server must be provided via <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/ansible/latest/collections/kubevirt/core/kubevirt_inventory.html#ansible-collections-kubevirt-core-kubevirt-inventory-parameter-ca-cert" title="(in Ansible v11)"><span><span class="pre">ca_cert</span></span></a></strong></code> or in the <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/ansible/latest/collections/kubevirt/core/kubevirt_inventory.html#ansible-collections-kubevirt-core-kubevirt-inventory-parameter-kubeconfig" title="(in Ansible v11)"><span><span class="pre">kubeconfig</span></span></a></strong></code> file.</p></li>
+<li><p>Inventories are not finalized at this stage, so the auto populated <code class="docutils literal notranslate"><span class="pre">all</span></code> and <code class="docutils literal notranslate"><span class="pre">ungrouped</span></code> groups will only reflect what previous inventory sources explicitly added to them.</p></li>
+<li><p>Runtime ‘magic variables’ are not available during inventory construction. For example, <code class="docutils literal notranslate"><span class="pre">groups</span></code> and <code class="docutils literal notranslate"><span class="pre">hostvars</span></code> do not exist yet.</p></li>
 </ul>
 </div>
 </section>

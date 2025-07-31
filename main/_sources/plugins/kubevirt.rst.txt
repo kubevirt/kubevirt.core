@@ -6,7 +6,7 @@
     :trim:
 
 .. meta::
-  :antsibull-docs: 2.19.1
+  :antsibull-docs: 2.20.0
 
 .. Anchors
 
@@ -546,7 +546,7 @@ Parameters
 
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-      <p>The default value when the host variable&#x27;s value is an empty string.</p>
+      <p>The default value when the host variable&#x27;s value is <code class="ansible-value literal notranslate">None</code> or an empty string.</p>
       <p>This option is mutually exclusive with <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-keyed_groups/trailing_separator"><span class="std std-ref"><span class="pre">keyed_groups[].trailing_separator</span></span></a></strong></code>.</p>
     </div></td>
   </tr>
@@ -620,7 +620,7 @@ Parameters
 
     </div></td>
     <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-      <p>Set this option to <code class="ansible-value literal notranslate">false</code> to omit the <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-keyed_groups/separator"><span class="std std-ref"><span class="pre">keyed_groups[].separator</span></span></a></strong></code> after the host variable when the value is an empty string.</p>
+      <p>Set this option to <code class="ansible-value literal notranslate">false</code> to omit the <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-keyed_groups/separator"><span class="std std-ref"><span class="pre">keyed_groups[].separator</span></span></a></strong></code> after the host variable when the value is <code class="ansible-value literal notranslate">None</code> or an empty string.</p>
       <p>This option is mutually exclusive with <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-keyed_groups/default_value"><span class="std std-ref"><span class="pre">keyed_groups[].default_value</span></span></a></strong></code>.</p>
       <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
       <ul class="simple">
@@ -1064,6 +1064,8 @@ Notes
 
 .. note::
    - To avoid SSL certificate validation errors when :ansopt:`kubevirt.core.kubevirt#inventory:validate\_certs=yes`\ , the full certificate chain for the API server must be provided via :ansopt:`kubevirt.core.kubevirt#inventory:ca\_cert` or in the :ansopt:`kubevirt.core.kubevirt#inventory:kubeconfig` file.
+   - Inventories are not finalized at this stage, so the auto populated :literal:`all` and :literal:`ungrouped` groups will only reflect what previous inventory sources explicitly added to them.
+   - Runtime 'magic variables' are not available during inventory construction. For example, :literal:`groups` and :literal:`hostvars` do not exist yet.
 
 .. Seealso
 
