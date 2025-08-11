@@ -86,7 +86,7 @@ jobs:
 
       - name: Checkout kubevirt.core repository
         if: inputs.ansible_test_targets != ''
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: ${{ env.source_directory }}
           fetch-depth: 0
