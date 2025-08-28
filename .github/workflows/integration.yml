@@ -117,7 +117,7 @@ jobs:
         if: inputs.ansible_test_targets != ''
         uses: helm/kind-action@v1.12.0
         with:
-          version: v0.29.0
+          version: v0.30.0
           install_only: true
 
       - name: Deploy kubevirt
