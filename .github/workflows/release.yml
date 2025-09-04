@@ -41,7 +41,7 @@ jobs:
 
       - name: Fail if tag exists
         if: ${{ steps.version.outputs.VERSION == steps.exists.outputs.EXISTS }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
               core.setFailed('Release tag already exists')
