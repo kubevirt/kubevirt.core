@@ -27,7 +27,7 @@ kubevirt_vmi_info -- Describe KubeVirt VirtualMachineInstances
     It is not included in ``ansible-core``.
     To check whether it is installed, run :code:`ansible-galaxy collection list`.
 
-    To install it, use: :code:`ansible-galaxy collection install kubevirt.core`.
+    To install it, use: :code:`ansible\-galaxy collection install kubevirt.core`.
     You need further requirements to be able to use this module,
     see :ref:`Requirements <ansible_collections.kubevirt.core.kubevirt_vmi_info_module_requirements>` for details.
 
