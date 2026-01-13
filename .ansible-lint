@@ -9,4 +9,3 @@ enable_list:
   - yaml
 
 profile: production
-parseable: true
