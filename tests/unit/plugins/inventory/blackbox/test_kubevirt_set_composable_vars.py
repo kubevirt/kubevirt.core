@@ -14,7 +14,6 @@ from ansible_collections.kubevirt.core.tests.unit.plugins.inventory.constants im
     DEFAULT_NAMESPACE,
 )
 
-
 VMI = {
     "metadata": {
         "name": "testvmi",

@@ -13,7 +13,6 @@ from ansible_collections.kubernetes.core.plugins.module_utils.k8s.service import
     K8sService,
 )
 
-
 INFO_ARG_SPEC = {
     "api_version": {"default": "kubevirt.io/v1"},
     "name": {},
