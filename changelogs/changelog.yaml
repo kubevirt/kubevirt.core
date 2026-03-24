@@ -258,3 +258,7 @@ releases:
     fragments:
     - 192.yaml
     release_date: '2025-06-04'
+  2.2.4:
+    changes:
+      release_summary: This is a service release with updated versions and dependencies.
+    release_date: '2026-03-24'
