@@ -920,7 +920,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             trust_compose_groups(self.get_option("compose")),
             hostvars,
             hostname,
-            strict=True,
+            strict=strict,
         )
         self._add_host_to_composed_groups(
             trust_compose_groups(self.get_option("groups")),
