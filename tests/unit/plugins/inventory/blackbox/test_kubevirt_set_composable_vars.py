@@ -61,3 +61,30 @@ def test_set_composable_vars(
     assert host in groups["block_migratable_vmis"]["children"]
     assert "fedora_40" in groups
     assert host in groups["fedora_40"]["children"]
+
+
+def test_set_composable_vars_strict_false_ignores_compose_errors(
+    inventory,
+    groups,
+    hosts,
+):
+    inventory._options = {
+        "compose": {"custom_label": "vmi_nonexistent_label"},
+        "groups": {},
+        "keyed_groups": [],
+        "strict": False,
+    }
+    inventory._populate_inventory(
+        {
+            "default_hostname": "test",
+            "cluster_domain": "test.com",
+            "namespaces": {
+                "default": {"vms": [], "vmis": [VMI], "services": {}},
+            },
+        },
+        InventoryOptions(),
+    )
+
+    host = f"{DEFAULT_NAMESPACE}-testvmi"
+    assert host in hosts
+    assert "custom_label" not in hosts[host]
