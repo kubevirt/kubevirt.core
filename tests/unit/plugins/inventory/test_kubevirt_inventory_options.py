@@ -22,6 +22,7 @@ def test_inventory_options_defaults():
     assert opts.create_groups is False
     assert opts.base_domain is None
     assert opts.append_base_domain is False
+    assert opts.default_win_ansible_connection == "winrm"
     assert opts.host_format == "{namespace}-{name}"
 
 
@@ -35,6 +36,7 @@ def test_inventory_options_override_defaults():
     create_groups = True
     base_domain = "test-domain.com"
     append_base_domain = True
+    default_win_ansible_connection = "psrp"
     host_format = "{name}-testhost"
 
     opts = InventoryOptions(
@@ -47,6 +49,7 @@ def test_inventory_options_override_defaults():
         create_groups=create_groups,
         base_domain=base_domain,
         append_base_domain=append_base_domain,
+        default_win_ansible_connection=default_win_ansible_connection,
         host_format=host_format,
     )
     assert opts.api_version == api_version
@@ -58,4 +61,5 @@ def test_inventory_options_override_defaults():
     assert opts.create_groups == create_groups
     assert opts.base_domain == base_domain
     assert opts.append_base_domain == append_base_domain
+    assert opts.default_win_ansible_connection == default_win_ansible_connection
     assert opts.host_format == host_format
