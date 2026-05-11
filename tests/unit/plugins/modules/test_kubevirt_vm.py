@@ -11,6 +11,7 @@ import pytest
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s import runner
 from ansible_collections.kubevirt.core.plugins.modules import kubevirt_vm
+from kubernetes.client.exceptions import ApiException
 from ansible_collections.kubevirt.core.tests.unit.utils.ansible_module_mock import (
     AnsibleFailJson,
     AnsibleExitJson,
@@ -159,6 +160,7 @@ MODULE_PARAMS_DEFAULT = {
     "state": "present",
     "force": False,
     "delete_options": None,
+    "grace_period_seconds": None,
 }
 
 MODULE_PARAMS_CREATE = MODULE_PARAMS_DEFAULT | {
@@ -334,7 +336,7 @@ def test_module(mocker, module_params, k8s_module_params, vm_definition, method)
     mocker.patch.object(AnsibleModule, "exit_json", exit_json)
     mocker.patch.object(runner, "get_api_client")
 
-    perform_action = mocker.patch.object(
+    mock_perform_action = mocker.patch.object(
         runner,
         "perform_action",
         return_value={
@@ -347,7 +349,7 @@ def test_module(mocker, module_params, k8s_module_params, vm_definition, method)
     with pytest.raises(AnsibleExitJson), patch_module_args(module_params):
         kubevirt_vm.main()
 
-    perform_action.assert_called_once_with(
+    mock_perform_action.assert_called_once_with(
         mocker.ANY,
         vm_definition,
         k8s_module_params,
@@ -711,3 +713,264 @@ def test_set_wait_condition(mocker, params, expected):
     kubevirt_vm.set_wait_condition(module)
 
     assert module.params == params | expected
+
+
+MODULE_PARAMS_START = MODULE_PARAMS_DEFAULT | {
+    "name": "testvm",
+    "namespace": "default",
+    "state": "started",
+}
+
+MODULE_PARAMS_STOP = MODULE_PARAMS_DEFAULT | {
+    "name": "testvm",
+    "namespace": "default",
+    "state": "stopped",
+}
+
+MODULE_PARAMS_STOP_FORCE = MODULE_PARAMS_DEFAULT | {
+    "name": "testvm",
+    "namespace": "default",
+    "state": "stopped",
+    "grace_period_seconds": 0,
+}
+
+MODULE_PARAMS_RESTART = MODULE_PARAMS_DEFAULT | {
+    "name": "testvm",
+    "namespace": "default",
+    "state": "restarted",
+}
+
+MODULE_PARAMS_RESTART_FORCE = MODULE_PARAMS_DEFAULT | {
+    "name": "testvm",
+    "namespace": "default",
+    "state": "restarted",
+    "grace_period_seconds": 0,
+}
+
+SUBRESOURCE_BASE_PATH = (
+    f"/apis/{kubevirt_vm.SUBRESOURCE_API}/namespaces/default/virtualmachines/testvm"
+)
+
+
+@pytest.mark.parametrize(
+    "module_params,action,expected_body",
+    [
+        (MODULE_PARAMS_START, "start", None),
+        (MODULE_PARAMS_STOP, "stop", None),
+        (MODULE_PARAMS_STOP_FORCE, "stop", {"gracePeriod": 0}),
+        (MODULE_PARAMS_RESTART, "restart", None),
+        (MODULE_PARAMS_RESTART_FORCE, "restart", {"gracePeriodSeconds": 0}),
+    ],
+)
+def test_subresource_action(mocker, module_params, action, expected_body):
+    mocker.patch.object(AnsibleModule, "exit_json", exit_json)
+    mocker.patch.object(
+        kubevirt_vm, "_apply_definition", return_value={"changed": False}
+    )
+    mock_client = mocker.Mock()
+    mocker.patch.object(kubevirt_vm, "get_api_client", return_value=mock_client)
+
+    with pytest.raises(AnsibleExitJson) as exc, patch_module_args(module_params):
+        kubevirt_vm.main()
+
+    mock_client.client.request.assert_called_once_with(
+        "put",
+        f"{SUBRESOURCE_BASE_PATH}/{action}",
+        body=expected_body,
+        header_params={"Accept": "*/*"},
+    )
+    assert exc.value.args[0]["changed"] is True
+
+
+@pytest.mark.parametrize("state", ["started", "stopped", "restarted"])
+def test_subresource_action_check_mode(mocker, state):
+    mocker.patch.object(AnsibleModule, "exit_json", exit_json)
+    mocker.patch.object(
+        kubevirt_vm, "_apply_definition", return_value={"changed": False}
+    )
+    mock_client = mocker.Mock()
+    mocker.patch.object(kubevirt_vm, "get_api_client", return_value=mock_client)
+
+    params = MODULE_PARAMS_DEFAULT | {
+        "name": "testvm",
+        "namespace": "default",
+        "state": state,
+        "_ansible_check_mode": True,
+    }
+    with pytest.raises(AnsibleExitJson) as exc, patch_module_args(params):
+        kubevirt_vm.main()
+
+    mock_client.client.request.assert_not_called()
+    assert exc.value.args[0]["changed"] is True
+
+
+@pytest.mark.parametrize("state", ["started", "stopped", "restarted"])
+def test_subresource_action_fails_without_name(mocker, state):
+    mocker.patch.object(AnsibleModule, "fail_json", fail_json)
+
+    params = MODULE_PARAMS_DEFAULT | {
+        "namespace": "default",
+        "state": state,
+        "generate_name": "testvm-",
+    }
+    with pytest.raises(AnsibleFailJson), patch_module_args(params):
+        kubevirt_vm.main()
+
+
+@pytest.mark.parametrize(
+    "state,action",
+    [
+        ("started", "start"),
+        ("stopped", "stop"),
+        ("restarted", "restart"),
+    ],
+)
+def test_subresource_action_api_error(mocker, state, action):
+    mocker.patch.object(AnsibleModule, "exit_json", exit_json)
+    mocker.patch.object(AnsibleModule, "fail_json", fail_json)
+    mocker.patch.object(
+        kubevirt_vm, "_apply_definition", return_value={"changed": False}
+    )
+
+    mock_client = mocker.Mock()
+    mock_client.client.request.side_effect = ApiException(
+        status=422, reason="API error"
+    )
+    mocker.patch.object(kubevirt_vm, "get_api_client", return_value=mock_client)
+
+    params = MODULE_PARAMS_DEFAULT | {
+        "name": "testvm",
+        "namespace": "default",
+        "state": state,
+    }
+    with pytest.raises(AnsibleFailJson) as exc, patch_module_args(params):
+        kubevirt_vm.main()
+
+    assert f"Failed to {action} VirtualMachine" in exc.value.args[0]["msg"]
+
+
+@pytest.mark.parametrize(
+    "state,expected_condition",
+    [
+        ("started", kubevirt_vm.WAIT_CONDITION_READY),
+        ("stopped", kubevirt_vm.WAIT_CONDITION_VMI_NOT_EXISTS),
+        ("restarted", kubevirt_vm.WAIT_CONDITION_READY),
+    ],
+)
+def test_subresource_action_wait(mocker, state, expected_condition):
+    mocker.patch.object(AnsibleModule, "exit_json", exit_json)
+    mocker.patch.object(
+        kubevirt_vm, "_apply_definition", return_value={"changed": False}
+    )
+    mock_client = mocker.Mock()
+    mocker.patch.object(kubevirt_vm, "get_api_client", return_value=mock_client)
+
+    mock_svc = mocker.Mock()
+    mock_svc.find.return_value = {"resources": [], "api_found": True}
+    mocker.patch.object(kubevirt_vm, "K8sService", return_value=mock_svc)
+
+    params = MODULE_PARAMS_DEFAULT | {
+        "name": "testvm",
+        "namespace": "default",
+        "state": state,
+        "wait": True,
+    }
+    with pytest.raises(AnsibleExitJson) as exc, patch_module_args(params):
+        kubevirt_vm.main()
+
+    mock_svc.find.assert_called_once_with(
+        kind="VirtualMachine",
+        api_version="kubevirt.io/v1",
+        name="testvm",
+        namespace="default",
+        wait=True,
+        wait_sleep=5,
+        wait_timeout=5,
+        condition=expected_condition,
+    )
+    assert exc.value.args[0]["changed"] is True
+
+
+@pytest.mark.parametrize("state", ["started", "stopped"])
+def test_subresource_action_idempotent(mocker, state):
+    mocker.patch.object(AnsibleModule, "exit_json", exit_json)
+    mocker.patch.object(
+        kubevirt_vm, "_apply_definition", return_value={"changed": False}
+    )
+
+    mock_client = mocker.Mock()
+    mock_client.client.request.side_effect = ApiException(status=409, reason="Conflict")
+    mocker.patch.object(kubevirt_vm, "get_api_client", return_value=mock_client)
+
+    params = MODULE_PARAMS_DEFAULT | {
+        "name": "testvm",
+        "namespace": "default",
+        "state": state,
+    }
+    with pytest.raises(AnsibleExitJson) as exc, patch_module_args(params):
+        kubevirt_vm.main()
+
+    assert exc.value.args[0]["changed"] is False
+
+
+@pytest.mark.parametrize(
+    "state,action,definition_changed",
+    [
+        ("started", "start", True),
+        ("stopped", "stop", True),
+        ("restarted", "restart", True),
+        ("started", "start", False),
+        ("stopped", "stop", False),
+        ("restarted", "restart", False),
+    ],
+)
+def test_subresource_action_with_definition(mocker, state, action, definition_changed):
+    mocker.patch.object(AnsibleModule, "exit_json", exit_json)
+
+    mock_client = mocker.Mock()
+    mocker.patch.object(kubevirt_vm, "get_api_client", return_value=mock_client)
+
+    def fake_run_module(module):
+        module.exit_json(changed=definition_changed, method="update", result={})
+
+    mocker.patch.object(runner, "run_module", side_effect=fake_run_module)
+
+    params = MODULE_PARAMS_DEFAULT | {
+        "name": "testvm",
+        "namespace": "default",
+        "state": state,
+        "labels": {"app": "test"},
+    }
+    with pytest.raises(AnsibleExitJson) as exc, patch_module_args(params):
+        kubevirt_vm.main()
+
+    runner.run_module.assert_called_once()
+    mock_client.client.request.assert_called_once_with(
+        "put",
+        f"{SUBRESOURCE_BASE_PATH}/{action}",
+        body=None,
+        header_params={"Accept": "*/*"},
+    )
+    assert exc.value.args[0]["changed"] is (definition_changed or True)
+
+
+def test_apply_definition_propagates_runner_error(mocker):
+    from ansible_collections.kubernetes.core.plugins.module_utils.k8s.exceptions import (
+        CoreException,
+    )
+
+    mocker.patch.object(AnsibleModule, "exit_json", exit_json)
+    mocker.patch.object(AnsibleModule, "fail_json", fail_json)
+    mocker.patch.object(
+        runner, "run_module", side_effect=CoreException("cluster unreachable")
+    )
+
+    params = MODULE_PARAMS_DEFAULT | {
+        "name": "testvm",
+        "namespace": "default",
+        "state": "started",
+    }
+    with pytest.raises(AnsibleFailJson) as exc, patch_module_args(params):
+        kubevirt_vm.main()
+
+    assert "cluster unreachable" in exc.value.args[0]["msg"]

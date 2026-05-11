@@ -21,6 +21,341 @@
             recreate.diff.before.metadata.annotations.get('kubemacpool.io/transaction-timestamp') and
             not recreate.diff.after.metadata.annotations
 
+- name: Stop VM
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Stop the VM
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: stopped
+        wait: true
+        wait_timeout: 300
+      register: stop_result
+    - name: Assert VM was stopped
+      ansible.builtin.assert:
+        that:
+          - stop_result.changed
+
+- name: Verify VM is stopped
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Get VM info
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+      register: vm_info
+    - name: Assert VM is not ready
+      ansible.builtin.assert:
+        that:
+          - not vm_info.resources[0].status.get('ready', False)
+
+- name: Stop already-stopped VM is idempotent
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Stop the VM again
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: stopped
+      register: stop_again
+    - name: Assert module reported no changes
+      ansible.builtin.assert:
+        that:
+          - not stop_again.changed
+
+- name: Start VM
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Start the VM
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: started
+        wait: true
+        wait_timeout: 600
+      register: start_result
+    - name: Assert VM was started
+      ansible.builtin.assert:
+        that:
+          - start_result.changed
+
+- name: Verify VM is running after start
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Get VM info
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        wait: true
+        wait_timeout: 600
+      register: vm_info
+    - name: Assert VM is ready
+      ansible.builtin.assert:
+        that:
+          - vm_info.resources[0].status.ready
+
+- name: Start already-running VM is idempotent
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Start the VM again
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: started
+      register: start_again
+    - name: Assert module reported no changes
+      ansible.builtin.assert:
+        that:
+          - not start_again.changed
+
+- name: Verify VM definition is untouched when only name and state started are provided
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Snapshot VM definition before
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+      register: before
+    - name: Run module with only name and state
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: started
+      register: noop_result
+    - name: Snapshot VM definition after
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+      register: after
+    - name: Assert definition was not changed
+      ansible.builtin.assert:
+        that:
+          - not noop_result.changed
+          - before.resources[0].spec.template.spec == after.resources[0].spec.template.spec
+          - before.resources[0].metadata.labels == after.resources[0].metadata.labels
+          - before.resources[0].metadata.annotations == after.resources[0].metadata.annotations
+
+- name: Verify VM definition is untouched when only name and state restarted are provided
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Snapshot VM definition before
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+      register: before
+    - name: Run module with only name and state restarted
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: restarted
+        wait: true
+        wait_timeout: 600
+      register: restart_noop_result
+    - name: Snapshot VM definition after
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        wait: true
+        wait_timeout: 600
+      register: after
+    - name: Assert definition was not changed
+      ansible.builtin.assert:
+        that:
+          - restart_noop_result.changed
+          - before.resources[0].spec.template.spec == after.resources[0].spec.template.spec
+          - before.resources[0].metadata.labels == after.resources[0].metadata.labels
+          - before.resources[0].metadata.annotations == after.resources[0].metadata.annotations
+
+- name: Verify VM definition is untouched when only name and state stopped are provided
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Snapshot VM definition before
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+      register: before
+    - name: Run module with only name and state stopped
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: stopped
+        wait: true
+        wait_timeout: 300
+      register: stop_noop_result
+    - name: Snapshot VM definition after
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+      register: after
+    - name: Assert definition was not changed
+      ansible.builtin.assert:
+        that:
+          - stop_noop_result.changed
+          - before.resources[0].spec.template.spec == after.resources[0].spec.template.spec
+          - before.resources[0].metadata.labels == after.resources[0].metadata.labels
+          - before.resources[0].metadata.annotations == after.resources[0].metadata.annotations
+
+- name: Re-start VM for remaining tests
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Start the VM again
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: started
+        wait: true
+        wait_timeout: 600
+
+- name: Restart VM
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Restart the VM
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: restarted
+        wait: true
+        wait_timeout: 600
+      register: restart_result
+    - name: Assert VM was restarted
+      ansible.builtin.assert:
+        that:
+          - restart_result.changed
+
+- name: Verify VM is running after restart
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Get VM info
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        wait: true
+        wait_timeout: 600
+      register: vm_info
+    - name: Assert VM is ready
+      ansible.builtin.assert:
+        that:
+          - vm_info.resources[0].status.ready
+
+- name: Update labels and stop VM at the same time
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Add labels and stop the VM
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: stopped
+        labels:
+          environment: stopped
+        wait: true
+        wait_timeout: 300
+      register: combined_stop
+    - name: Assert VM was changed
+      ansible.builtin.assert:
+        that:
+          - combined_stop.changed
+    - name: Get VM info
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+      register: vm_info
+    - name: Assert labels were applied and VM is stopped
+      ansible.builtin.assert:
+        that:
+          - not vm_info.resources[0].status.get('ready', False)
+          - vm_info.resources[0].metadata.labels.environment == 'stopped'
+
+- name: Update labels and start VM at the same time
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Update labels and start the VM
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: started
+        labels:
+          environment: started
+        wait: true
+        wait_timeout: 600
+      register: combined_start
+    - name: Assert VM was changed
+      ansible.builtin.assert:
+        that:
+          - combined_start.changed
+    - name: Get VM info
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        wait: true
+        wait_timeout: 600
+      register: vm_info
+    - name: Assert labels were applied and VM is running
+      ansible.builtin.assert:
+        that:
+          - vm_info.resources[0].status.ready
+          - vm_info.resources[0].metadata.labels.environment == 'started'
+
+- name: Update labels and restart VM at the same time
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Update labels and restart the VM
+      kubevirt.core.kubevirt_vm:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        state: restarted
+        labels:
+          environment: restarted
+        wait: true
+        wait_timeout: 600
+      register: combined_restart
+    - name: Assert VM was changed
+      ansible.builtin.assert:
+        that:
+          - combined_restart.changed
+    - name: Get VM info
+      kubevirt.core.kubevirt_vm_info:
+        name: testvm
+        namespace: {{ NAMESPACE }}
+        wait: true
+        wait_timeout: 600
+      register: vm_info
+    - name: Assert labels were applied and VM is running
+      ansible.builtin.assert:
+        that:
+          - vm_info.resources[0].status.ready
+          - vm_info.resources[0].metadata.labels.environment == 'restarted'
+
 - name: Delete VM
   connection: local
   gather_facts: false

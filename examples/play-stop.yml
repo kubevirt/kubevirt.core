@@ -1,0 +1,10 @@
+---
+- name: Playbook stopping a virtual machine
+  hosts: localhost
+  tasks:
+    - name: Stop VM
+      kubevirt.core.kubevirt_vm:
+        state: stopped
+        name: testvm
+        namespace: default
+        wait: true
