@@ -86,17 +86,38 @@ def test_ignore_vmi_without_named_interface(mocker, inventory):
     set_ansible_host_and_port.assert_not_called()
 
 
-def test_set_winrm_if_windows(mocker, inventory):
+@pytest.mark.parametrize(
+    "default_win_ansible_connection",
+    [
+        "winrm",
+        "ansible.builtin.winrm",
+        "psrp",
+        "ansible.builtin.psrp",
+        "ssh",
+        "ansible.builtin.ssh",
+    ],
+)
+def test_set_connection_if_windows(mocker, inventory, default_win_ansible_connection):
     mocker.patch.object(inventory, "_set_common_vars")
     mocker.patch.object(inventory, "_is_windows", return_value=True)
     mocker.patch.object(inventory, "_set_ansible_host_and_port")
+    mocker.patch.object(
+        inventory.inventory,
+        "get_host",
+        return_value=mocker.Mock(get_vars=mocker.Mock(return_value={})),
+    )
     set_variable = mocker.patch.object(inventory.inventory, "set_variable")
 
     hostname = "default-testvm"
     vmi = {"metadata": {}, "status": {"interfaces": [{"ipAddress": "1.1.1.1"}]}}
-    inventory._set_vars_from_vmi(hostname, vmi, {}, InventoryOptions())
+    opts = InventoryOptions(
+        default_win_ansible_connection=default_win_ansible_connection
+    )
+    inventory._set_vars_from_vmi(hostname, vmi, {}, opts)
 
-    set_variable.assert_called_once_with(hostname, "ansible_connection", "winrm")
+    set_variable.assert_called_once_with(
+        hostname, "ansible_connection", default_win_ansible_connection
+    )
 
 
 @pytest.mark.parametrize(
@@ -110,6 +131,11 @@ def test_set_winrm_if_windows(mocker, inventory):
 def test_service_lookup(mocker, inventory, is_windows, target_port):
     mocker.patch.object(inventory, "_set_common_vars")
     mocker.patch.object(inventory, "_is_windows", return_value=is_windows)
+    mocker.patch.object(
+        inventory.inventory,
+        "get_host",
+        return_value=mocker.Mock(get_vars=mocker.Mock(return_value={})),
+    )
     set_ansible_host_and_port = mocker.patch.object(
         inventory, "_set_ansible_host_and_port"
     )
@@ -144,6 +170,11 @@ def test_service_ignore_not_matching_connection(
 ):
     mocker.patch.object(inventory, "_set_common_vars")
     mocker.patch.object(inventory, "_is_windows", return_value=is_windows)
+    mocker.patch.object(
+        inventory.inventory,
+        "get_host",
+        return_value=mocker.Mock(get_vars=mocker.Mock(return_value={})),
+    )
     set_ansible_host_and_port = mocker.patch.object(
         inventory, "_set_ansible_host_and_port"
     )
@@ -168,6 +199,11 @@ def test_service_ignore_not_matching_connection(
 def test_service_prefer_winrm_https(mocker, inventory):
     mocker.patch.object(inventory, "_set_common_vars")
     mocker.patch.object(inventory, "_is_windows", return_value=True)
+    mocker.patch.object(
+        inventory.inventory,
+        "get_host",
+        return_value=mocker.Mock(get_vars=mocker.Mock(return_value={})),
+    )
     set_ansible_host_and_port = mocker.patch.object(
         inventory, "_set_ansible_host_and_port"
     )

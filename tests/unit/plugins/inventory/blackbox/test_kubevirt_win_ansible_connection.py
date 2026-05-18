@@ -78,23 +78,54 @@ SVC_LB_WINRM_HTTPS = {
     },
     "status": {"loadBalancer": {"ingress": [{"ip": "192.168.1.100"}]}},
 }
+SVC_LB_SSH = merge_dicts(
+    SVC_LB_WINRM_HTTPS,
+    {
+        "metadata": {
+            "name": "test-lb-ssh",
+            "uid": "33a31042-f58c-5044-cf78-ef211cedb1d4",
+        },
+        "spec": {
+            "ports": [
+                {
+                    "protocol": "TCP",
+                    "port": 12345,
+                    "targetPort": 22,
+                },
+            ],
+        },
+    },
+)
 
 
 @pytest.mark.parametrize(
-    "vmi,expected,use_service",
+    "vmi,expected,use_service,default_win_ansible_connection,services",
     [
-        (BASE_VMI, False, False),
-        (WINDOWS_VMI_1, True, True),
-        (WINDOWS_VMI_2, True, True),
-        (WINDOWS_VMI_3, True, True),
-        (WINDOWS_VMI_4, True, True),
-        (WINDOWS_VMI_1, True, False),
-        (WINDOWS_VMI_2, True, False),
-        (WINDOWS_VMI_3, True, False),
-        (WINDOWS_VMI_4, True, False),
+        (BASE_VMI, False, False, "winrm", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_1, True, True, "winrm", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_2, True, True, "winrm", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_3, True, True, "winrm", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_4, True, True, "winrm", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_1, True, False, "winrm", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_2, True, False, "winrm", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_3, True, False, "winrm", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_4, True, False, "winrm", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_1, True, True, "psrp", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_1, True, False, "psrp", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_2, True, True, "ansible.builtin.psrp", [SVC_LB_WINRM_HTTPS]),
+        (WINDOWS_VMI_3, True, False, "ssh", [SVC_LB_SSH]),
+        (WINDOWS_VMI_4, True, True, "ansible.builtin.ssh", [SVC_LB_SSH]),
     ],
 )
-def test_ansible_connection_winrm(inventory, hosts, vmi, expected, use_service):
+def test_default_win_ansible_connection(
+    inventory,
+    hosts,
+    vmi,
+    expected,
+    use_service,
+    default_win_ansible_connection,
+    services,
+):
     inventory._populate_inventory(
         {
             "default_hostname": "test",
@@ -103,16 +134,19 @@ def test_ansible_connection_winrm(inventory, hosts, vmi, expected, use_service):
                 "default": {
                     "vms": [],
                     "vmis": [vmi],
-                    "services": {"testdomain": [SVC_LB_WINRM_HTTPS]},
+                    "services": {"testdomain": services},
                 }
             },
         },
-        InventoryOptions(use_service=use_service),
+        InventoryOptions(
+            use_service=use_service,
+            default_win_ansible_connection=default_win_ansible_connection,
+        ),
     )
 
     host = f"{DEFAULT_NAMESPACE}-{vmi['metadata']['name']}"
     if expected:
-        assert hosts[host]["ansible_connection"] == "winrm"
+        assert hosts[host]["ansible_connection"] == default_win_ansible_connection
     else:
         assert "ansible_connection" not in hosts[host]
     if use_service:
