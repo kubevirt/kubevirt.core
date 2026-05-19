@@ -1,0 +1,10 @@
+---
+- name: Playbook restarting a virtual machine
+  hosts: localhost
+  tasks:
+    - name: Restart VM
+      kubevirt.core.kubevirt_vm:
+        state: restarted
+        name: testvm
+        namespace: default
+        wait: true
