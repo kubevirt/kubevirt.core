@@ -1,0 +1,10 @@
+---
+- name: Playbook starting a virtual machine
+  hosts: localhost
+  tasks:
+    - name: Start VM
+      kubevirt.core.kubevirt_vm:
+        state: started
+        name: testvm
+        namespace: default
+        wait: true
