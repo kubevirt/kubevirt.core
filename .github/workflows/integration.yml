@@ -70,6 +70,10 @@ on:
             {
               "ansible-version": "devel",
               "python-version": "3.11"
+            },
+            {
+              "ansible-version": "devel",
+              "python-version": "3.12"
             }
           ]
         required: false
