@@ -14,11 +14,23 @@
 
 ## Development environment
 
-To develop and to run tests you need to install `tox` and `tox-ansible` on
-your machine.
+Install `tox` (version 4 or newer) and `tox-ansible`:
 
 ```
-pip install --user tox tox-ansible
+pip install --user 'tox>=4' tox-ansible
+```
+
+With `--user`, `tox` is in `~/.local/bin`. Put it first on `PATH` before
+`make` targets that use `tox` (`build-venv`, `test-unit`, `test-sanity`):
+
+```
+export PATH="$HOME/.local/bin:$PATH"    # whole shell session
+```
+
+or
+
+```
+PATH="$HOME/.local/bin:$PATH" make <target>    # command only
 ```
 
 ### Virtualenv for development
