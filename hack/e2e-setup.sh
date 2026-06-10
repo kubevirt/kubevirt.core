@@ -23,12 +23,13 @@ set_default_params() {
   BIN_DIR=${BIN_DIR:-$DIR/../bin}
 
   KIND=${KIND:-$BIN_DIR/kind}
-  KIND_VERSION=${KIND_VERSION:-v0.31.0}
+  KIND_VERSION=${KIND_VERSION:-v0.32.0}
+  KIND_NODE_IMAGE=${KIND_NODE_IMAGE:-kindest/node:v1.35.5}
 
   KUBECTL=${KUBECTL:-$BIN_DIR/kubectl}
   KUBECTL_VERSION=${KUBECTL_VERSION:-v1.35.1}
 
-  KUBEVIRT_VERSION=${KUBEVIRT_VERSION:-v1.8.2}
+  KUBEVIRT_VERSION=${KUBEVIRT_VERSION:-v1.8.3}
   KUBEVIRT_CDI_VERSION=${KUBEVIRT_CDI_VERSION:-v1.65.0}
   KUBEVIRT_USE_EMULATION=${KUBEVIRT_USE_EMULATION:-"false"}
 
@@ -127,7 +128,7 @@ create_registry() {
 create_cluster() {
   if [ "${OPT_CREATE_REGISTRY}" == true ]; then
     echo "Creating kind cluster with containerd registry config dir enabled"
-    cat <<EOF | DOCKER_HOST=unix://${_cri_socket} ${KIND} create cluster --wait 2m --name "${CLUSTER_NAME}" --config=-
+    cat <<EOF | DOCKER_HOST=unix://${_cri_socket} ${KIND} create cluster --wait 2m --name "${CLUSTER_NAME}" --image "${KIND_NODE_IMAGE}" --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 containerdConfigPatches:
@@ -137,7 +138,7 @@ containerdConfigPatches:
 EOF
   else
     echo "Creating cluster with kind"
-    DOCKER_HOST=unix://${_cri_socket} ${KIND} create cluster --wait 2m --name "${CLUSTER_NAME}"
+    DOCKER_HOST=unix://${_cri_socket} ${KIND} create cluster --wait 2m --name "${CLUSTER_NAME}" --image "${KIND_NODE_IMAGE}"
   fi
 
   echo "Waiting for the network to be ready"
