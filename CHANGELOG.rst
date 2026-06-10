@@ -6,6 +6,26 @@ KubeVirt Collection for Ansible Release Notes
 
 This changelog describes changes after version 1.0.0.
 
+v2.3.0
+======
+
+Release Summary
+---------------
+
+This release adds support for managing VM lifecycle using state=started/stopped/restarted in kubevirt_vm and introduces the default_win_ansible_connection option for the inventory plugin. It also fixes the handling of the user-configured strict option in the inventory plugin and adds compatibility with ansible-core 2.21.
+
+Minor Changes
+-------------
+
+- chore(ci): add ansible 2.21 and fix docs build `#237 <https://github.com/kubevirt/kubevirt.core/pull/237>`_
+- feat(inventory): add ``default_win_ansible_connection`` option `#240 <https://github.com/kubevirt/kubevirt.core/pull/240>`_
+- feat(kubevirt_vm): add ``state=started/stopped/restarted`` to manage VM lifecycle `#242 <https://github.com/kubevirt/kubevirt.core/pull/242>`_
+
+Bugfixes
+--------
+
+- fix: pass user-configured ``strict`` option to ``_set_composite_vars`` in kubevirt inventory plugin `#235 <https://github.com/kubevirt/kubevirt.core/pull/235>`_
+
 v2.2.4
 ======
 
