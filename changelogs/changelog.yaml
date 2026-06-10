@@ -262,3 +262,11 @@ releases:
     changes:
       release_summary: This is a service release with updated versions and dependencies.
     release_date: '2026-03-24'
+  2.3.0:
+    changes:
+      release_summary: This release adds support for managing VM lifecycle using
+        state=started/stopped/restarted in kubevirt_vm and introduces the default_win_ansible_connection
+        option for the inventory plugin. It also fixes the handling of the user-configured
+        strict option in the inventory plugin and adds compatibility with ansible-core
+        2.21.
+    release_date: '2026-06-10'
