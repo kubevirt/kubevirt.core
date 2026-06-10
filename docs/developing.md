@@ -12,6 +12,11 @@
 - All arguments have a specification in `meta/argument_specs.yml`
 - All playbooks/roles should be focused on compatibility with Ansible Automation Platform
 
+### Before pushing
+
+- Run `make format` before committing to auto-format the code. CI rejects unformatted PRs.
+- CI runs `yamllint`, `ansible-lint` (production profile) and `shellcheck`. Fix any violations before pushing
+
 ## Development environment
 
 Install `tox` (version 4 or newer) and `tox-ansible`:
