@@ -121,6 +121,56 @@ def test_set_connection_if_windows(mocker, inventory, default_win_ansible_connec
 
 
 @pytest.mark.parametrize(
+    "existing_ansible_connection,default_win_ansible_connection,target_port",
+    [
+        ("ssh", "winrm", 22),
+        ("winrm", "ssh", 5986),
+    ],
+)
+def test_respect_existing_ansible_connection(
+    mocker,
+    inventory,
+    existing_ansible_connection,
+    default_win_ansible_connection,
+    target_port,
+):
+    mocker.patch.object(inventory, "_set_common_vars")
+    mocker.patch.object(inventory, "_is_windows", return_value=True)
+    set_ansible_host_and_port = mocker.patch.object(
+        inventory, "_set_ansible_host_and_port"
+    )
+    mocker.patch.object(
+        inventory.inventory,
+        "get_host",
+        return_value=mocker.Mock(
+            get_vars=mocker.Mock(
+                return_value={"ansible_connection": existing_ansible_connection}
+            )
+        ),
+    )
+    set_variable = mocker.patch.object(inventory.inventory, "set_variable")
+
+    hostname = "default-testvm"
+    vmi = {
+        "metadata": {"labels": {LABEL_KUBEVIRT_IO_DOMAIN: "testdomain"}},
+        "status": {"interfaces": [{"ipAddress": "1.1.1.1"}]},
+    }
+    service = {
+        "metadata": {"name": "testsvc"},
+        "spec": {"ports": [{"targetPort": target_port}]},
+    }
+    opts = InventoryOptions(
+        default_win_ansible_connection=default_win_ansible_connection
+    )
+    inventory._set_vars_from_vmi(hostname, vmi, {"testdomain": [service]}, opts)
+
+    set_variable.assert_not_called()
+    set_ansible_host_and_port.assert_called_once_with(
+        vmi, hostname, "1.1.1.1", service, opts
+    )
+
+
+@pytest.mark.parametrize(
     "is_windows,target_port",
     [
         (False, 22),

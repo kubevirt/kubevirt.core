@@ -96,6 +96,34 @@ SVC_LB_SSH = merge_dicts(
         },
     },
 )
+SVC_LB_SSH_2222 = merge_dicts(
+    SVC_LB_SSH,
+    {
+        "spec": {
+            "ports": [
+                {
+                    "protocol": "TCP",
+                    "port": 2222,
+                    "targetPort": 22,
+                },
+            ],
+        },
+    },
+)
+SVC_LB_WINRM_HTTPS_59861 = merge_dicts(
+    SVC_LB_WINRM_HTTPS,
+    {
+        "spec": {
+            "ports": [
+                {
+                    "protocol": "TCP",
+                    "port": 59861,
+                    "targetPort": 5986,
+                },
+            ],
+        },
+    },
+)
 
 
 @pytest.mark.parametrize(
@@ -155,3 +183,45 @@ def test_default_win_ansible_connection(
     else:
         assert hosts[host]["ansible_host"] == "10.10.10.10"
         assert hosts[host]["ansible_port"] is None
+
+
+@pytest.mark.parametrize(
+    "default_win_ansible_connection,expected_port",
+    [
+        ("winrm", 59861),
+        ("ssh", 2222),
+    ],
+)
+def test_default_win_ansible_connection_picks_service_by_protocol(
+    inventory,
+    hosts,
+    default_win_ansible_connection,
+    expected_port,
+):
+    inventory._populate_inventory(
+        {
+            "default_hostname": "test",
+            "cluster_domain": "test.com",
+            "namespaces": {
+                "default": {
+                    "vms": [],
+                    "vmis": [WINDOWS_VMI_1],
+                    "services": {
+                        "testdomain": [
+                            SVC_LB_SSH_2222,
+                            SVC_LB_WINRM_HTTPS_59861,
+                        ]
+                    },
+                }
+            },
+        },
+        InventoryOptions(
+            use_service=True,
+            default_win_ansible_connection=default_win_ansible_connection,
+        ),
+    )
+
+    host = f"{DEFAULT_NAMESPACE}-{WINDOWS_VMI_1['metadata']['name']}"
+    assert hosts[host]["ansible_connection"] == default_win_ansible_connection
+    assert hosts[host]["ansible_host"] == "192.168.1.100"
+    assert hosts[host]["ansible_port"] == expected_port
