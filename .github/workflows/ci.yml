@@ -155,6 +155,10 @@ jobs:
             "python-version": "3.11"
           },
           {
+            "ansible-version": "milestone",
+            "python-version": "3.12"
+          },
+          {
             "ansible-version": "devel",
             "python-version": "3.10"
           },
@@ -230,6 +234,10 @@ jobs:
           {
             "ansible-version": "milestone",
             "python-version": "3.11"
+          },
+          {
+            "ansible-version": "milestone",
+            "python-version": "3.12"
           },
           {
             "ansible-version": "devel",
