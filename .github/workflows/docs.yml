@@ -50,6 +50,14 @@ jobs:
           cp -rp ansible_collections \
             ${{ env.work_dir }}
 
+      - name: Set up git credentials for gh-pages push
+        run: |
+          cd ${{ env.collection_dir }}
+          git config credential.helper \
+            '!f() { echo "username=x-access-token"; echo "password=${GITHUB_TOKEN}"; }; f'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create changelog and documentation
         uses: ansible-middleware/collection-docs-action@main
         with:

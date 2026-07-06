@@ -58,6 +58,13 @@ jobs:
         run: |
           ansible-galaxy collection build .
 
+      - name: Set up git credentials
+        run: |
+          git config credential.helper \
+            '!f() { echo "username=x-access-token"; echo "password=${GITHUB_TOKEN}"; }; f'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create changelog and documentation
         uses: ansible-middleware/collection-docs-action@main
         with:
