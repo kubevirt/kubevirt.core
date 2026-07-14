@@ -61,7 +61,7 @@ jobs:
       - name: Set up git credentials
         run: |
           BASIC_AUTH=$(echo -n "x-access-token:${GITHUB_TOKEN}" | base64)
-          git config --local http.https://github.com/.extraheader \
+          git config --global http.https://github.com/.extraheader \
             "AUTHORIZATION: basic ${BASIC_AUTH}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
