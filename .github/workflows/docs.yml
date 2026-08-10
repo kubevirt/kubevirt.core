@@ -18,7 +18,9 @@ jobs:
       contents: write
     env:
       collection_dir: ansible_collections/kubevirt/core
-      work_dir: /home/runner/.ansible/collections
+      # Make the checkout itself resolvable as a collection, so no copy of
+      # the repository is needed
+      ANSIBLE_COLLECTIONS_PATH: ${{ github.workspace }}
     steps:
 
       - name: Check out code
@@ -39,24 +41,10 @@ jobs:
             -r ${{ env.collection_dir }}/docs/requirements.txt
           pip install \
             -r ${{ env.collection_dir }}/requirements.txt
-          mkdir -p ${{ env.work_dir }}
           ansible-galaxy collection install \
             -r ${{ env.collection_dir }}/requirements.yml \
-            -p ${{ env.work_dir }} --force-with-deps
+            -p ${{ github.workspace }} --force-with-deps
           sudo apt install -y sed hub
-
-      - name: Move collection to work dir
-        run: |
-          cp -rp ansible_collections \
-            ${{ env.work_dir }}
-
-      - name: Set up git credentials for gh-pages push
-        run: |
-          BASIC_AUTH=$(echo -n "x-access-token:${GITHUB_TOKEN}" | base64)
-          git config --global http.https://github.com/.extraheader \
-            "AUTHORIZATION: basic ${BASIC_AUTH}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create changelog and documentation
         uses: ansible-middleware/collection-docs-action@main
@@ -68,7 +56,7 @@ jobs:
           commit_ghpages: true
           changelog_release: false
           generate_docs: true
-          path: ${{ env.work_dir }}/${{ env.collection_dir }}
+          path: ${{ env.collection_dir }}
           token: ${{ secrets.GITHUB_TOKEN }}
           bot_email: kubevirtbot@redhat.com
           bot_account: kubevirt-bot
