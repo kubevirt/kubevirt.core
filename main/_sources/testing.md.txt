@@ -27,6 +27,16 @@ Run unit tests with `tox-ansible` like so:
 make test-unit
 ```
 
+`make test-unit` runs the full matrix in parallel. For local development, run
+one environment instead. If you installed tox with `--user`, put `~/.local/bin`
+first on `PATH` before running `tox`. See [developing.md](developing.md).
+
+```
+tox -e unit-py3.11-2.16 --ansible --conf tox-ansible.ini
+```
+
+List available unit envs with `tox -f unit --ansible --conf tox-ansible.ini -l`.
+
 ### Running tests with ansible-test
 
 In order to test changes with `ansible-test`, it is recommended to bind mount
@@ -135,4 +145,3 @@ ansible-playbook -i examples/inventory.kubevirt.yml examples/play-delete.yml
 # terminate the environment
 hack/e2e-setup.sh --cleanup
 ```
-

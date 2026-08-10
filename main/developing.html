@@ -7,17 +7,16 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contributor’s Guidelines &mdash; KubeVirt Ansible Collection  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=41de9001" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5707b69d" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
-      <link rel="stylesheet" type="text/css" href="_static/ansible-basic-sphinx-ext.css" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -53,7 +52,10 @@
 <p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributor’s Guidelines</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributor’s Guidelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#before-pushing">Before pushing</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="#development-environment">Development environment</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#virtualenv-for-development">Virtualenv for development</a></li>
 </ul>
@@ -104,12 +106,27 @@
 <li><p>All arguments have a specification in <code class="docutils literal notranslate"><span class="pre">meta/argument_specs.yml</span></code></p></li>
 <li><p>All playbooks/roles should be focused on compatibility with Ansible Automation Platform</p></li>
 </ul>
+<section id="before-pushing">
+<h2>Before pushing<a class="headerlink" href="#before-pushing" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">format</span></code> before committing to auto-format the code. CI rejects unformatted PRs.</p></li>
+<li><p>CI runs <code class="docutils literal notranslate"><span class="pre">yamllint</span></code>, <code class="docutils literal notranslate"><span class="pre">ansible-lint</span></code> (production profile) and <code class="docutils literal notranslate"><span class="pre">shellcheck</span></code>. Fix any violations before pushing</p></li>
+</ul>
+</section>
 </section>
 <section id="development-environment">
 <h1>Development environment<a class="headerlink" href="#development-environment" title="Link to this heading"></a></h1>
-<p>To develop and to run tests you need to install <code class="docutils literal notranslate"><span class="pre">tox</span></code> and <code class="docutils literal notranslate"><span class="pre">tox-ansible</span></code> on
-your machine.</p>
-<div class="highlight-YAML+Jinja notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">pip install --user tox tox-ansible</span>
+<p>Install <code class="docutils literal notranslate"><span class="pre">tox</span></code> (version 4 or newer) and <code class="docutils literal notranslate"><span class="pre">tox-ansible</span></code>:</p>
+<div class="highlight-YAML+Jinja notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">pip install --user &#39;tox&gt;=4&#39; tox-ansible</span>
+</pre></div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">--user</span></code>, <code class="docutils literal notranslate"><span class="pre">tox</span></code> is in <code class="docutils literal notranslate"><span class="pre">~/.local/bin</span></code>. Put it first on <code class="docutils literal notranslate"><span class="pre">PATH</span></code> before
+<code class="docutils literal notranslate"><span class="pre">make</span></code> targets that use <code class="docutils literal notranslate"><span class="pre">tox</span></code> (<code class="docutils literal notranslate"><span class="pre">build-venv</span></code>, <code class="docutils literal notranslate"><span class="pre">test-unit</span></code>, <code class="docutils literal notranslate"><span class="pre">test-sanity</span></code>):</p>
+<div class="highlight-YAML+Jinja notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">export PATH=&quot;$HOME/.local/bin:$PATH&quot;</span><span class="w">    </span><span class="c1"># whole shell session</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-YAML+Jinja notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">PATH=&quot;$HOME/.local/bin:$PATH&quot; make &lt;target&gt;</span><span class="w">    </span><span class="c1"># command only</span>
 </pre></div>
 </div>
 <section id="virtualenv-for-development">
@@ -135,7 +152,7 @@ be selected as virtualenv in VSCode (<code class="docutils literal notranslate">
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 Red Hat, Inc..</p>
+    <p>&#169; Copyright 2026 Red Hat, Inc..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

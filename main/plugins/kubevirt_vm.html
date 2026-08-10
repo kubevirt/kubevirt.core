@@ -4,21 +4,20 @@
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="2.23.0" name="antsibull-docs" />
+<meta content="2.25.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kubevirt_vm – Create or delete KubeVirt VirtualMachines &mdash; KubeVirt Ansible Collection  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=41de9001" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+  <title>kubevirt_vm – Manage KubeVirt VirtualMachines &mdash; KubeVirt Ansible Collection  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5707b69d" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/antsibull-minimal.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/ansible-basic-sphinx-ext.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -50,7 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../README.html">Lean Ansible bindings for KubeVirt</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Plugin Index</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="kubevirt.html">kubevirt – Inventory source for KubeVirt VirtualMachines and VirtualMachineInstances</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">kubevirt_vm – Create or delete KubeVirt VirtualMachines</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kubevirt_vm – Manage KubeVirt VirtualMachines</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
@@ -95,7 +94,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Plugin Index</a></li>
-      <li class="breadcrumb-item active">kubevirt_vm – Create or delete KubeVirt VirtualMachines</li>
+      <li class="breadcrumb-item active">kubevirt_vm – Manage KubeVirt VirtualMachines</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/plugins/kubevirt_vm.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -105,8 +104,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-kubevirt-core-kubevirt-vm-module"></span><section id="kubevirt-vm-create-or-delete-kubevirt-virtualmachines">
-<h1>kubevirt_vm – Create or delete KubeVirt VirtualMachines<a class="headerlink" href="#kubevirt-vm-create-or-delete-kubevirt-virtualmachines" title="Link to this heading"></a></h1>
+  <span class="target" id="ansible-collections-kubevirt-core-kubevirt-vm-module"></span><section id="kubevirt-vm-manage-kubevirt-virtualmachines">
+<h1>kubevirt_vm – Manage KubeVirt VirtualMachines<a class="headerlink" href="#kubevirt-vm-manage-kubevirt-virtualmachines" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/kubevirt/core/">kubevirt.core collection</a>.</p>
@@ -130,7 +129,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <section id="synopsis">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Use the Kubernetes Python client to perform create or delete operations on KubeVirt VirtualMachines.</p></li>
+<li><p>Use the Kubernetes Python client to perform create, delete, start, stop, or restart operations on KubeVirt VirtualMachines.</p></li>
 <li><p>Pass options to create the VirtualMachine as module arguments.</p></li>
 <li><p>Authenticate using either a config file, certificates, password or token.</p></li>
 <li><p>Supports check mode.</p></li>
@@ -387,6 +386,22 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 </tr>
 <tr class="row-odd">
   <td><div class="ansible-option-cell">
+    <div class="ansibleOptionAnchor" id="parameter-grace_period_seconds"></div>
+    <p class="ansible-option-title"><strong>grace_period_seconds</strong></p>
+    <a class="ansibleOptionLink" href="#parameter-grace_period_seconds" title="Permalink to this option"></a>
+    <p class="ansible-option-type-line">
+      <span class="ansible-option-type">integer</span>
+    </p>
+    <p><em class="ansible-option-versionadded">added in kubevirt.core 2.3.0</em></p>
+  </div></td>
+  <td><div class="ansible-option-cell">
+    <p>Specify the grace period in seconds for stopping or restarting the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
+    <p>Only used when <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=stopped</span></span></a></code> or <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=restarted</span></span></a></code>.</p>
+    <p>When used with <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=restarted</span></span></a></code>, the only supported values are <code class="ansible-value literal notranslate">null</code> (use the default grace period) and <code class="ansible-value literal notranslate">0</code> (force restart immediately).</p>
+  </div></td>
+</tr>
+<tr class="row-even">
+  <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-hidden_fields"></div>
     <p class="ansible-option-title"><strong>hidden_fields</strong></p>
     <a class="ansibleOptionLink" href="#parameter-hidden_fields" title="Permalink to this option"></a>
@@ -402,7 +417,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">[&#34;metadata.annotations[kubemacpool.io/transaction-timestamp]&#34;, &#34;metadata.managedFields&#34;]</code></p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-host"></div>
     <p class="ansible-option-title"><strong>host</strong></p>
@@ -416,7 +431,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_HOST</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-impersonate_groups"></div>
     <p class="ansible-option-title"><strong>impersonate_groups</strong></p>
@@ -431,7 +446,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_IMPERSONATE_GROUPS</code> environment variable, e.g. <code class='docutils literal notranslate'>Group1,Group2</code>.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-impersonate_user"></div>
     <p class="ansible-option-title"><strong>impersonate_user</strong></p>
@@ -445,7 +460,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_IMPERSONATE_USER</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-instancetype"></div>
     <p class="ansible-option-title"><strong>instancetype</strong></p>
@@ -459,7 +474,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Only used when <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-kubeconfig"></div>
     <p class="ansible-option-title"><strong>kubeconfig</strong></p>
@@ -475,7 +490,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>The kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version &gt;= 17.17.0.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-labels"></div>
     <p class="ansible-option-title"><strong>labels</strong></p>
@@ -488,7 +503,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Specify labels to set on the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-name"></div>
     <p class="ansible-option-title"><strong>name</strong></p>
@@ -503,7 +518,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Mutually exclusive with <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-generate_name"><span class="std std-ref"><span class="pre">generate_name</span></span></a></strong></code>.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-namespace"></div>
     <p class="ansible-option-title"><strong>namespace</strong></p>
@@ -517,7 +532,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Specify the namespace of the <code class='docutils literal notranslate'>VirtualMachine</code>.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-no_proxy"></div>
     <p class="ansible-option-title"><strong>no_proxy</strong></p>
@@ -534,7 +549,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Example value is <code class='docutils literal notranslate'>localhost,.local,.example.com,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16</code>.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-password"></div>
     <p class="ansible-option-title"><strong>password</strong></p>
@@ -549,7 +564,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Please read the description of the <code class="ansible-option literal notranslate"><strong><a class="reference internal" href="#parameter-username"><span class="std std-ref"><span class="pre">username</span></span></a></strong></code> option for a discussion of when this option is applicable.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-persist_config"></div>
     <p class="ansible-option-title"><strong>persist_config</strong></p>
@@ -571,7 +586,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-preference"></div>
     <p class="ansible-option-title"><strong>preference</strong></p>
@@ -585,7 +600,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Only used when <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy"></div>
     <p class="ansible-option-title"><strong>proxy</strong></p>
@@ -600,7 +615,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Please note that this module does not pick up typical proxy settings from the environment (e.g. <code class="xref std std-envvar literal notranslate">HTTP_PROXY</code>).</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy_headers"></div>
     <p class="ansible-option-title"><strong>proxy_headers</strong></p>
@@ -614,7 +629,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Documentation can be found here <a href='https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers'>https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers</a>.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy_headers/basic_auth"></div>
     <p class="ansible-option-title"><strong>basic_auth</strong></p>
@@ -628,7 +643,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PROXY_HEADERS_BASIC_AUTH</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy_headers/proxy_basic_auth"></div>
     <p class="ansible-option-title"><strong>proxy_basic_auth</strong></p>
@@ -642,7 +657,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-proxy_headers/user_agent"></div>
     <p class="ansible-option-title"><strong>user_agent</strong></p>
@@ -657,7 +672,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
   </div></td>
 </tr>
 
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-run_strategy"></div>
     <p class="ansible-option-title"><strong>run_strategy</strong></p>
@@ -681,7 +696,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-running"></div>
     <p class="ansible-option-title"><strong>running</strong></p>
@@ -702,7 +717,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-spec"></div>
     <p class="ansible-option-title"><strong>spec</strong></p>
@@ -716,7 +731,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>See <a href='https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec'>https://kubevirt.io/api-reference/main/definitions.html#_v1_virtualmachineinstancespec</a></p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-state"></div>
     <p class="ansible-option-title"><strong>state</strong></p>
@@ -726,19 +741,25 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     </p>
   </div></td>
   <td><div class="ansible-option-cell">
-    <p>Determines if an object should be created, patched, or deleted.</p>
+    <p>Determines if an object should be created, patched, deleted, started, stopped, or restarted.</p>
     <p>When set to <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>, an object will be created, if it does not already exist.</p>
     <p>If set to <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>, an existing object will be deleted.</p>
     <p>If set to <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>, an existing object will be patched, if its attributes differ from those specified.</p>
+    <p>If set to <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=started</span></span></a></code>, it will be ensured that the <code class='docutils literal notranslate'>VirtualMachine</code> is running. Added in version 2.3.0.</p>
+    <p>If set to <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=stopped</span></span></a></code>, it will be ensured that the <code class='docutils literal notranslate'>VirtualMachine</code> is stopped. Added in version 2.3.0.</p>
+    <p>If set to <code class="ansible-option-value literal notranslate"><a class="reference internal" href="#parameter-state"><span class="std std-ref"><span class="pre">state=restarted</span></span></a></code>, it will be ensured that the <code class='docutils literal notranslate'>VirtualMachine</code> is restarted. Added in version 2.3.0.</p>
     <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
     <ul class="simple">
       <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;absent&#34;</code></p></li>
       <li><p><code class="ansible-value literal notranslate ansible-option-default-bold"><strong>&#34;present&#34;</strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;restarted&#34;</code></p></li>
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;started&#34;</code></p></li>
+      <li><p><code class="ansible-value literal notranslate ansible-option-choices-entry">&#34;stopped&#34;</code></p></li>
     </ul>
 
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-username"></div>
     <p class="ansible-option-title"><strong>username</strong></p>
@@ -752,7 +773,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p>Can also be specified via <code class="xref std std-envvar literal notranslate">K8S_AUTH_USERNAME</code> environment variable.</p>
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-validate_certs"></div>
     <div class="ansibleOptionAnchor" id="parameter-verify_ssl"></div>
@@ -774,7 +795,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-wait"></div>
     <p class="ansible-option-title"><strong>wait</strong></p>
@@ -793,7 +814,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 
   </div></td>
 </tr>
-<tr class="row-even">
+<tr class="row-odd">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-wait_sleep"></div>
     <p class="ansible-option-title"><strong>wait_sleep</strong></p>
@@ -808,7 +829,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
     <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-value literal notranslate ansible-option-default">5</code></p>
   </div></td>
 </tr>
-<tr class="row-odd">
+<tr class="row-even">
   <td><div class="ansible-option-cell">
     <div class="ansibleOptionAnchor" id="parameter-wait_timeout"></div>
     <p class="ansible-option-title"><strong>wait_timeout</strong></p>
@@ -830,7 +851,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>To avoid SSL certificate validation errors when <code class="ansible-option-value docutils literal notranslate"><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_module.html#ansible-collections-kubevirt-core-kubevirt-vm-module-parameter-validate-certs" title="(in Ansible v13)"><span><span class="pre">validate_certs=yes</span></span></a></code>, the full certificate chain for the API server must be provided via <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_module.html#ansible-collections-kubevirt-core-kubevirt-vm-module-parameter-ca-cert" title="(in Ansible v13)"><span><span class="pre">ca_cert</span></span></a></strong></code> or in the <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_module.html#ansible-collections-kubevirt-core-kubevirt-vm-module-parameter-kubeconfig" title="(in Ansible v13)"><span><span class="pre">kubeconfig</span></span></a></strong></code> file.</p></li>
+<li><p>To avoid SSL certificate validation errors when <code class="ansible-option-value docutils literal notranslate"><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_module.html#ansible-collections-kubevirt-core-kubevirt-vm-module-parameter-validate-certs" title="(in Ansible v14)"><span><span class="pre">validate_certs=yes</span></span></a></code>, the full certificate chain for the API server must be provided via <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_module.html#ansible-collections-kubevirt-core-kubevirt-vm-module-parameter-ca-cert" title="(in Ansible v14)"><span><span class="pre">ca_cert</span></span></a></strong></code> or in the <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_module.html#ansible-collections-kubevirt-core-kubevirt-vm-module-parameter-kubeconfig" title="(in Ansible v14)"><span><span class="pre">kubeconfig</span></span></a></strong></code> file.</p></li>
 </ul>
 </div>
 </section>
@@ -918,12 +939,41 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testvm</span>
 <span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Start a VirtualMachine</span>
+<span class="w">  </span><span class="nt">kubevirt.core.kubevirt_vm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testvm</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
+<span class="w">    </span><span class="nt">wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stop a VirtualMachine</span>
+<span class="w">  </span><span class="nt">kubevirt.core.kubevirt_vm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testvm</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stopped</span>
+<span class="w">    </span><span class="nt">wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart a VirtualMachine</span>
+<span class="w">  </span><span class="nt">kubevirt.core.kubevirt_vm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testvm</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
+<span class="w">    </span><span class="nt">wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Force restart a VirtualMachine</span>
+<span class="w">  </span><span class="nt">kubevirt.core.kubevirt_vm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testvm</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
+<span class="w">    </span><span class="nt">grace_period_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </section>
 <section id="return-values">
 <h2><a class="toc-backref" href="#id6" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Link to this heading"></a></h2>
-<p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible v13)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
+<p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible v14)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
 <table class="colwidths-auto ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd">
@@ -1012,7 +1062,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 Red Hat, Inc..</p>
+    <p>&#169; Copyright 2026 Red Hat, Inc..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -4,26 +4,25 @@
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="2.23.0" name="antsibull-docs" />
+<meta content="2.25.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>kubevirt_vm_info – Describe KubeVirt VirtualMachines &mdash; KubeVirt Ansible Collection  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=41de9001" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5707b69d" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/antsibull-minimal.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/ansible-basic-sphinx-ext.css" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="kubevirt_vmi_info – Describe KubeVirt VirtualMachineInstances" href="kubevirt_vmi_info.html" />
-    <link rel="prev" title="kubevirt_vm – Create or delete KubeVirt VirtualMachines" href="kubevirt_vm.html" /> 
+    <link rel="prev" title="kubevirt_vm – Manage KubeVirt VirtualMachines" href="kubevirt_vm.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,7 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../README.html">Lean Ansible bindings for KubeVirt</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Plugin Index</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="kubevirt.html">kubevirt – Inventory source for KubeVirt VirtualMachines and VirtualMachineInstances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kubevirt_vm.html">kubevirt_vm – Create or delete KubeVirt VirtualMachines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kubevirt_vm.html">kubevirt_vm – Manage KubeVirt VirtualMachines</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">kubevirt_vm_info – Describe KubeVirt VirtualMachines</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
@@ -619,7 +618,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>To avoid SSL certificate validation errors when <code class="ansible-option-value docutils literal notranslate"><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_info_module.html#ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-validate-certs" title="(in Ansible v13)"><span><span class="pre">validate_certs=yes</span></span></a></code>, the full certificate chain for the API server must be provided via <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_info_module.html#ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-ca-cert" title="(in Ansible v13)"><span><span class="pre">ca_cert</span></span></a></strong></code> or in the <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_info_module.html#ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-kubeconfig" title="(in Ansible v13)"><span><span class="pre">kubeconfig</span></span></a></strong></code> file.</p></li>
+<li><p>To avoid SSL certificate validation errors when <code class="ansible-option-value docutils literal notranslate"><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_info_module.html#ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-validate-certs" title="(in Ansible v14)"><span><span class="pre">validate_certs=yes</span></span></a></code>, the full certificate chain for the API server must be provided via <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_info_module.html#ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-ca-cert" title="(in Ansible v14)"><span><span class="pre">ca_cert</span></span></a></strong></code> or in the <code class="ansible-option docutils literal notranslate"><strong><a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/collections/kubevirt/core/kubevirt_vm_info_module.html#ansible-collections-kubevirt-core-kubevirt-vm-info-module-parameter-kubeconfig" title="(in Ansible v14)"><span><span class="pre">kubeconfig</span></span></a></strong></code> file.</p></li>
 </ul>
 </div>
 </section>
@@ -662,7 +661,7 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
 </section>
 <section id="return-values">
 <h2><a class="toc-backref" href="#id6" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Link to this heading"></a></h2>
-<p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible v13)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
+<p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible v14)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
 <table class="colwidths-auto ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd">
@@ -784,14 +783,14 @@ see <a class="reference internal" href="#ansible-collections-kubevirt-core-kubev
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="kubevirt_vm.html" class="btn btn-neutral float-left" title="kubevirt_vm – Create or delete KubeVirt VirtualMachines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kubevirt_vm.html" class="btn btn-neutral float-left" title="kubevirt_vm – Manage KubeVirt VirtualMachines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="kubevirt_vmi_info.html" class="btn btn-neutral float-right" title="kubevirt_vmi_info – Describe KubeVirt VirtualMachineInstances" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 Red Hat, Inc..</p>
+    <p>&#169; Copyright 2026 Red Hat, Inc..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

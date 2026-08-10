@@ -7,17 +7,16 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Testing &mdash; KubeVirt Ansible Collection  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=41de9001" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5707b69d" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
-      <link rel="stylesheet" type="text/css" href="_static/ansible-basic-sphinx-ext.css" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -123,6 +122,13 @@ is ensured.</p>
 <div class="highlight-YAML+Jinja notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">make test-unit</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test-unit</span></code> runs the full matrix in parallel. For local development, run
+one environment instead. If you installed tox with <code class="docutils literal notranslate"><span class="pre">--user</span></code>, put <code class="docutils literal notranslate"><span class="pre">~/.local/bin</span></code>
+first on <code class="docutils literal notranslate"><span class="pre">PATH</span></code> before running <code class="docutils literal notranslate"><span class="pre">tox</span></code>. See <a class="reference internal" href="developing.html"><span class="std std-doc">developing.md</span></a>.</p>
+<div class="highlight-YAML+Jinja notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">tox -e unit-py3.11-2.16 --ansible --conf tox-ansible.ini</span>
+</pre></div>
+</div>
+<p>List available unit envs with <code class="docutils literal notranslate"><span class="pre">tox</span> <span class="pre">-f</span> <span class="pre">unit</span> <span class="pre">--ansible</span> <span class="pre">--conf</span> <span class="pre">tox-ansible.ini</span> <span class="pre">-l</span></code>.</p>
 </section>
 <section id="running-tests-with-ansible-test">
 <h3>Running tests with ansible-test<a class="headerlink" href="#running-tests-with-ansible-test" title="Link to this heading"></a></h3>
@@ -227,7 +233,7 @@ hack/e2e-setup.sh<span class="w"> </span>--cleanup
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025 Red Hat, Inc..</p>
+    <p>&#169; Copyright 2026 Red Hat, Inc..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
