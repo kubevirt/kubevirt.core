@@ -1,0 +1,4 @@
+plugins/inventory/kubevirt.py validate-modules:missing-gplv3-license
+plugins/modules/kubevirt_vm.py validate-modules:missing-gplv3-license
+plugins/modules/kubevirt_vm_info.py validate-modules:missing-gplv3-license
+plugins/modules/kubevirt_vmi_info.py validate-modules:missing-gplv3-license

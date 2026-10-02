@@ -13,7 +13,7 @@
         instancetype:
           name: u1.small
         preference:
-          name: centos.stream9
+          name: centos.stream10
         spec:
           domain:
             devices:
@@ -30,7 +30,7 @@
                 networkName: {{ SECONDARY_NETWORK }}
           volumes:
             - containerDisk:
-                image: quay.io/containerdisks/centos-stream:9
+                image: quay.io/containerdisks/centos-stream:10
               name: containerdisk
             - cloudInitNoCloud:
                 userData: |-
