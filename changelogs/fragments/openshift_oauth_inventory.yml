@@ -1,0 +1,2 @@
+minor_changes:
+  - kubevirt inventory - add an opt-in OpenShift OAuth credential exchange for username/password authentication.
