@@ -107,6 +107,10 @@ jobs:
             "python-version": "3.14"
           },
           {
+            "ansible-version": "stable-2.16",
+            "python-version": "3.15"
+          },
+          {
             "ansible-version": "stable-2.17",
             "python-version": "3.13"
           },
@@ -115,12 +119,20 @@ jobs:
             "python-version": "3.14"
           },
           {
+            "ansible-version": "stable-2.17",
+            "python-version": "3.15"
+          },
+          {
             "ansible-version": "stable-2.18",
             "python-version": "3.10"
           },
           {
             "ansible-version": "stable-2.18",
             "python-version": "3.14"
+          },
+          {
+            "ansible-version": "stable-2.18",
+            "python-version": "3.15"
           },
           {
             "ansible-version": "stable-2.19",
@@ -131,6 +143,10 @@ jobs:
             "python-version": "3.14"
           },
           {
+            "ansible-version": "stable-2.19",
+            "python-version": "3.15"
+          },
+          {
             "ansible-version": "stable-2.20",
             "python-version": "3.10"
           },
@@ -139,12 +155,32 @@ jobs:
             "python-version": "3.11"
           },
           {
+            "ansible-version": "stable-2.20",
+            "python-version": "3.15"
+          },
+          {
             "ansible-version": "stable-2.21",
             "python-version": "3.10"
           },
           {
             "ansible-version": "stable-2.21",
             "python-version": "3.11"
+          },
+          {
+            "ansible-version": "stable-2.21",
+            "python-version": "3.15"
+          },
+          {
+            "ansible-version": "stable-2.22",
+            "python-version": "3.10"
+          },
+          {
+            "ansible-version": "stable-2.22",
+            "python-version": "3.11"
+          },
+          {
+            "ansible-version": "stable-2.22",
+            "python-version": "3.12"
           },
           {
             "ansible-version": "milestone",
@@ -188,6 +224,10 @@ jobs:
             "python-version": "3.14"
           },
           {
+            "ansible-version": "stable-2.16",
+            "python-version": "3.15"
+          },
+          {
             "ansible-version": "stable-2.17",
             "python-version": "3.13"
           },
@@ -196,12 +236,20 @@ jobs:
             "python-version": "3.14"
           },
           {
+            "ansible-version": "stable-2.17",
+            "python-version": "3.15"
+          },
+          {
             "ansible-version": "stable-2.18",
             "python-version": "3.10"
           },
           {
             "ansible-version": "stable-2.18",
             "python-version": "3.14"
+          },
+          {
+            "ansible-version": "stable-2.18",
+            "python-version": "3.15"
           },
           {
             "ansible-version": "stable-2.19",
@@ -212,6 +260,10 @@ jobs:
             "python-version": "3.14"
           },
           {
+            "ansible-version": "stable-2.19",
+            "python-version": "3.15"
+          },
+          {
             "ansible-version": "stable-2.20",
             "python-version": "3.10"
           },
@@ -220,12 +272,32 @@ jobs:
             "python-version": "3.11"
           },
           {
+            "ansible-version": "stable-2.20",
+            "python-version": "3.15"
+          },
+          {
             "ansible-version": "stable-2.21",
             "python-version": "3.10"
           },
           {
             "ansible-version": "stable-2.21",
             "python-version": "3.11"
+          },
+          {
+            "ansible-version": "stable-2.21",
+            "python-version": "3.15"
+          },
+          {
+            "ansible-version": "stable-2.22",
+            "python-version": "3.10"
+          },
+          {
+            "ansible-version": "stable-2.22",
+            "python-version": "3.11"
+          },
+          {
+            "ansible-version": "stable-2.22",
+            "python-version": "3.12"
           },
           {
             "ansible-version": "milestone",
