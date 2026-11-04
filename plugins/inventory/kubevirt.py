@@ -40,6 +40,16 @@ options:
     description:
     - Optional name to assign to the cluster. If not provided, a name is constructed from the server
       and port.
+  auth_type:
+    description:
+    - Select how username and password credentials are used.
+    - The default C(basic) mode passes them to the Kubernetes client as HTTP Basic credentials.
+    - Use C(openshift_oauth) to exchange them for a temporary OpenShift OAuth bearer token.
+      This mode supports credentials supplied in this file or through C(K8S_AUTH_USERNAME) and
+      C(K8S_AUTH_PASSWORD). The API endpoint must be specified with O(host) or C(K8S_AUTH_HOST).
+    type: str
+    choices: [basic, openshift_oauth]
+    default: basic
   namespaces:
     description:
     - List of namespaces. If not specified, will fetch virtual machines from all namespaces
@@ -109,9 +119,18 @@ options:
       parameters of each connection to the configuration top level.
     - Deprecated in version C(1.5.0), will be removed in version C(3.0.0).
 
+notes:
+- The default O(auth_type) value, C(basic), passes O(username) and O(password) as HTTP Basic credentials.
+  Most OpenShift clusters use OAuth bearer tokens for API authentication and do not accept HTTP Basic
+  authentication on the Kubernetes API. Set O(auth_type=openshift_oauth) to exchange the same credentials
+  for a temporary OAuth token. The plugin revokes that token after fetching inventory.
+- O(auth_type=openshift_oauth) uses the host and TLS options documented in the authentication fragment,
+  including C(K8S_AUTH_HOST), C(K8S_AUTH_SSL_CA_CERT), and C(K8S_AUTH_VERIFY_SSL).
+
 requirements:
 - "python >= 3.9"
 - "kubernetes >= 28.1.0"
+- "requests >= 2.26.0"
 - "PyYAML >= 3.11"
 """
 
@@ -122,6 +141,12 @@ EXAMPLES = """
 - plugin: kubevirt.core.kubevirt
   host: https://192.168.64.4:8443
   api_key: xxxxxxxxxxxxxxxx
+  validate_certs: false
+
+# Exchange OpenShift username/password credentials for a temporary OAuth token
+- plugin: kubevirt.core.kubevirt
+  host: https://api.example.com:6443
+  auth_type: openshift_oauth
   validate_certs: false
 
 # Use default ~/.kube/config and return virtual machines from namespace testing connected to network bridge-network
@@ -143,6 +168,7 @@ EXAMPLES = """
 """
 
 from dataclasses import dataclass, InitVar
+import os
 from json import loads
 from re import compile as re_compile
 from typing import (
@@ -150,6 +176,7 @@ from typing import (
     Dict,
     List,
     Optional,
+    Tuple,
 )
 
 # Handle import errors of python kubernetes client.
@@ -176,6 +203,7 @@ except ImportError as e:
     K8S_IMPORT_EXCEPTION = e
 
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
+from ansible.module_utils.parsing.convert_bool import boolean
 
 # Handle import errors of trust_as_template.
 # It is only available on ansible-core >=2.19.
@@ -188,6 +216,11 @@ except ImportError:
 from ansible_collections.kubernetes.core.plugins.module_utils.k8s.client import (
     get_api_client,
     K8SClient,
+)
+from ansible_collections.kubevirt.core.plugins.module_utils.openshift_auth import (
+    OpenShiftOAuthError,
+    get_openshift_oauth_token,
+    revoke_openshift_oauth_token,
 )
 
 ANNOTATION_KUBEVIRT_IO_CLUSTER_PREFERENCE_NAME = "kubevirt.io/cluster-preference-name"
@@ -483,11 +516,88 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             except KeyError:
                 cache_needs_update = True
         if not attempt_to_read_cache or cache_needs_update:
-            results = self._fetch_objects(get_api_client(**config_data), opts)
+            client, oauth_token, oauth_host, oauth_verify = self._get_api_client(
+                config_data
+            )
+            try:
+                results = self._fetch_objects(client, opts)
+            finally:
+                if oauth_token:
+                    revoke_openshift_oauth_token(oauth_host, oauth_token, oauth_verify)
         if cache_needs_update:
             self.cache[cache_key] = results
 
         self._populate_inventory(results, opts)
+
+    @staticmethod
+    def _config_or_environment(
+        config_data: Dict, config_name: str, environment_name: str
+    ) -> Any:
+        """Return a configured value, falling back to its Kubernetes auth environment variable."""
+        value = config_data.get(config_name)
+        return value if value is not None else os.environ.get(environment_name)
+
+    def _get_api_client(
+        self, config_data: Dict
+    ) -> Tuple[Any, Optional[str], Optional[str], Any]:
+        """Create the Kubernetes client, optionally exchanging OpenShift credentials for a token."""
+        client_config = config_data.copy()
+        auth_type = client_config.pop("auth_type", "basic")
+
+        if auth_type not in ("basic", "openshift_oauth"):
+            raise KubeVirtInventoryException(
+                f"Unsupported auth_type '{auth_type}'. Use 'basic' or 'openshift_oauth'."
+            )
+        if auth_type != "openshift_oauth":
+            return get_api_client(**client_config), None, None, None
+
+        # A provided bearer token or kubeconfig already supplies authentication.
+        api_key = self._config_or_environment(
+            client_config, "api_key", "K8S_AUTH_API_KEY"
+        )
+        username = self._config_or_environment(
+            client_config, "username", "K8S_AUTH_USERNAME"
+        )
+        password = self._config_or_environment(
+            client_config, "password", "K8S_AUTH_PASSWORD"
+        )
+        if api_key:
+            return get_api_client(**client_config), None, None, None
+        if not (username and password):
+            raise KubeVirtInventoryException(
+                "auth_type 'openshift_oauth' requires username and password credentials "
+                "(or use api_key without auth_type)."
+            )
+
+        host = self._config_or_environment(client_config, "host", "K8S_AUTH_HOST")
+        if not host:
+            raise KubeVirtInventoryException(
+                "auth_type 'openshift_oauth' requires host or K8S_AUTH_HOST."
+            )
+
+        ca_cert = self._config_or_environment(
+            client_config, "ca_cert", "K8S_AUTH_SSL_CA_CERT"
+        )
+        validate_certs = self._config_or_environment(
+            client_config, "validate_certs", "K8S_AUTH_VERIFY_SSL"
+        )
+        verify_certs = boolean(validate_certs) if validate_certs is not None else True
+        verify = ca_cert if verify_certs and ca_cert else verify_certs
+
+        try:
+            token = get_openshift_oauth_token(host, username, password, verify)
+        except OpenShiftOAuthError as exc:
+            raise KubeVirtInventoryException(str(exc)) from exc
+        client_config["host"] = host
+        client_config.pop("username", None)
+        client_config.pop("password", None)
+        client_config["api_key"] = token
+        try:
+            client = get_api_client(**client_config)
+        except Exception:
+            revoke_openshift_oauth_token(host, token, verify)
+            raise
+        return client, token, host, verify
 
     def _connections_compatibility(self, config_data: Dict) -> None:
         """
