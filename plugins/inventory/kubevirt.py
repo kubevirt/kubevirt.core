@@ -61,6 +61,8 @@ options:
     description:
     - Enable the use of C(Services) to establish an SSH connection to a virtual machine.
     - Services are only used if no O(network_name) was provided.
+    - Services may expose multiple ports. The mapping targeting SSH (22) or WinRM (5985 or 5986)
+      is used for the selected connection type.
     type: bool
     default: True
   unset_ansible_port:
@@ -364,14 +366,14 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         """
         _find_service_with_target_port returns the first found service with a given
         target port in the passed in list of services or otherwise None.
+        The returned copy contains only the matching port mapping, so connection
+        port lookup uses that mapping without modifying the original service.
         """
         for service in services:
-            if (
-                (ports := service.get("spec", {}).get("ports")) is not None
-                and len(ports) == 1
-                and ports[0].get("targetPort", 0) == target_port
-            ):
-                return service
+            spec = service.get("spec", {})
+            for port in spec.get("ports") or []:
+                if port.get("targetPort", 0) == target_port:
+                    return dict(service, spec=dict(spec, ports=[port]))
 
         return None
 
@@ -670,17 +672,16 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             ):
                 continue
 
-            # Continue if ports are not defined, there are more than one port mapping
-            # or the target port is not port 22 (ssh) or port 5985 or 5986 (winrm).
-            if (
-                (ports := spec.get("ports")) is None
-                or len(ports) != 1
-                or ports[0].get("targetPort")
-                not in [
+            # Keep services with any port targeting SSH or WinRM, including
+            # services that also expose unrelated application ports.
+            if not any(
+                port.get("targetPort")
+                in (
                     SERVICE_TARGET_PORT_SSH,
                     SERVICE_TARGET_PORT_WIN_MGMT_HTTP,
                     SERVICE_TARGET_PORT_WIN_MGMT_HTTPS,
-                ]
+                )
+                for port in spec.get("ports") or []
             ):
                 continue
 
