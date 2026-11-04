@@ -1,0 +1,27 @@
+---
+# This workflow calls a pinned version of the
+# reusable workflow.
+name: Run collection certification checks
+
+permissions:
+  contents: read
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+concurrency:
+  group: cert-ver-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  call:
+    # yamllint disable-line rule:line-length
+    uses: ansible-collections/partner-certification-checker/.github/workflows/certification-reusable.yml@v6.0.0 # zizmor: ignore[unpinned-uses]
+    with:
+      # Keep in sync with galaxy.yml dependencies.
+      collection-deps: kubernetes.core
