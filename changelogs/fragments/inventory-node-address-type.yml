@@ -1,0 +1,2 @@
+minor_changes:
+  - kubevirt inventory - add an optional node_address_type setting to select a hosting Node address for NodePort connections instead of its node name.
