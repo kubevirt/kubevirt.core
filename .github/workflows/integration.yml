@@ -16,6 +16,10 @@ on:
               "python-version": "3.14"
             },
             {
+              "ansible-version": "stable-2.16",
+              "python-version": "3.15"
+            },
+            {
               "ansible-version": "stable-2.17",
               "python-version": "3.13"
             },
@@ -24,12 +28,20 @@ on:
               "python-version": "3.14"
             },
             {
+              "ansible-version": "stable-2.17",
+              "python-version": "3.15"
+            },
+            {
               "ansible-version": "stable-2.18",
               "python-version": "3.10"
             },
             {
               "ansible-version": "stable-2.18",
               "python-version": "3.14"
+            },
+            {
+              "ansible-version": "stable-2.18",
+              "python-version": "3.15"
             },
             {
               "ansible-version": "stable-2.19",
@@ -40,6 +52,10 @@ on:
               "python-version": "3.14"
             },
             {
+              "ansible-version": "stable-2.19",
+              "python-version": "3.15"
+            },
+            {
               "ansible-version": "stable-2.20",
               "python-version": "3.10"
             },
@@ -48,12 +64,32 @@ on:
               "python-version": "3.11"
             },
             {
+              "ansible-version": "stable-2.20",
+              "python-version": "3.15"
+            },
+            {
               "ansible-version": "stable-2.21",
               "python-version": "3.10"
             },
             {
               "ansible-version": "stable-2.21",
               "python-version": "3.11"
+            },
+            {
+              "ansible-version": "stable-2.21",
+              "python-version": "3.15"
+            },
+            {
+              "ansible-version": "stable-2.22",
+              "python-version": "3.10"
+            },
+            {
+              "ansible-version": "stable-2.22",
+              "python-version": "3.11"
+            },
+            {
+              "ansible-version": "stable-2.22",
+              "python-version": "3.12"
             },
             {
               "ansible-version": "milestone",
@@ -117,6 +153,7 @@ jobs:
           - stable-2.19
           - stable-2.20
           - stable-2.21
+          - stable-2.22
           - milestone
           - devel
         python-version:
@@ -125,6 +162,7 @@ jobs:
           - "3.12"
           - "3.13"
           - "3.14"
+          - "3.15"
         exclude: ${{ fromJSON(inputs.matrix_exclude) }}
         include: ${{ fromJSON(inputs.matrix_include) }}
     env:
