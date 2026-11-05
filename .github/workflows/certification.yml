@@ -1,6 +1,6 @@
 ---
 # This workflow calls a pinned version of the
-# reusable workflow.
+# reusable workflow
 name: Run collection certification checks
 
 permissions:
