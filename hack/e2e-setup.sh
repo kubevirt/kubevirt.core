@@ -218,7 +218,7 @@ deploy_kubevirt() {
   fi
 
   echo "Waiting for KubeVirt to be ready"
-  ${KUBECTL} wait --for=condition=Available kubevirt kubevirt --namespace=kubevirt --timeout=5m
+  ${KUBECTL} wait --for=condition=Available kubevirt kubevirt --namespace=kubevirt --timeout=10m
 
   echo "Successfully deployed KubeVirt:"
   ${KUBECTL} get pods -n kubevirt
