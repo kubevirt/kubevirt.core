@@ -62,3 +62,20 @@
         spec:
           domain:
             devices: {}
+
+    - name: Expose SSH through a NodePort Service
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: testvm1-ssh
+            namespace: {{ NAMESPACE }}
+          spec:
+            type: NodePort
+            selector:
+              kubevirt.io/domain: testvm1
+            ports:
+              - port: 2022
+                targetPort: 22

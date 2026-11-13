@@ -41,7 +41,7 @@ def test_use_first_interface_by_default(mocker, inventory):
     inventory._set_vars_from_vmi(hostname, vmi, {}, opts)
 
     set_ansible_host_and_port.assert_called_once_with(
-        vmi, hostname, "1.1.1.1", None, opts
+        vmi, hostname, "1.1.1.1", None, opts, None
     )
 
 
@@ -65,7 +65,7 @@ def test_use_named_interface(mocker, inventory):
     inventory._set_vars_from_vmi(hostname, vmi, {}, opts)
 
     set_ansible_host_and_port.assert_called_once_with(
-        vmi, hostname, "2.2.2.2", None, opts
+        vmi, hostname, "2.2.2.2", None, opts, None
     )
 
 
@@ -166,7 +166,7 @@ def test_respect_existing_ansible_connection(
 
     set_variable.assert_not_called()
     set_ansible_host_and_port.assert_called_once_with(
-        vmi, hostname, "1.1.1.1", service, opts
+        vmi, hostname, "1.1.1.1", service, opts, None
     )
 
 
@@ -203,7 +203,7 @@ def test_service_lookup(mocker, inventory, is_windows, target_port):
     inventory._set_vars_from_vmi(hostname, vmi, {"testdomain": [service]}, opts)
 
     set_ansible_host_and_port.assert_called_once_with(
-        vmi, hostname, "1.1.1.1", service, opts
+        vmi, hostname, "1.1.1.1", service, opts, None
     )
 
 
@@ -242,7 +242,7 @@ def test_service_ignore_not_matching_connection(
     inventory._set_vars_from_vmi(hostname, vmi, {"testdomain": [service]}, opts)
 
     set_ansible_host_and_port.assert_called_once_with(
-        vmi, hostname, "1.1.1.1", None, opts
+        vmi, hostname, "1.1.1.1", None, opts, None
     )
 
 
@@ -277,5 +277,5 @@ def test_service_prefer_winrm_https(mocker, inventory):
     )
 
     set_ansible_host_and_port.assert_called_once_with(
-        vmi, hostname, "1.1.1.1", service_winrm_https, opts
+        vmi, hostname, "1.1.1.1", service_winrm_https, opts, None
     )

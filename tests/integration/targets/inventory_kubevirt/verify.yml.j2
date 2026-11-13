@@ -51,3 +51,21 @@
         that:
           - inv_cache_before == inv_all
           - inv_cache_before == inv_cache_after
+
+    - name: Read inventories for NodePort address selection
+      ansible.builtin.set_fact:
+        inv_node_address: "{{ '{{' }} lookup('ansible.builtin.file', 'node-address.json') | from_json {{ '}}' }}"
+        inv_node_default: "{{ '{{' }} lookup('ansible.builtin.file', 'node-default.json') | from_json {{ '}}' }}"
+    - name: Read the hosting Node
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Node
+        name: "{{ '{{' }} inv_node_address._meta.hostvars['{{ NAMESPACE }}-testvm1'].vmi_node_name {{ '}}' }}"
+      register: hosting_node
+    - name: Assert NodePort address selection preserves the mapped port
+      ansible.builtin.assert:
+        that:
+          - inv_node_address._meta.hostvars['{{ NAMESPACE }}-testvm1'].ansible_host == (hosting_node.resources[0].status.addresses | selectattr('type', 'equalto', 'InternalIP') | map(attribute='address') | first)
+          - inv_node_default._meta.hostvars['{{ NAMESPACE }}-testvm1'].ansible_host == inv_node_default._meta.hostvars['{{ NAMESPACE }}-testvm1'].vmi_node_name
+          - inv_node_address._meta.hostvars['{{ NAMESPACE }}-testvm1'].ansible_port == inv_node_default._meta.hostvars['{{ NAMESPACE }}-testvm1'].ansible_port
+          - inv_node_address._meta.hostvars['{{ NAMESPACE }}-testvm1'].ansible_port is not none
