@@ -60,6 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#virtualenv-for-development">Virtualenv for development</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#dependency-updates-with-renovate">Dependency updates with Renovate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html">Collection Versioning Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">General</span></p>
@@ -139,6 +140,13 @@
 be selected as virtualenv in VSCode (<code class="docutils literal notranslate"><span class="pre">Shift+Ctrl+P</span></code> and then
 <code class="docutils literal notranslate"><span class="pre">Python:</span> <span class="pre">Select</span> <span class="pre">Interpreter</span></code>).</p>
 </section>
+</section>
+<section id="dependency-updates-with-renovate">
+<h1>Dependency updates with Renovate<a class="headerlink" href="#dependency-updates-with-renovate" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Renovate</span></code> GitHub Actions workflow runs daily at 06:00 UTC and can also
+be started manually from the Actions tab. It uses the existing <code class="docutils literal notranslate"><span class="pre">renovate.json</span></code>
+configuration to update GitHub Actions and the end-to-end test tools.
+The workflow runs only in <code class="docutils literal notranslate"><span class="pre">kubevirt/kubevirt.core</span></code>.</p>
 </section>
 
 

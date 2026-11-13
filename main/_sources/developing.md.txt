@@ -49,3 +49,10 @@ make build-venv
 The resulting virtualenv will be symlinked to `.venv`, which for example can
 be selected as virtualenv in VSCode (`Shift+Ctrl+P` and then
 `Python: Select Interpreter`).
+
+## Dependency updates with Renovate
+
+The `Renovate` GitHub Actions workflow runs daily at 06:00 UTC and can also
+be started manually from the Actions tab. It uses the existing `renovate.json`
+configuration to update GitHub Actions and the end-to-end test tools.
+The workflow runs only in `kubevirt/kubevirt.core`.
