@@ -209,8 +209,8 @@ configure_secondary_network() {
 
 deploy_kubevirt() {
   echo "Deploying KubeVirt"
-  ${KUBECTL} apply -f "https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_VERSION}/kubevirt-operator.yaml"
-  ${KUBECTL} apply -f "https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_VERSION}/kubevirt-cr.yaml"
+  ${KUBECTL} create -f "https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_VERSION}/kubevirt-operator.yaml"
+  ${KUBECTL} create -f "https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_VERSION}/kubevirt-cr.yaml"
 
   if ! is_nested_virt_enabled; then
     echo "Configuring Kubevirt to use emulation"
