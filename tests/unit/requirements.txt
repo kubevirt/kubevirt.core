@@ -1,6 +1,7 @@
 # This file is required by ansible-test units
 jsonpatch
 kubernetes>=28.1.0
+requests>=2.26.0
 PyYAML>=3.11
 pytest
 pytest-mock
