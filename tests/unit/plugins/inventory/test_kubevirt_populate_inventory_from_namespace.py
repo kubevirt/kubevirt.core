@@ -115,7 +115,9 @@ def test_populate_inventory_from_namespace(
         add_host_calls.append(add_host_call(vm))
         set_vars_from_vm_calls.append(mocker.call(hostname, vm, opts))
         if name in _vmis.keys():
-            set_vars_from_vmi_calls.append(mocker.call(hostname, _vmis[name], {}, opts))
+            set_vars_from_vmi_calls.append(
+                mocker.call(hostname, _vmis[name], {}, opts, None)
+            )
         set_composable_vars_calls.append(mocker.call(hostname))
 
     # For each VMI add the expected calls
@@ -126,7 +128,7 @@ def test_populate_inventory_from_namespace(
             hostname = format_hostname(vmi)
             add_host_side_effects.append(hostname)
             add_host_calls.append(add_host_call(vmi))
-            set_vars_from_vmi_calls.append(mocker.call(hostname, vmi, {}, opts))
+            set_vars_from_vmi_calls.append(mocker.call(hostname, vmi, {}, opts, None))
             set_composable_vars_calls.append(mocker.call(hostname))
 
     obj_is_valid = mocker.patch.object(inventory, "_obj_is_valid", return_value=True)

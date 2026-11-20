@@ -17,6 +17,7 @@ def test_inventory_options_defaults():
     assert opts.label_selector is None
     assert opts.network_name is None
     assert opts.kube_secondary_dns is False
+    assert opts.node_address_type is None
     assert opts.use_service is True
     assert opts.unset_ansible_port is True
     assert opts.create_groups is False
@@ -63,3 +64,19 @@ def test_inventory_options_override_defaults():
     assert opts.append_base_domain == append_base_domain
     assert opts.default_win_ansible_connection == default_win_ansible_connection
     assert opts.host_format == host_format
+
+
+def test_inventory_options_node_address_type() -> None:
+    assert (
+        InventoryOptions(
+            config_data={"node_address_type": "InternalIP"}
+        ).node_address_type
+        == "InternalIP"
+    )
+    assert (
+        InventoryOptions(
+            node_address_type="ExternalIP",
+            config_data={"node_address_type": "InternalIP"},
+        ).node_address_type
+        == "ExternalIP"
+    )

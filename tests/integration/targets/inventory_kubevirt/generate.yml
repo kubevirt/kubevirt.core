@@ -16,4 +16,5 @@
         - test.kubevirt
         - test.label.kubevirt
         - test.net.kubevirt
+        - test.node-address.kubevirt
         - verify
