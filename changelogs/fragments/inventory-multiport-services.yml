@@ -1,0 +1,2 @@
+bugfixes:
+  - kubevirt inventory - detect SSH and WinRM mappings in Services with multiple ports and use the matching mapping for the connection port.
