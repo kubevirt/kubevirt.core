@@ -6,7 +6,7 @@
     :trim:
 
 .. meta::
-  :antsibull-docs: 2.28.0
+  :antsibull-docs: 2.29.2
 
 .. Anchors
 
@@ -63,7 +63,7 @@ Synopsis
 
 Requirements
 ------------
-The below requirements are needed on the local controller node that executes this inventory.
+The below requirements are needed on the local controller node that executes this inventory plugin.
 
 - python \>= 3.9
 - kubernetes \>= 28.1.0
