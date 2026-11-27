@@ -351,7 +351,7 @@ def test_populate_inventory(mocker, inventory, results, expected):
         base_domain=results["cluster_domain"], name=results["default_hostname"]
     )
     calls = [
-        mocker.call(namespace, data, opts)
+        mocker.call(namespace, data, opts, None)
         for namespace, data in results["namespaces"].items()
     ]
     populate_inventory_from_namespace.assert_has_calls(calls)

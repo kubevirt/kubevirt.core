@@ -15,7 +15,7 @@ cleanup() {
     ansible localhost -m kubernetes.core.k8s -a "name=${NAMESPACE} api_version=v1 kind=Namespace state=absent"
     rm -rf all.yml cache_after.yml cache_before.yml cleanup.yml empty.yml label.yml net.yml playbook.yml \
            test.cache.kubevirt.yml test.kubevirt.yml test.label.kubevirt.yml test.net.kubevirt.yml verify.yml \
-           kubevirt-cache
+           test.node-address.kubevirt.yml node-address.json node-default.json kubevirt-cache
 }
 trap cleanup EXIT
 
@@ -35,6 +35,9 @@ ansible-inventory -i test.kubevirt.yml -y --list --output all.yml "$@"
 ansible-inventory -i test.cache.kubevirt.yml -y --list --output cache_before.yml "$@"
 ansible-inventory -i test.label.kubevirt.yml -y --list --output label.yml "$@"
 ansible-inventory -i test.net.kubevirt.yml -y --list --output net.yml "$@"
+
+ansible-inventory -i test.kubevirt.yml --list --output node-default.json "$@"
+ansible-inventory -i test.node-address.kubevirt.yml --list --output node-address.json "$@"
 
 ansible-playbook cleanup.yml "$@"
 

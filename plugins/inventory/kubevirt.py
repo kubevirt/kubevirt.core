@@ -63,6 +63,19 @@ options:
     - Services are only used if no O(network_name) was provided.
     type: bool
     default: True
+  node_address_type:
+    description:
+    - Select an address from the hosting Node's C(status.addresses) for NodePort connections.
+    - When omitted, use the VMI's C(status.nodeName) as before, without querying Nodes.
+    - Requires permission to C(get) cluster-scoped C(nodes) when enabled for NodePort Services.
+    - The first non-empty address of the requested type in API order is used, including on dual-stack Nodes.
+    - An unavailable address type or failure to read the Node causes inventory parsing to fail.
+    - Selected addresses are used verbatim; O(append_base_domain) applies only when this option is omitted.
+    - Ignored for LoadBalancer Services, when O(use_service=false), or when O(network_name) is set.
+    - Cached inventory must be refreshed when enabling this option against data cached without Node addresses.
+    type: str
+    choices: [InternalIP, ExternalIP, Hostname, InternalDNS, ExternalDNS]
+    version_added: 2.3.0
   unset_ansible_port:
     description:
     - Try to unset the value of C(ansible_port) if no non-default value was found.
@@ -140,6 +153,11 @@ EXAMPLES = """
 - plugin: kubevirt.core.kubevirt
   kubeconfig: /path/to/config
   context: 'awx/192-168-64-4:8443/developer'
+
+# Use the hosting Node's InternalIP for NodePort connections (requires get access to nodes)
+- plugin: kubevirt.core.kubevirt
+  use_service: true
+  node_address_type: InternalIP
 """
 
 from dataclasses import dataclass, InitVar
@@ -219,6 +237,7 @@ class InventoryOptions:
     network_name: Optional[str] = None
     kube_secondary_dns: Optional[bool] = None
     use_service: Optional[bool] = None
+    node_address_type: Optional[str] = None
     unset_ansible_port: Optional[bool] = None
     create_groups: Optional[bool] = None
     base_domain: Optional[str] = None
@@ -259,6 +278,21 @@ class InventoryOptions:
             if self.use_service is not None
             else config_data.get("use_service", True)
         )
+        self.node_address_type = (
+            self.node_address_type
+            if self.node_address_type is not None
+            else config_data.get("node_address_type")
+        )
+        if self.node_address_type is not None and self.node_address_type not in (
+            "InternalIP",
+            "ExternalIP",
+            "Hostname",
+            "InternalDNS",
+            "ExternalDNS",
+        ):
+            raise KubeVirtInventoryException(
+                f"Unsupported node_address_type '{self.node_address_type}'."
+            )
         self.unset_ansible_port = (
             self.unset_ansible_port
             if self.unset_ansible_port is not None
@@ -553,11 +587,48 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 "services": self._get_services_for_namespace(client, namespace),
             }
 
-        return {
+        results = {
             "default_hostname": self._get_default_hostname(client.configuration.host),
             "cluster_domain": self._get_cluster_domain(client),
             "namespaces": namespaces,
         }
+
+        if opts.node_address_type and opts.use_service and not opts.network_name:
+            results["node_addresses"] = self._get_node_addresses(client, namespaces)
+        return results
+
+    def _get_node_addresses(
+        self, client: K8SClient, namespaces: Dict
+    ) -> Dict[str, List[Dict[str, str]]]:
+        """Fetch each hosting Node once for VMIs associated with NodePort Services."""
+        node_names = set()
+        for data in namespaces.values():
+            for vmi in data["vmis"]:
+                domain = (
+                    vmi.get("metadata", {})
+                    .get("labels", {})
+                    .get(LABEL_KUBEVIRT_IO_DOMAIN)
+                )
+                services = data["services"].get(domain, [])
+                if any(
+                    service.get("spec", {}).get("type") == TYPE_NODEPORT
+                    for service in services
+                ):
+                    if node_name := vmi.get("status", {}).get("nodeName"):
+                        node_names.add(node_name)
+        addresses = {}
+        for node_name in sorted(node_names):
+            try:
+                resource = client.resources.get(api_version="v1", kind="Node")
+                node = resource.get(name=node_name).to_dict()
+            except (DynamicApiError, ResourceNotFoundError) as exc:
+                raise KubeVirtInventoryException(
+                    f"Unable to read Node '{node_name}' for node_address_type; "
+                    "the inventory credential requires get access to cluster-scoped nodes. "
+                    f"{exc}"
+                ) from exc
+            addresses[node_name] = node.get("status", {}).get("addresses", [])
+        return addresses
 
     def _get_cluster_domain(self, client: K8SClient) -> Optional[str]:
         """
@@ -702,10 +773,16 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         if opts.name is None:
             opts.name = results["default_hostname"]
         for namespace, data in results["namespaces"].items():
-            self._populate_inventory_from_namespace(namespace, data, opts)
+            self._populate_inventory_from_namespace(
+                namespace, data, opts, results.get("node_addresses")
+            )
 
     def _populate_inventory_from_namespace(
-        self, namespace: str, data: Dict, opts: InventoryOptions
+        self,
+        namespace: str,
+        data: Dict,
+        opts: InventoryOptions,
+        node_addresses: Optional[Dict[str, List[Dict[str, str]]]] = None,
     ) -> None:
         """
         _populate_inventory_from_namespace adds groups and hosts from a
@@ -741,7 +818,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             hostname = self._add_host(vm["metadata"], opts.host_format, namespace_group)
             self._set_vars_from_vm(hostname, vm, opts)
             if name in vmis:
-                self._set_vars_from_vmi(hostname, vmis[name], services, opts)
+                self._set_vars_from_vmi(
+                    hostname, vmis[name], services, opts, node_addresses
+                )
             self._set_composable_vars(hostname)
 
         # Add remaining VMIs without VM
@@ -751,7 +830,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             hostname = self._add_host(
                 vmi["metadata"], opts.host_format, namespace_group
             )
-            self._set_vars_from_vmi(hostname, vmi, services, opts)
+            self._set_vars_from_vmi(hostname, vmi, services, opts, node_addresses)
             self._set_composable_vars(hostname)
 
     def _add_host(self, metadata: Dict, host_format: str, namespace_group: str) -> str:
@@ -782,6 +861,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         vmi: Dict,
         services: Dict[str, List[Dict]],
         opts: InventoryOptions,
+        node_addresses: Optional[Dict[str, List[Dict[str, str]]]] = None,
     ) -> None:
         """
         _set_vars_from_vmi sets inventory variables from a VMI prefixed with vmi_ and
@@ -848,6 +928,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             interface["ipAddress"],
             service,
             opts,
+            node_addresses,
         )
 
     def _set_common_vars(
@@ -899,6 +980,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         ip_address: str,
         service: Optional[Dict],
         opts: InventoryOptions,
+        node_addresses: Optional[Dict[str, List[Dict[str, str]]]] = None,
     ) -> None:
         """
         _set_ansible_host_and_port sets the ansible_host and possibly the ansible_port var.
@@ -916,7 +998,32 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             # Set ansible_host and ansible_port to the host and port from the LoadBalancer
             # or NodePort service exposing SSH
             node_name = vmi["status"].get("nodeName")
-            if node_name and opts.append_base_domain and opts.base_domain:
+            if (
+                opts.node_address_type
+                and service.get("spec", {}).get("type") == TYPE_NODEPORT
+            ):
+                addresses = (node_addresses or {}).get(node_name, [])
+                node_address = next(
+                    (
+                        address["address"]
+                        for address in addresses
+                        if address.get("type") == opts.node_address_type
+                        and address.get("address")
+                    ),
+                    None,
+                )
+                if node_address is None:
+                    raise KubeVirtInventoryException(
+                        f"Node '{node_name}' has no address of type '{opts.node_address_type}' "
+                        f"for NodePort host '{hostname}'. Check Node addresses and refresh the inventory cache."
+                    )
+                node_name = node_address
+            elif (
+                not opts.node_address_type
+                and node_name
+                and opts.append_base_domain
+                and opts.base_domain
+            ):
                 node_name += f".{opts.base_domain}"
             host = self._get_host_from_service(service, node_name)
             port = self._get_port_from_service(service)

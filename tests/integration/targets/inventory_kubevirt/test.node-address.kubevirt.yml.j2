@@ -1,0 +1,9 @@
+---
+# Copyright 2026 KubeVirt Project
+# Apache License 2.0 (see LICENSE or http://www.apache.org/licenses/LICENSE-2.0)
+plugin: kubevirt.core.kubevirt
+name: test
+namespaces:
+  - {{ NAMESPACE }}
+use_service: true
+node_address_type: InternalIP
